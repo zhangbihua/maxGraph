@@ -74,5 +74,5 @@ class mxModelCodec extends mxObjectCodec {
   }
 }
 
-mxCodecRegistry.register(new mxModelCodec());
+// mxCodecRegistry.register(new mxModelCodec());
 export default mxModelCodec;

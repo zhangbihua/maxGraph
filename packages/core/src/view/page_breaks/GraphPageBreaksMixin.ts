@@ -1,9 +1,17 @@
 import Rectangle from '../geometry/Rectangle';
 import Point from '../geometry/Point';
 import Polyline from '../geometry/shape/edge/Polyline';
-import { autoImplement } from '../../util/Utils';
+import { Graph } from '../Graph';
+import { mixInto } from '../../util/Utils';
 
-import type Graph from '../Graph';
+declare module '../Graph' {
+  interface Graph {
+    horizontalPageBreaks: any[] | null;
+    verticalPageBreaks: any[] | null;
+
+    updatePageBreaks: (visible: boolean, width: number, height: number) => void;
+  }
+}
 
 type PartialGraph = Pick<
   Graph,
@@ -16,11 +24,16 @@ type PartialGraph = Pick<
   | 'getDialect'
   | 'isPageBreakDashed'
 >;
-type PartialClass = PartialGraph;
+type PartialPageBreaks = Pick<
+  Graph,
+  'horizontalPageBreaks' | 'verticalPageBreaks' | 'updatePageBreaks'
+>;
+type PartialType = PartialGraph & PartialPageBreaks;
 
-class GraphPageBreaks extends autoImplement<PartialClass>() {
-  horizontalPageBreaks: any[] | null = null;
-  verticalPageBreaks: any[] | null = null;
+// @ts-expect-error The properties of PartialGraph are defined elsewhere.
+const GraphPageBreaksMixin: PartialType = {
+  horizontalPageBreaks: null,
+  verticalPageBreaks: null,
 
   /**
    * Invokes from {@link sizeDidChange} to redraw the page breaks.
@@ -29,7 +42,7 @@ class GraphPageBreaks extends autoImplement<PartialClass>() {
    * @param width Specifies the width of the container in pixels.
    * @param height Specifies the height of the container in pixels.
    */
-  updatePageBreaks(visible: boolean, width: number, height: number): void {
+  updatePageBreaks(visible, width, height) {
     const { scale, translate: tr } = this.getView();
     const fmt = this.getPageFormat();
     const ps = scale * this.getPageScale();
@@ -119,7 +132,7 @@ class GraphPageBreaks extends autoImplement<PartialClass>() {
 
     drawPageBreaks(this.horizontalPageBreaks);
     drawPageBreaks(this.verticalPageBreaks);
-  }
-}
+  },
+};
 
-export default GraphPageBreaks;
+mixInto(Graph)(GraphPageBreaksMixin);

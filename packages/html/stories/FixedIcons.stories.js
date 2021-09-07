@@ -1,4 +1,4 @@
-import maxgraph from '@maxgraph/core';
+import { Graph, Rubberband, Rectangle, Constants, utils, mxLabel } from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -14,8 +14,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const { Graph, Rubberband, Rectangle, Constants, utils, mxLabel } = maxgraph;
-
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';

@@ -15,14 +15,14 @@ import {
 import Point from './geometry/Point';
 import Rectangle from './geometry/Rectangle';
 import RectangleShape from './geometry/shape/node/RectangleShape';
-import graph, { MaxGraph } from './Graph';
+import { Graph } from './Graph';
 import ImageShape from './geometry/shape/node/ImageShape';
 import InternalEvent from './event/InternalEvent';
-import utils from '../util/Utils';
 import Image from './image/ImageBox';
 import EventObject from './event/EventObject';
 import { getSource, isMouseEvent } from '../util/EventUtils';
 import EventSource from './event/EventSource';
+import { hasScrollbars } from '../util/Utils';
 
 /**
  * @class Outline
@@ -71,7 +71,7 @@ import EventSource from './event/EventSource';
  * ```
  */
 class Outline {
-  constructor(source: MaxGraph, container: HTMLElement | null = null) {
+  constructor(source: Graph, container: HTMLElement | null = null) {
     this.source = source;
 
     if (container != null) {
@@ -132,7 +132,7 @@ class Outline {
 
     // Refreshes the graph in the outline after a refresh of the main graph
     this.refreshHandler = (sender: any) => {
-      const outline = <graph>this.outline;
+      const outline = <Graph>this.outline;
       outline.setStylesheet(this.source.getStylesheet());
       outline.refresh();
     };
@@ -154,21 +154,21 @@ class Outline {
     // complete gesture on the event target. This is needed because all the events
     // are routed via the initial element even if that element is removed from the
     // DOM, which happens when we repaint the selection border and zoom handles.
-    const handler = (evt: Event) => {
+    const handler = (evt: MouseEvent) => {
       const t = getSource(evt);
 
       const redirect = (evt: Event) => {
-        const outline = <graph>this.outline;
+        const outline = <Graph>this.outline;
         outline.fireMouseEvent(InternalEvent.MOUSE_MOVE, new InternalMouseEvent(evt));
       };
 
       var redirect2 = (evt: Event) => {
-        const outline = <graph>this.outline;
+        const outline = <Graph>this.outline;
         InternalEvent.removeGestureListeners(t, null, redirect, redirect2);
         outline.fireMouseEvent(InternalEvent.MOUSE_UP, new InternalMouseEvent(evt));
       };
 
-      const outline = <graph>this.outline;
+      const outline = <Graph>this.outline;
       InternalEvent.addGestureListeners(t, null, redirect, redirect2);
       outline.fireMouseEvent(InternalEvent.MOUSE_DOWN, new InternalMouseEvent(evt));
     };
@@ -224,12 +224,12 @@ class Outline {
   /**
    * Reference to the source {@link graph}.
    */
-  source: MaxGraph;
+  source: Graph;
 
   /**
    * Reference to the {@link graph} that renders the outline.
    */
-  outline: graph | null = null;
+  outline: Graph | null = null;
 
   /**
    * Renderhint to be used for the outline graph.
@@ -308,8 +308,8 @@ class Outline {
   /**
    * Creates the {@link graph} used in the outline.
    */
-  createGraph(container: HTMLElement): graph {
-    const graph = new graph(
+  createGraph(container: HTMLElement): Graph {
+    const graph = new Graph(
       container,
       this.source.getModel(),
       this.graphRenderHint,
@@ -361,7 +361,7 @@ class Outline {
    */
   // createSizer(): mxShape;
   createSizer(): RectangleShape {
-    const outline = <graph>this.outline;
+    const outline = <Graph>this.outline;
     if (this.sizerImage != null) {
       const sizer = new ImageShape(
         new Rectangle(0, 0, this.sizerImage.width, this.sizerImage.height),
@@ -599,8 +599,8 @@ class Outline {
       const sizerNode = <SVGGElement>sizer.node;
       const selectionBorder = <RectangleShape>this.selectionBorder;
       const selectionBorderNode = <SVGGElement>selectionBorder.node;
-      const source = <graph>this.source;
-      const outline = <graph>this.outline;
+      const source = <Graph>this.source;
+      const outline = <Graph>this.outline;
 
       selectionBorderNode.style.display = this.showViewport ? '' : 'none';
       sizerNode.style.display = selectionBorderNode.style.display;
@@ -628,7 +628,7 @@ class Outline {
         source.panGraph(-dx - <number>this.dx0, -dy - <number>this.dy0);
       } else {
         // Does *not* preview zooming on the source graph
-        const { container } = <graph>this.source;
+        const { container } = <Graph>this.source;
         // @ts-ignore
         const viewRatio = container.clientWidth / container.clientHeight;
         dy = dx / viewRatio;
@@ -692,8 +692,8 @@ class Outline {
       const delta = this.getTranslateForEvent(me);
       let dx = delta.x;
       let dy = delta.y;
-      const source = <graph>this.source;
-      const outline = <graph>this.outline;
+      const source = <Graph>this.source;
+      const outline = <Graph>this.outline;
       const selectionBorder = <RectangleShape>this.selectionBorder;
 
       if (Math.abs(dx) > 0 || Math.abs(dy) > 0) {

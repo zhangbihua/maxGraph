@@ -155,11 +155,7 @@ class mxGraphViewCodec extends mxObjectCodec {
         }
 
         for (let i = 0; i < childCount; i += 1) {
-          const childNode = this.encodeCell(
-            enc,
-            view,
-            cell.getChildAt(i)
-          );
+          const childNode = this.encodeCell(enc, view, cell.getChildAt(i));
 
           if (childNode != null) {
             node.appendChild(childNode);
@@ -171,5 +167,5 @@ class mxGraphViewCodec extends mxObjectCodec {
   }
 }
 
-mxCodecRegistry.register(new mxGraphViewCodec());
+// mxCodecRegistry.register(new mxGraphViewCodec());
 export default mxGraphViewCodec;

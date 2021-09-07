@@ -9,7 +9,7 @@ import Dictionary from '../../util/Dictionary';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
 import { sortCells } from '../../util/Utils';
-import { MaxGraph } from '../Graph';
+import { Graph } from '../Graph';
 import Cell from '../cell/datatypes/Cell';
 import CellState from '../cell/datatypes/CellState';
 import { GraphPlugin } from '../../types';
@@ -42,7 +42,7 @@ import InternalMouseEvent from '../event/InternalMouseEvent';
 class SelectionCellsHandler extends EventSource implements GraphPlugin {
   static pluginId = 'SelectionCellsHandler';
 
-  constructor(graph: MaxGraph) {
+  constructor(graph: Graph) {
     super();
 
     this.graph = graph;
@@ -71,7 +71,7 @@ class SelectionCellsHandler extends EventSource implements GraphPlugin {
    *
    * Reference to the enclosing <mxGraph>.
    */
-  graph: MaxGraph;
+  graph: Graph;
 
   /**
    * Variable: enabled

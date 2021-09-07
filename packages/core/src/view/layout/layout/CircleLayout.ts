@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 import GraphLayout from './GraphLayout';
-import Graph from '../../Graph';
+import { Graph } from '../../Graph';
 import CellArray from '../../cell/datatypes/CellArray';
 import Cell from '../../cell/datatypes/Cell';
 

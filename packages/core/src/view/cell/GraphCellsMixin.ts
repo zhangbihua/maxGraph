@@ -1,14 +1,13 @@
 import Cell from './datatypes/Cell';
-import StyleMap from '../style/StyleMap';
 import CellArray from './datatypes/CellArray';
 import {
-  autoImplement,
   contains,
   getBoundingBox,
   getRotatedPoint,
   getSizeForString,
   getValue,
   intersects,
+  mixInto,
   ptSegDistSq,
   setCellStyleFlags,
   setCellStyles,
@@ -31,21 +30,230 @@ import Rectangle from '../geometry/Rectangle';
 import Dictionary from '../../util/Dictionary';
 import Point from '../geometry/Point';
 import { htmlEntities } from '../../util/StringUtils';
-import InternalMouseEvent from '../event/InternalMouseEvent';
 import CellState from './datatypes/CellState';
-
-import type Graph from '../Graph';
-import type GraphImage from '../image/GraphImage';
-import type GraphSelection from '../selection/GraphSelection';
-import type GraphEdge from './edge/GraphEdge';
-import type GraphConnections from '../connection/GraphConnections';
-import type GraphValidation from '../validation/GraphValidation';
-import type GraphFolding from '../folding/GraphFolding';
-import type GraphLabel from '../label/GraphLabel';
-import type GraphSnap from '../snap/GraphSnap';
+import { Graph } from '../Graph';
 
 import type { CellStateStyles } from '../../types';
-import GraphVertex from './vertex/GraphVertex';
+
+declare module '../Graph' {
+  interface Graph {
+    cellsResizable: boolean;
+    cellsBendable: boolean;
+    cellsSelectable: boolean;
+    cellsDisconnectable: boolean;
+    autoSizeCells: boolean;
+    autoSizeCellsOnAdd: boolean;
+    cellsLocked: boolean;
+    cellsCloneable: boolean;
+    cellsDeletable: boolean;
+    cellsMovable: boolean;
+    extendParents: boolean;
+    extendParentsOnAdd: boolean;
+    extendParentsOnMove: boolean;
+
+    getBoundingBox: (cells: CellArray) => Rectangle | null;
+    removeStateForCell: (cell: Cell) => void;
+    getCurrentCellStyle: (cell: Cell, ignoreState?: boolean) => CellStateStyles;
+    getCellStyle: (cell: Cell) => CellStateStyles;
+    postProcessCellStyle: (style: CellStateStyles) => CellStateStyles;
+    setCellStyle: (style: keyof CellStateStyles, cells: CellArray) => void;
+    toggleCellStyle: (
+      key: keyof CellStateStyles,
+      defaultValue: boolean,
+      cell: Cell
+    ) => boolean | null;
+    toggleCellStyles: (
+      key: keyof CellStateStyles,
+      defaultValue: boolean,
+      cells: CellArray
+    ) => boolean | null;
+    setCellStyles: (
+      key: keyof CellStateStyles,
+      value: CellStateStyles[keyof CellStateStyles],
+      cells: CellArray
+    ) => void;
+    toggleCellStyleFlags: (
+      key: keyof CellStateStyles,
+      flag: number,
+      cells: CellArray
+    ) => void;
+    setCellStyleFlags: (
+      key: keyof CellStateStyles,
+      flag: number,
+      value: boolean | null,
+      cells: CellArray
+    ) => void;
+    alignCells: (align: string, cells: CellArray, param: number | null) => void;
+    cloneCell: (
+      cell: Cell,
+      allowInvalidEdges?: boolean,
+      mapping?: any,
+      keepPosition?: boolean
+    ) => Cell;
+    cloneCells: (
+      cells: CellArray,
+      allowInvalidEdges: boolean,
+      mapping: any,
+      keepPosition?: boolean
+    ) => CellArray;
+    addCell: (
+      cell: Cell,
+      parent: Cell | null,
+      index?: number | null,
+      source?: Cell | null,
+      target?: Cell | null
+    ) => Cell;
+    addCells: (
+      cells: CellArray,
+      parent: Cell | null,
+      index: number | null,
+      source: Cell | null,
+      target: Cell | null,
+      absolute?: boolean
+    ) => CellArray;
+    cellsAdded: (
+      cells: CellArray,
+      parent: Cell,
+      index: number,
+      source: Cell | null,
+      target: Cell | null,
+      absolute: boolean,
+      constrain?: boolean,
+      extend?: boolean
+    ) => void;
+    autoSizeCell: (cell: Cell, recurse?: boolean) => void;
+    removeCells: (cells: CellArray | null, includeEdges: boolean) => CellArray;
+    cellsRemoved: (cells: CellArray) => void;
+    toggleCells: (show: boolean, cells: CellArray, includeEdges: boolean) => CellArray;
+    cellsToggled: (cells: CellArray, show: boolean) => void;
+    updateCellSize: (cell: Cell, ignoreChildren?: boolean) => Cell;
+    cellSizeUpdated: (cell: Cell, ignoreChildren: boolean) => void;
+    getPreferredSizeForCell: (cell: Cell, textWidth?: number | null) => Rectangle | null;
+    resizeCell: (cell: Cell, bounds: Rectangle, recurse?: boolean) => Cell;
+    resizeCells: (cells: CellArray, bounds: Rectangle[], recurse: boolean) => CellArray;
+    cellsResized: (cells: CellArray, bounds: Rectangle[], recurse: boolean) => void;
+    cellResized: (
+      cell: Cell,
+      bounds: Rectangle,
+      ignoreRelative: boolean,
+      recurse: boolean
+    ) => Geometry | null;
+    resizeChildCells: (cell: Cell, newGeo: Geometry) => void;
+    constrainChildCells: (cell: Cell) => void;
+    scaleCell: (cell: Cell, dx: number, dy: number, recurse: boolean) => void;
+    extendParent: (cell: Cell) => void;
+    importCells: (
+      cells: CellArray,
+      dx: number,
+      dy: number,
+      target: Cell | null,
+      evt: MouseEvent | null,
+      mapping: any
+    ) => CellArray;
+    moveCells: (
+      cells: CellArray,
+      dx: number,
+      dy: number,
+      clone?: boolean,
+      target?: Cell | null,
+      evt?: MouseEvent | null,
+      mapping?: any
+    ) => CellArray;
+    cellsMoved: (
+      cells: CellArray,
+      dx: number,
+      dy: number,
+      disconnect: boolean,
+      constrain: boolean,
+      extend?: boolean
+    ) => void;
+    translateCell: (cell: Cell, dx: number, dy: number) => void;
+    getCellContainmentArea: (cell: Cell) => Rectangle | null;
+    constrainChild: (cell: Cell, sizeFirst?: boolean) => void;
+    getChildCells: (
+      parent: Cell | null,
+      vertices?: boolean,
+      edges?: boolean
+    ) => CellArray;
+    getCellAt: (
+      x: number,
+      y: number,
+      parent?: Cell | null,
+      vertices?: boolean,
+      edges?: boolean,
+      ignoreFn?: Function | null
+    ) => Cell | null;
+    getCells: (
+      x: number,
+      y: number,
+      width: number,
+      height: number,
+      parent?: Cell | null,
+      result?: CellArray,
+      intersection?: Rectangle | null,
+      ignoreFn?: Function | null,
+      includeDescendants?: boolean
+    ) => CellArray;
+    getCellsBeyond: (
+      x0: number,
+      y0: number,
+      parent: Cell | null,
+      rightHalfpane: boolean,
+      bottomHalfpane: boolean
+    ) => CellArray;
+    intersects: (state: CellState, x: number, y: number) => boolean;
+    isValidAncestor: (cell: Cell, parent: Cell, recurse: boolean) => boolean;
+    isCellLocked: (cell: Cell) => boolean;
+    isCellsLocked: () => boolean;
+    setCellsLocked: (value: boolean) => void;
+    getCloneableCells: (cells: CellArray) => CellArray;
+    isCellCloneable: (cell: Cell) => boolean;
+    isCellsCloneable: () => boolean;
+    setCellsCloneable: (value: boolean) => void;
+    getExportableCells: (cells: CellArray) => CellArray;
+    canExportCell: (cell: Cell | null) => boolean;
+    getImportableCells: (cells: CellArray) => CellArray;
+    canImportCell: (cell: Cell | null) => boolean;
+    isCellSelectable: (cell: Cell) => boolean;
+    isCellsSelectable: () => boolean;
+    setCellsSelectable: (value: boolean) => void;
+    getDeletableCells: (cells: CellArray) => CellArray;
+    isCellDeletable: (cell: Cell) => boolean;
+    isCellsDeletable: () => boolean;
+    setCellsDeletable: (value: boolean) => void;
+    isCellRotatable: (cell: Cell) => boolean;
+    getMovableCells: (cells: CellArray) => CellArray;
+    isCellMovable: (cell: Cell) => boolean;
+    isCellsMovable: () => boolean;
+    setCellsMovable: (value: boolean) => void;
+    isCellResizable: (cell: Cell) => boolean;
+    isCellsResizable: () => boolean;
+    setCellsResizable: (value: boolean) => void;
+    isCellBendable: (cell: Cell) => boolean;
+    isCellsBendable: () => boolean;
+    setCellsBendable: (value: boolean) => void;
+    isAutoSizeCell: (cell: Cell) => boolean;
+    isAutoSizeCells: () => boolean;
+    setAutoSizeCells: (value: boolean) => void;
+    isExtendParent: (cell: Cell) => boolean;
+    isExtendParents: () => boolean;
+    setExtendParents: (value: boolean) => void;
+    isExtendParentsOnAdd: (cell: Cell) => boolean;
+    setExtendParentsOnAdd: (value: boolean) => void;
+    isExtendParentsOnMove: () => boolean;
+    setExtendParentsOnMove: (value: boolean) => void;
+    getCursorForCell: (cell: Cell) => string | null;
+    getCellBounds: (
+      cell: Cell,
+      includeEdges: boolean,
+      includeDescendants: boolean
+    ) => Rectangle | null;
+    getBoundingBoxFromGeometry: (
+      cells: CellArray,
+      includeEdges: boolean
+    ) => Rectangle | null;
+  }
+}
 
 type PartialGraph = Pick<
   Graph,
@@ -62,11 +270,9 @@ type PartialGraph = Pick<
   | 'getMaximumGraphBounds'
   | 'isExportEnabled'
   | 'isImportEnabled'
->;
-type PartialImage = Pick<GraphImage, 'getImageFromBundles'>;
-type PartialSelection = Pick<GraphSelection, 'getSelectionCells' | 'getSelectionCell'>;
-type PartialEdge = Pick<
-  GraphEdge,
+  | 'getImageFromBundles'
+  | 'getSelectionCells'
+  | 'getSelectionCell'
   | 'addAllEdges'
   | 'getAllEdges'
   | 'isCloneInvalidEdges'
@@ -74,120 +280,210 @@ type PartialEdge = Pick<
   | 'resetEdges'
   | 'isResetEdgesOnResize'
   | 'isResetEdgesOnMove'
->;
-type PartialConnections = Pick<
-  GraphConnections,
   | 'isConstrainChild'
   | 'cellConnected'
   | 'isDisconnectOnMove'
   | 'isConstrainRelativeChildren'
   | 'disconnectGraph'
+  | 'getEdgeValidationError'
+  | 'getFoldingImage'
+  | 'isHtmlLabel'
+  | 'isGridEnabled'
+  | 'snap'
+  | 'getGridSize'
+  | 'isAllowNegativeCoordinates'
+  | 'setAllowNegativeCoordinates'
+  | 'getEventTolerance'
 >;
-type PartialValidation = Pick<GraphValidation, 'getEdgeValidationError'>;
-type PartialFolding = Pick<GraphFolding, 'getFoldingImage'>;
-type PartialLabel = Pick<GraphLabel, 'isHtmlLabel'>;
-type PartialSnap = Pick<
-  GraphSnap,
-  'isGridEnabled' | 'snap' | 'getGridSize' | 'getTolerance'
->;
-type PartialVertex = Pick<
-  GraphVertex,
-  'isAllowNegativeCoordinates' | 'setAllowNegativeCoordinates'
->;
-type PartialClass = PartialGraph &
-  PartialImage &
-  PartialSelection &
-  PartialEdge &
-  PartialConnections &
-  PartialValidation &
-  PartialFolding &
-  PartialLabel &
-  PartialSnap &
-  PartialVertex;
 
-// @ts-ignore recursive reference error
-class GraphCells extends autoImplement<PartialClass>() {
+type PartialCells = Pick<
+  Graph,
+  | 'cellsResizable'
+  | 'cellsBendable'
+  | 'cellsSelectable'
+  | 'cellsDisconnectable'
+  | 'autoSizeCells'
+  | 'autoSizeCellsOnAdd'
+  | 'cellsLocked'
+  | 'cellsCloneable'
+  | 'cellsDeletable'
+  | 'cellsMovable'
+  | 'extendParents'
+  | 'extendParentsOnAdd'
+  | 'extendParentsOnMove'
+  | 'getBoundingBox'
+  | 'removeStateForCell'
+  | 'getCurrentCellStyle'
+  | 'getCellStyle'
+  | 'postProcessCellStyle'
+  | 'setCellStyle'
+  | 'toggleCellStyle'
+  | 'toggleCellStyles'
+  | 'setCellStyles'
+  | 'toggleCellStyleFlags'
+  | 'setCellStyleFlags'
+  | 'alignCells'
+  | 'cloneCell'
+  | 'cloneCells'
+  | 'addCell'
+  | 'addCells'
+  | 'cellsAdded'
+  | 'autoSizeCell'
+  | 'removeCells'
+  | 'cellsRemoved'
+  | 'toggleCells'
+  | 'cellsToggled'
+  | 'updateCellSize'
+  | 'cellSizeUpdated'
+  | 'getPreferredSizeForCell'
+  | 'resizeCell'
+  | 'resizeCells'
+  | 'cellResized'
+  | 'cellsResized'
+  | 'resizeChildCells'
+  | 'constrainChildCells'
+  | 'scaleCell'
+  | 'extendParent'
+  | 'importCells'
+  | 'moveCells'
+  | 'cellsMoved'
+  | 'translateCell'
+  | 'getCellContainmentArea'
+  | 'constrainChild'
+  | 'getChildCells'
+  | 'getCellAt'
+  | 'getCells'
+  | 'getCellsBeyond'
+  | 'intersects'
+  | 'isValidAncestor'
+  | 'isCellLocked'
+  | 'isCellsLocked'
+  | 'setCellsLocked'
+  | 'getCloneableCells'
+  | 'isCellCloneable'
+  | 'isCellsCloneable'
+  | 'setCellsCloneable'
+  | 'getExportableCells'
+  | 'canExportCell'
+  | 'getImportableCells'
+  | 'canImportCell'
+  | 'isCellSelectable'
+  | 'isCellsSelectable'
+  | 'setCellsSelectable'
+  | 'getDeletableCells'
+  | 'isCellDeletable'
+  | 'isCellsDeletable'
+  | 'setCellsDeletable'
+  | 'isCellRotatable'
+  | 'getMovableCells'
+  | 'isCellMovable'
+  | 'isCellsMovable'
+  | 'setCellsMovable'
+  | 'isCellResizable'
+  | 'isCellsResizable'
+  | 'setCellsResizable'
+  | 'isCellBendable'
+  | 'isCellsBendable'
+  | 'setCellsBendable'
+  | 'isAutoSizeCell'
+  | 'isAutoSizeCells'
+  | 'setAutoSizeCells'
+  | 'isExtendParent'
+  | 'isExtendParents'
+  | 'setExtendParents'
+  | 'isExtendParentsOnAdd'
+  | 'setExtendParentsOnAdd'
+  | 'isExtendParentsOnMove'
+  | 'setExtendParentsOnMove'
+  | 'getCursorForCell'
+  | 'getCellBounds'
+  | 'getBoundingBoxFromGeometry'
+>;
+type PartialType = PartialGraph & PartialCells;
+
+// @ts-expect-error The properties of PartialGraph are defined elsewhere.
+const GraphCellsMixin: PartialType = {
   /**
    * Specifies the return value for {@link isCellsResizable}.
    * @default true
    */
-  cellsResizable = true;
+  cellsResizable: true,
 
   /**
    * Specifies the return value for {@link isCellsBendable}.
    * @default true
    */
-  cellsBendable = true;
+  cellsBendable: true,
 
   /**
    * Specifies the return value for {@link isCellsSelectable}.
    * @default true
    */
-  cellsSelectable = true;
+  cellsSelectable: true,
 
   /**
    * Specifies the return value for {@link isCellsDisconnectable}.
    * @default true
    */
-  cellsDisconnectable = true;
+  cellsDisconnectable: true,
 
   /**
    * Specifies if the graph should automatically update the cell size after an
    * edit. This is used in {@link isAutoSizeCell}.
    * @default false
    */
-  autoSizeCells = false;
+  autoSizeCells: false,
 
   /**
    * Specifies if autoSize style should be applied when cells are added.
    * @default false
    */
-  autoSizeCellsOnAdd = false;
+  autoSizeCellsOnAdd: false,
 
   /**
    * Specifies the return value for {@link isCellLocked}.
    * @default false
    */
-  cellsLocked = false;
+  cellsLocked: false,
 
   /**
    * Specifies the return value for {@link isCellCloneable}.
    * @default true
    */
-  cellsCloneable = true;
+  cellsCloneable: true,
 
   /**
    * Specifies the return value for {@link isCellDeletable}.
    * @default true
    */
-  cellsDeletable = true;
+  cellsDeletable: true,
 
   /**
    * Specifies the return value for {@link isCellMovable}.
    * @default true
    */
-  cellsMovable = true;
+  cellsMovable: true,
 
   /**
    * Specifies if a parent should contain the child bounds after a resize of
    * the child. This has precedence over {@link constrainChildren}.
    * @default true
    */
-  extendParents = true;
+  extendParents: true,
 
   /**
    * Specifies if parents should be extended according to the {@link extendParents}
    * switch if cells are added.
    * @default true
    */
-  extendParentsOnAdd = true;
+  extendParentsOnAdd: true,
 
   /**
    * Specifies if parents should be extended according to the {@link extendParents}
    * switch if cells are added.
    * @default false (for backwards compatibility)
    */
-  extendParentsOnMove = false;
+  extendParentsOnMove: false,
 
   /**
    * Returns the bounding box for the given array of {@link Cell}. The bounding box for
@@ -195,7 +491,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cells Array of {@link Cell} whose bounding box should be returned.
    */
-  getBoundingBox(cells: CellArray) {
+  getBoundingBox(cells) {
     let result = null;
 
     if (cells.length > 0) {
@@ -214,7 +510,7 @@ class GraphCells extends autoImplement<PartialClass>() {
       }
     }
     return result;
-  }
+  },
 
   /**
    * Removes all cached information for the given cell and its descendants.
@@ -224,14 +520,14 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} that was removed from the model.
    */
-  removeStateForCell(cell: Cell) {
+  removeStateForCell(cell) {
     for (const child of cell.getChildren()) {
       this.removeStateForCell(child);
     }
 
     this.getView().invalidate(cell, false, true);
     this.getView().removeState(cell);
-  }
+  },
 
   /*****************************************************************************
    * Group: Cell styles
@@ -244,10 +540,10 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param cell {@link mxCell} whose style should be returned as an array.
    * @param ignoreState Optional boolean that specifies if the cell state should be ignored.
    */
-  getCurrentCellStyle(cell: Cell, ignoreState = false) {
+  getCurrentCellStyle(cell, ignoreState = false) {
     const state = ignoreState ? null : this.getView().getState(cell);
     return state ? state.style : this.getCellStyle(cell);
-  }
+  },
 
   /**
    * Returns an array of key, value pairs representing the cell style for the
@@ -259,7 +555,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} whose style should be returned as an array.
    */
-  getCellStyle(cell: Cell) {
+  getCellStyle(cell) {
     const stylename = cell.getStyle();
     let style;
     const stylesheet = this.getStylesheet();
@@ -281,14 +577,14 @@ class GraphCells extends autoImplement<PartialClass>() {
       style = {} as CellStateStyles;
     }
     return style;
-  }
+  },
 
   /**
    * Tries to resolve the value for the image style in the image bundles and
    * turns short data URIs as defined in mxImageBundle to data URIs as
    * defined in RFC 2397 of the IETF.
    */
-  postProcessCellStyle(style: CellStateStyles) {
+  postProcessCellStyle(style) {
     const key = style.image;
     let image = this.getImageFromBundles(key);
 
@@ -315,7 +611,7 @@ class GraphCells extends autoImplement<PartialClass>() {
       style.image = image;
     }
     return style;
-  }
+  },
 
   /**
    * Sets the style of the specified cells. If no cells are given, then the
@@ -325,16 +621,15 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param cells Optional array of {@link Cell} to set the style for. Default is the
    * selection cells.
    */
-  setCellStyle(
-    style: keyof CellStateStyles,
-    cells: CellArray = this.getSelectionCells()
-  ) {
+  setCellStyle(style, cells?) {
+    cells = cells ?? this.getSelectionCells();
+
     this.batchUpdate(() => {
-      for (const cell of cells) {
+      for (const cell of cells!) {
         this.getModel().setStyle(cell, style);
       }
     });
-  }
+  },
 
   /**
    * Toggles the boolean value for the given key in the style of the given cell
@@ -349,13 +644,10 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param cell Optional {@link Cell} whose style should be modified. Default is
    * the selection cell.
    */
-  toggleCellStyle(
-    key: keyof CellStateStyles,
-    defaultValue = false,
-    cell: Cell = this.getSelectionCell()
-  ) {
+  toggleCellStyle(key, defaultValue = false, cell?) {
+    cell = cell ?? this.getSelectionCell();
     return this.toggleCellStyles(key, defaultValue, new CellArray(cell));
-  }
+  },
 
   /**
    * Toggles the boolean value for the given key in the style of the given cells
@@ -371,21 +663,19 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param cells Optional array of {@link Cell} whose styles should be modified.
    * Default is the selection cells.
    */
-  toggleCellStyles(
-    key: keyof CellStateStyles,
-    defaultValue = false,
-    cells: CellArray = this.getSelectionCells()
-  ) {
-    let value = null;
+  toggleCellStyles(key, defaultValue = false, cells?) {
+    let value = false;
+
+    cells = cells ?? this.getSelectionCells();
 
     if (cells.length > 0) {
       const style = this.getCurrentCellStyle(cells[0]);
-      value = getValue(style, key, defaultValue) ? 0 : 1;
+      value = style[key] ?? defaultValue ? false : true;
       this.setCellStyles(key, value, cells);
     }
 
     return value;
-  }
+  },
 
   /**
    * Sets the key to value in the styles of the given cells. This will modify
@@ -399,13 +689,11 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param cells Optional array of {@link Cell} to change the style for. Default is
    * the selection cells.
    */
-  setCellStyles(
-    key: keyof CellStateStyles,
-    value: CellStateStyles[keyof CellStateStyles],
-    cells: CellArray = this.getSelectionCells()
-  ) {
+  setCellStyles(key, value, cells) {
+    cells = cells ?? this.getSelectionCells();
+
     setCellStyles(this.getModel(), cells, key, value);
-  }
+  },
 
   /**
    * Toggles the given bit for the given key in the styles of the specified
@@ -416,13 +704,11 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param cells Optional array of {@link Cell} to change the style for. Default is
    * the selection cells.
    */
-  toggleCellStyleFlags(
-    key: keyof CellStateStyles,
-    flag: number,
-    cells: CellArray = this.getSelectionCells()
-  ) {
+  toggleCellStyleFlags(key, flag, cells) {
+    cells = cells ?? this.getSelectionCells();
+
     this.setCellStyleFlags(key, flag, null, cells);
-  }
+  },
 
   /**
    * Sets or toggles the given bit for the given key in the styles of the
@@ -434,12 +720,9 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param cells Optional array of {@link Cell} to change the style for. Default is
    * the selection cells.
    */
-  setCellStyleFlags(
-    key: keyof CellStateStyles,
-    flag: number,
-    value: boolean | null = null,
-    cells: CellArray = this.getSelectionCells()
-  ) {
+  setCellStyleFlags(key, flag, value = null, cells) {
+    cells = cells ?? this.getSelectionCells();
+
     if (cells.length > 0) {
       if (value === null) {
         const style = this.getCurrentCellStyle(cells[0]);
@@ -449,7 +732,7 @@ class GraphCells extends autoImplement<PartialClass>() {
       }
       setCellStyleFlags(this.getModel(), cells, key, flag, value);
     }
-  }
+  },
 
   /*****************************************************************************
    * Group: Cell alignment and orientation
@@ -464,11 +747,9 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param cells Array of {@link Cell} to be aligned.
    * @param param Optional coordinate for the alignment.
    */
-  alignCells(
-    align: string,
-    cells: CellArray = this.getSelectionCells(),
-    param: number | null = null
-  ) {
+  alignCells(align, cells, param = null) {
+    cells = cells ?? this.getSelectionCells();
+
     if (cells.length > 1) {
       // Finds the required coordinate for the alignment
       if (param === null) {
@@ -546,7 +827,7 @@ class GraphCells extends autoImplement<PartialClass>() {
     }
 
     return cells;
-  }
+  },
 
   /*****************************************************************************
    * Group: Cell cloning, insertion and removal
@@ -563,16 +844,14 @@ class GraphCells extends autoImplement<PartialClass>() {
    * be updated to reflect the lost parent cell. Default is `false`.
    */
   // cloneCell(cell: mxCell, allowInvalidEdges?: boolean, mapping?: any, keepPosition?: boolean): mxCellArray;
-  cloneCell(
-    cell: Cell,
-    allowInvalidEdges = false,
-    mapping: any = null,
-    keepPosition = false
-  ): Cell {
-    return (<CellArray>(
-      this.cloneCells(new CellArray(cell), allowInvalidEdges, mapping, keepPosition)
-    ))[0];
-  }
+  cloneCell(cell, allowInvalidEdges = false, mapping = null, keepPosition = false) {
+    return this.cloneCells(
+      new CellArray(cell),
+      allowInvalidEdges,
+      mapping,
+      keepPosition
+    )[0];
+  },
 
   /**
    * Returns the clones for the given cells. The clones are created recursively
@@ -588,12 +867,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    * be updated to reflect the lost parent cell. Default is `false`.
    */
   // cloneCells(cells: mxCellArray, allowInvalidEdges?: boolean, mapping?: any, keepPosition?: boolean): mxCellArray;
-  cloneCells(
-    cells: CellArray,
-    allowInvalidEdges = true,
-    mapping: any = {},
-    keepPosition = false
-  ) {
+  cloneCells(cells, allowInvalidEdges = true, mapping = {}, keepPosition = false) {
     let clones;
 
     // Creates a dictionary for fast lookups
@@ -691,7 +965,7 @@ class GraphCells extends autoImplement<PartialClass>() {
       clones = new CellArray();
     }
     return clones;
-  }
+  },
 
   /**
    * Adds the cell to the parent and connects it to the given source and
@@ -705,15 +979,9 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param source Optional {@link Cell} that represents the source terminal.
    * @param target Optional {@link Cell} that represents the target terminal.
    */
-  addCell(
-    cell: Cell,
-    parent: Cell | null = null,
-    index: number | null = null,
-    source: Cell | null = null,
-    target: Cell | null = null
-  ) {
+  addCell(cell, parent = null, index = null, source = null, target = null) {
     return this.addCells(new CellArray(cell), parent, index, source, target)[0];
-  }
+  },
 
   /**
    * Function: addCells
@@ -735,11 +1003,11 @@ class GraphCells extends autoImplement<PartialClass>() {
    * their absolute position. Default is false.
    */
   addCells(
-    cells: CellArray,
-    parent: Cell | null = null,
-    index: number | null = null,
-    source: Cell | null = null,
-    target: Cell | null = null,
+    cells,
+    parent = null,
+    index = null,
+    source = null,
+    target = null,
     absolute = false
   ) {
     const p = parent ?? this.getDefaultParent();
@@ -753,7 +1021,7 @@ class GraphCells extends autoImplement<PartialClass>() {
     });
 
     return cells;
-  }
+  },
 
   /**
    * Function: cellsAdded
@@ -762,11 +1030,11 @@ class GraphCells extends autoImplement<PartialClass>() {
    * <mxEvent.CELLS_ADDED> while the transaction is in progress.
    */
   cellsAdded(
-    cells: CellArray,
-    parent: Cell,
-    index: number,
-    source: Cell | null = null,
-    target: Cell | null = null,
+    cells,
+    parent,
+    index,
+    source = null,
+    target = null,
     absolute = false,
     constrain = false,
     extend = true
@@ -857,7 +1125,7 @@ class GraphCells extends autoImplement<PartialClass>() {
         })
       );
     });
-  }
+  },
 
   /**
    * Resizes the specified cell to just fit around the its label and/or children
@@ -866,7 +1134,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param recurse Optional boolean which specifies if all descendants should be
    * autosized. Default is `true`.
    */
-  autoSizeCell(cell: Cell, recurse = true) {
+  autoSizeCell(cell, recurse = true) {
     if (recurse) {
       for (const child of cell.getChildren()) {
         this.autoSizeCell(child);
@@ -876,7 +1144,7 @@ class GraphCells extends autoImplement<PartialClass>() {
     if (cell.isVertex() && this.isAutoSizeCell(cell)) {
       this.updateCellSize(cell);
     }
-  }
+  },
 
   /**
    * Removes the given cells from the graph including all connected edges if
@@ -889,7 +1157,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param includeEdges Optional boolean which specifies if all connected edges
    * should be removed as well. Default is `true`.
    */
-  removeCells(cells: CellArray | null = null, includeEdges = true) {
+  removeCells(cells = null, includeEdges = true) {
     if (!cells) {
       cells = this.getDeletableCells(this.getSelectionCells());
     }
@@ -926,8 +1194,8 @@ class GraphCells extends autoImplement<PartialClass>() {
       );
     });
 
-    return cells;
-  }
+    return cells ?? new CellArray();
+  },
 
   /**
    * Removes the given cells from the model. This method fires
@@ -935,7 +1203,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cells Array of {@link Cell} to remove.
    */
-  cellsRemoved(cells: CellArray) {
+  cellsRemoved(cells) {
     if (cells.length > 0) {
       const { scale } = this.getView();
       const tr = this.getView().translate;
@@ -1024,7 +1292,7 @@ class GraphCells extends autoImplement<PartialClass>() {
         this.fireEvent(new EventObject(InternalEvent.CELLS_REMOVED, { cells }));
       });
     }
-  }
+  },
 
   /*****************************************************************************
    * Group: Cell visibility
@@ -1042,11 +1310,9 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param includeEdges Optional boolean indicating if the visible state of all
    * connected edges should be changed as well. Default is `true`.
    */
-  toggleCells(
-    show = false,
-    cells: CellArray = this.getSelectionCells(),
-    includeEdges = true
-  ) {
+  toggleCells(show = false, cells, includeEdges = true) {
+    cells = cells ?? this.getSelectionCells();
+
     // Adds all connected edges recursively
     if (includeEdges) {
       cells = this.addAllEdges(cells);
@@ -1059,7 +1325,7 @@ class GraphCells extends autoImplement<PartialClass>() {
       );
     });
     return cells;
-  }
+  },
 
   /**
    * Sets the visible state of the specified cells.
@@ -1067,7 +1333,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param cells Array of {@link Cell} whose visible state should be changed.
    * @param show Boolean that specifies the visible state to be assigned.
    */
-  cellsToggled(cells: CellArray, show = false) {
+  cellsToggled(cells, show = false) {
     if (cells.length > 0) {
       this.batchUpdate(() => {
         for (const cell of cells) {
@@ -1075,7 +1341,7 @@ class GraphCells extends autoImplement<PartialClass>() {
         }
       });
     }
-  }
+  },
 
   /*****************************************************************************
    * Group: Cell sizing
@@ -1088,7 +1354,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} whose size should be updated.
    */
-  updateCellSize(cell: Cell, ignoreChildren = false) {
+  updateCellSize(cell, ignoreChildren = false) {
     this.batchUpdate(() => {
       this.cellSizeUpdated(cell, ignoreChildren);
       this.fireEvent(
@@ -1096,7 +1362,7 @@ class GraphCells extends autoImplement<PartialClass>() {
       );
     });
     return cell;
-  }
+  },
 
   /**
    * Updates the size of the given cell in the model using
@@ -1104,7 +1370,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} for which the size should be changed.
    */
-  cellSizeUpdated(cell: Cell, ignoreChildren = false) {
+  cellSizeUpdated(cell, ignoreChildren = false) {
     this.batchUpdate(() => {
       const size = this.getPreferredSizeForCell(cell);
       let geo = cell.getGeometry();
@@ -1181,7 +1447,7 @@ class GraphCells extends autoImplement<PartialClass>() {
         this.cellsResized(new CellArray(cell), [geo], false);
       }
     });
-  }
+  },
 
   /**
    * Returns the preferred width and height of the given {@link Cell} as an
@@ -1190,7 +1456,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * ```javascript
    * var graphGetPreferredSizeForCell = graph.getPreferredSizeForCell;
-   * graph.getPreferredSizeForCell = function(cell)
+   * graph.getPreferredSizeForCell(cell)
    * {
    *   var result = graphGetPreferredSizeForCell.apply(this, arguments);
    *   var style = this.getCellStyle(cell);
@@ -1207,7 +1473,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param cell {@link mxCell} for which the preferred size should be returned.
    * @param textWidth Optional maximum text width for word wrapping.
    */
-  getPreferredSizeForCell(cell: Cell, textWidth: number | null = null) {
+  getPreferredSizeForCell(cell, textWidth = null) {
     let result = null;
 
     const state = this.getView().createState(cell);
@@ -1288,7 +1554,7 @@ class GraphCells extends autoImplement<PartialClass>() {
     }
 
     return result;
-  }
+  },
 
   /**
    * Sets the bounds of the given cell using {@link resizeCells}. Returns the
@@ -1297,9 +1563,9 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param cell {@link mxCell} whose bounds should be changed.
    * @param bounds {@link mxRectangle} that represents the new bounds.
    */
-  resizeCell(cell: Cell, bounds: Rectangle, recurse = false) {
+  resizeCell(cell, bounds, recurse = false) {
     return this.resizeCells(new CellArray(cell), [bounds], recurse)[0];
-  }
+  },
 
   /**
    * Sets the bounds of the given cells and fires a {@link InternalEvent.RESIZE_CELLS}
@@ -1309,11 +1575,9 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param cells Array of {@link Cell} whose bounds should be changed.
    * @param bounds Array of {@link mxRectangles} that represent the new bounds.
    */
-  resizeCells(
-    cells: CellArray,
-    bounds: Rectangle[],
-    recurse = this.isRecursiveResize()
-  ): CellArray {
+  resizeCells(cells, bounds, recurse): CellArray {
+    recurse = recurse ?? this.isRecursiveResize();
+
     this.batchUpdate(() => {
       const prev = this.cellsResized(cells, bounds, recurse);
       this.fireEvent(
@@ -1321,7 +1585,7 @@ class GraphCells extends autoImplement<PartialClass>() {
       );
     });
     return cells;
-  }
+  },
 
   /**
    * Sets the bounds of the given cells and fires a {@link InternalEvent.CELLS_RESIZED}
@@ -1365,7 +1629,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param bounds Array of {@link mxRectangles} that represent the new bounds.
    * @param recurse Optional boolean that specifies if the children should be resized.
    */
-  cellsResized(cells: CellArray, bounds: Rectangle[], recurse = false) {
+  cellsResized(cells, bounds, recurse = false) {
     const prev: (Geometry | null)[] = [];
 
     if (cells.length === bounds.length) {
@@ -1390,7 +1654,7 @@ class GraphCells extends autoImplement<PartialClass>() {
       });
     }
     return prev;
-  }
+  },
 
   /**
    * Resizes the parents recursively so that they contain the complete area
@@ -1401,7 +1665,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param ignoreRelative Boolean that indicates if relative cells should be ignored.
    * @param recurse Optional boolean that specifies if the children should be resized.
    */
-  cellResized(cell: Cell, bounds: Rectangle, ignoreRelative = false, recurse = false) {
+  cellResized(cell, bounds, ignoreRelative = false, recurse = false) {
     const prev = cell.getGeometry();
 
     if (
@@ -1444,7 +1708,7 @@ class GraphCells extends autoImplement<PartialClass>() {
     }
 
     return prev;
-  }
+  },
 
   /**
    * Resizes the child cells of the given cell for the given new geometry with
@@ -1453,7 +1717,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param cell {@link mxCell} that has been resized.
    * @param newGeo {@link mxGeometry} that represents the new bounds.
    */
-  resizeChildCells(cell: Cell, newGeo: Geometry) {
+  resizeChildCells(cell, newGeo) {
     const geo = cell.getGeometry();
 
     if (geo) {
@@ -1464,18 +1728,18 @@ class GraphCells extends autoImplement<PartialClass>() {
         this.scaleCell(child, dx, dy, true);
       }
     }
-  }
+  },
 
   /**
    * Constrains the children of the given cell using {@link constrainChild}.
    *
    * @param cell {@link mxCell} that has been resized.
    */
-  constrainChildCells(cell: Cell) {
+  constrainChildCells(cell) {
     for (const child of cell.getChildren()) {
       this.constrainChild(child);
     }
-  }
+  },
 
   /**
    * Scales the points, position and size of the given cell according to the
@@ -1486,7 +1750,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param dy Vertical scaling factor.
    * @param recurse Boolean indicating if the child cells should be scaled.
    */
-  scaleCell(cell: Cell, dx: number, dy: number, recurse = false) {
+  scaleCell(cell, dx, dy, recurse = false) {
     let geo = cell.getGeometry();
 
     if (geo) {
@@ -1529,7 +1793,7 @@ class GraphCells extends autoImplement<PartialClass>() {
         this.getModel().setGeometry(cell, geo);
       }
     }
-  }
+  },
 
   /**
    * Resizes the parents recursively so that they contain the complete area
@@ -1537,7 +1801,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} that has been resized.
    */
-  extendParent(cell: Cell) {
+  extendParent(cell) {
     const parent = cell.getParent();
     let p = parent ? parent.getGeometry() : null;
 
@@ -1557,7 +1821,7 @@ class GraphCells extends autoImplement<PartialClass>() {
         this.cellsResized(new CellArray(parent), [p], false);
       }
     }
-  }
+  },
 
   /*****************************************************************************
    * Group: Cell moving
@@ -1575,16 +1839,9 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param evt Mouseevent that triggered the invocation.
    * @param mapping Optional mapping for existing clones.
    */
-  importCells(
-    cells: CellArray,
-    dx: number,
-    dy: number,
-    target: Cell | null = null,
-    evt: MouseEvent | null = null,
-    mapping: any = {}
-  ) {
+  importCells(cells, dx, dy, target = null, evt = null, mapping = {}) {
     return this.moveCells(cells, dx, dy, true, target, evt, mapping);
-  }
+  },
 
   /**
    * Function: moveCells
@@ -1612,13 +1869,13 @@ class GraphCells extends autoImplement<PartialClass>() {
    * mapping - Optional mapping for existing clones.
    */
   moveCells(
-    cells: CellArray,
-    dx: number = 0,
-    dy: number = 0,
+    cells,
+    dx = 0,
+    dy = 0,
     clone = false,
-    target: Cell | null = null,
-    evt: MouseEvent | null = null,
-    mapping: any = null
+    target = null,
+    evt = null,
+    mapping = null
   ) {
     if (dx !== 0 || dy !== 0 || clone || target) {
       // Removes descendants with ancestors in cells to avoid multiple moving
@@ -1731,7 +1988,7 @@ class GraphCells extends autoImplement<PartialClass>() {
       });
     }
     return cells;
-  }
+  },
 
   /**
    * Function: cellsMoved
@@ -1740,14 +1997,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    * using disconnectGraph is disconnect is true. This method fires
    * <mxEvent.CELLS_MOVED> while the transaction is in progress.
    */
-  cellsMoved(
-    cells: CellArray,
-    dx: number,
-    dy: number,
-    disconnect = false,
-    constrain = false,
-    extend = false
-  ) {
+  cellsMoved(cells, dx, dy, disconnect = false, constrain = false, extend = false) {
     if (dx !== 0 || dy !== 0) {
       this.batchUpdate(() => {
         if (disconnect) {
@@ -1773,13 +2023,13 @@ class GraphCells extends autoImplement<PartialClass>() {
         );
       });
     }
-  }
+  },
 
   /**
    * Translates the geometry of the given cell and stores the new,
    * translated geometry in the model as an atomic change.
    */
-  translateCell(cell: Cell, dx: number, dy: number) {
+  translateCell(cell, dx, dy) {
     let geometry = cell.getGeometry();
 
     if (geometry) {
@@ -1818,14 +2068,14 @@ class GraphCells extends autoImplement<PartialClass>() {
       }
       this.getModel().setGeometry(cell, geometry);
     }
-  }
+  },
 
   /**
    * Returns the {@link Rectangle} inside which a cell is to be kept.
    *
    * @param cell {@link mxCell} for which the area should be returned.
    */
-  getCellContainmentArea(cell: Cell) {
+  getCellContainmentArea(cell) {
     if (!cell.isEdge()) {
       const parent = cell.getParent();
 
@@ -1872,7 +2122,7 @@ class GraphCells extends autoImplement<PartialClass>() {
       }
     }
     return null;
-  }
+  },
 
   /**
    * Keeps the given cell inside the bounds returned by
@@ -1883,7 +2133,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param cell {@link mxCell} which should be constrained.
    * @param sizeFirst Specifies if the size should be changed first. Default is `true`.
    */
-  constrainChild(cell: Cell, sizeFirst = true) {
+  constrainChild(cell, sizeFirst = true) {
     let geo = cell.getGeometry();
 
     if (geo && (this.isConstrainRelativeChildren() || !geo.relative)) {
@@ -1943,7 +2193,7 @@ class GraphCells extends autoImplement<PartialClass>() {
         const bbox = this.getBoundingBoxFromGeometry(cells, false);
 
         if (bbox) {
-          geo = <Geometry>geo.clone();
+          geo = geo.clone();
 
           // Cumulative horizontal movement
           let dx = 0;
@@ -1996,7 +2246,7 @@ class GraphCells extends autoImplement<PartialClass>() {
         }
       }
     }
-  }
+  },
 
   /*****************************************************************************
    * Group: Cell retrieval
@@ -2012,7 +2262,9 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param edges Optional boolean that specifies if child edges should
    * be returned. Default is `false`.
    */
-  getChildCells(parent: Cell = this.getDefaultParent(), vertices = false, edges = false) {
+  getChildCells(parent, vertices = false, edges = false) {
+    parent = parent ?? this.getDefaultParent();
+
     const cells = parent.getChildCells(vertices, edges);
     const result = new CellArray();
 
@@ -2023,7 +2275,7 @@ class GraphCells extends autoImplement<PartialClass>() {
       }
     }
     return result;
-  }
+  },
 
   /**
    * Returns the bottom-most cell that intersects the given point (x, y) in
@@ -2044,14 +2296,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param ignoreFn Optional function that returns true if cell should be ignored.
    * The function is passed the cell state and the x and y parameter.
    */
-  getCellAt(
-    x: number,
-    y: number,
-    parent: Cell | null = null,
-    vertices = true,
-    edges = true,
-    ignoreFn: Function | null = null
-  ): Cell | null {
+  getCellAt(x, y, parent = null, vertices = true, edges = true, ignoreFn = null) {
     if (!parent) {
       parent = this.getCurrentRoot();
 
@@ -2087,7 +2332,7 @@ class GraphCells extends autoImplement<PartialClass>() {
       }
     }
     return null;
-  }
+  },
 
   /**
    * Returns the child vertices and edges of the given parent that are contained
@@ -2104,14 +2349,14 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param result Optional array to store the result in.
    */
   getCells(
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    parent: Cell | null = null,
-    result: CellArray = new CellArray(),
-    intersection: Rectangle | null = null,
-    ignoreFn: Function | null = null,
+    x,
+    y,
+    width,
+    height,
+    parent = null,
+    result = new CellArray(),
+    intersection = null,
+    ignoreFn = null,
     includeDescendants = false
   ) {
     if (width > 0 || height > 0 || intersection) {
@@ -2170,7 +2415,7 @@ class GraphCells extends autoImplement<PartialClass>() {
       }
     }
     return result;
-  }
+  },
 
   /**
    * Function: getCellsBeyond
@@ -2190,13 +2435,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    * bottomHalfpane - Boolean indicating if the cells in the bottom halfpane
    * from the origin should be returned.
    */
-  getCellsBeyond(
-    x0: number,
-    y0: number,
-    parent: Cell | null = null,
-    rightHalfpane = false,
-    bottomHalfpane = false
-  ) {
+  getCellsBeyond(x0, y0, parent = null, rightHalfpane = false, bottomHalfpane = false) {
     const result = [];
 
     if (rightHalfpane || bottomHalfpane) {
@@ -2215,8 +2454,8 @@ class GraphCells extends autoImplement<PartialClass>() {
         }
       }
     }
-    return result;
-  }
+    return new CellArray(...result);
+  },
 
   /**
    * Returns the bottom-most cell that intersects the given point (x, y) in
@@ -2226,11 +2465,11 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param x X-coordinate of the location to be checked.
    * @param y Y-coordinate of the location to be checked.
    */
-  intersects(state: CellState, x: number, y: number): boolean {
+  intersects(state, x, y) {
     const pts = state.absolutePoints;
 
     if (pts.length > 0) {
-      const t2 = this.getTolerance() * this.getTolerance();
+      const t2 = this.getEventTolerance() * this.getEventTolerance();
       let pt = pts[0];
 
       for (let i = 1; i < pts.length; i += 1) {
@@ -2263,7 +2502,7 @@ class GraphCells extends autoImplement<PartialClass>() {
       }
     }
     return false;
-  }
+  },
 
   /**
    * Returns whether or not the specified parent is a valid
@@ -2274,9 +2513,9 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param parent {@link mxCell} the possible parent cell
    * @param recurse boolean whether or not to recurse the child ancestors
    */
-  isValidAncestor(cell: Cell, parent: Cell, recurse: boolean = false) {
+  isValidAncestor(cell, parent, recurse = false) {
     return recurse ? parent.isAncestor(cell) : cell.getParent() === parent;
-  }
+  },
 
   /*****************************************************************************
    * Group: Graph behaviour
@@ -2289,11 +2528,11 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} whose locked state should be returned.
    */
-  isCellLocked(cell: Cell) {
+  isCellLocked(cell) {
     const geometry = cell.getGeometry();
 
-    return this.isCellsLocked() || (geometry && cell.isVertex() && geometry.relative);
-  }
+    return this.isCellsLocked() || (!!geometry && cell.isVertex() && geometry.relative);
+  },
 
   /**
    * Returns true if the given cell may not be moved, sized, bended,
@@ -2304,7 +2543,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    */
   isCellsLocked() {
     return this.cellsLocked;
-  }
+  },
 
   /**
    * Sets if any cell may be moved, sized, bended, disconnected, edited or
@@ -2312,18 +2551,18 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param value Boolean that defines the new value for {@link cellsLocked}.
    */
-  setCellsLocked(value: boolean) {
+  setCellsLocked(value) {
     this.cellsLocked = value;
-  }
+  },
 
   /**
    * Returns the cells which may be exported in the given array of cells.
    */
-  getCloneableCells(cells: CellArray) {
+  getCloneableCells(cells) {
     return this.getModel().filterCells(cells, (cell: Cell) => {
       return this.isCellCloneable(cell);
     });
-  }
+  },
 
   /**
    * Returns true if the given cell is cloneable. This implementation returns
@@ -2332,10 +2571,10 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cell Optional {@link Cell} whose cloneable state should be returned.
    */
-  isCellCloneable(cell: Cell) {
+  isCellCloneable(cell) {
     const style = this.getCurrentCellStyle(cell);
     return this.isCellsCloneable() && style.cloneable;
-  }
+  },
 
   /**
    * Returns {@link cellsCloneable}, that is, if the graph allows cloning of cells
@@ -2343,7 +2582,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    */
   isCellsCloneable() {
     return this.cellsCloneable;
-  }
+  },
 
   /**
    * Specifies if the graph should allow cloning of cells by holding down the
@@ -2352,18 +2591,18 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param value Boolean indicating if the graph should be cloneable.
    */
-  setCellsCloneable(value: boolean) {
+  setCellsCloneable(value) {
     this.cellsCloneable = value;
-  }
+  },
 
   /**
    * Returns the cells which may be exported in the given array of cells.
    */
-  getExportableCells(cells: CellArray) {
+  getExportableCells(cells) {
     return this.getModel().filterCells(cells, (cell: Cell) => {
       return this.canExportCell(cell);
     });
-  }
+  },
 
   /**
    * Returns true if the given cell may be exported to the clipboard. This
@@ -2371,18 +2610,18 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} that represents the cell to be exported.
    */
-  canExportCell(cell: Cell | null = null) {
+  canExportCell(cell = null) {
     return this.isExportEnabled();
-  }
+  },
 
   /**
    * Returns the cells which may be imported in the given array of cells.
    */
-  getImportableCells(cells: CellArray) {
+  getImportableCells(cells) {
     return this.getModel().filterCells(cells, (cell: Cell) => {
       return this.canImportCell(cell);
     });
-  }
+  },
 
   /**
    * Returns true if the given cell may be imported from the clipboard.
@@ -2390,9 +2629,9 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} that represents the cell to be imported.
    */
-  canImportCell(cell: Cell | null = null) {
+  canImportCell(cell = null) {
     return this.isImportEnabled();
-  }
+  },
 
   /**
    * Returns true if the given cell is selectable. This implementation
@@ -2401,7 +2640,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    * To add a new style for making cells (un)selectable, use the following code.
    *
    * ```javascript
-   * isCellSelectable = function(cell)
+   * isCellSelectable(cell)
    * {
    *   var style = this.getCurrentCellStyle(cell);
    *
@@ -2417,32 +2656,32 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} whose selectable state should be returned.
    */
-  isCellSelectable(cell: Cell) {
+  isCellSelectable(cell) {
     return this.isCellsSelectable();
-  }
+  },
 
   /**
    * Returns {@link cellsSelectable}.
    */
   isCellsSelectable() {
     return this.cellsSelectable;
-  }
+  },
 
   /**
    * Sets {@link cellsSelectable}.
    */
-  setCellsSelectable(value: boolean) {
+  setCellsSelectable(value) {
     this.cellsSelectable = value;
-  }
+  },
 
   /**
    * Returns the cells which may be exported in the given array of cells.
    */
-  getDeletableCells(cells: CellArray) {
+  getDeletableCells(cells) {
     return this.getModel().filterCells(cells, (cell: Cell) => {
       return this.isCellDeletable(cell);
     });
-  }
+  },
 
   /**
    * Returns true if the given cell is moveable. This returns
@@ -2451,26 +2690,26 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} whose deletable state should be returned.
    */
-  isCellDeletable(cell: Cell) {
+  isCellDeletable(cell) {
     const style = this.getCurrentCellStyle(cell);
     return this.isCellsDeletable() && style.deletable;
-  }
+  },
 
   /**
    * Returns {@link cellsDeletable}.
    */
   isCellsDeletable() {
     return this.cellsDeletable;
-  }
+  },
 
   /**
    * Sets {@link cellsDeletable}.
    *
    * @param value Boolean indicating if the graph should allow deletion of cells.
    */
-  setCellsDeletable(value: boolean) {
+  setCellsDeletable(value) {
     this.cellsDeletable = value;
-  }
+  },
 
   /**
    * Returns true if the given cell is rotatable. This returns true for the given
@@ -2478,19 +2717,19 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} whose rotatable state should be returned.
    */
-  isCellRotatable(cell: Cell) {
+  isCellRotatable(cell) {
     const style = this.getCurrentCellStyle(cell);
     return style.rotatable;
-  }
+  },
 
   /**
    * Returns the cells which are movable in the given array of cells.
    */
-  getMovableCells(cells: CellArray) {
+  getMovableCells(cells) {
     return this.getModel().filterCells(cells, (cell: Cell) => {
       return this.isCellMovable(cell);
     });
-  }
+  },
 
   /**
    * Returns true if the given cell is moveable. This returns {@link cellsMovable}
@@ -2499,18 +2738,18 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} whose movable state should be returned.
    */
-  isCellMovable(cell: Cell) {
+  isCellMovable(cell) {
     const style = this.getCurrentCellStyle(cell);
 
     return this.isCellsMovable() && !this.isCellLocked(cell) && style.movable;
-  }
+  },
 
   /**
    * Returns {@link cellsMovable}.
    */
   isCellsMovable() {
     return this.cellsMovable;
-  }
+  },
 
   /**
    * Specifies if the graph should allow moving of cells. This implementation
@@ -2518,9 +2757,9 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param value Boolean indicating if the graph should allow moving of cells.
    */
-  setCellsMovable(value: boolean) {
+  setCellsMovable(value) {
     this.cellsMovable = value;
-  }
+  },
 
   /**
    * Returns true if the given cell is resizable. This returns
@@ -2530,20 +2769,20 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} whose resizable state should be returned.
    */
-  isCellResizable(cell: Cell) {
+  isCellResizable(cell) {
     const style = this.getCurrentCellStyle(cell);
 
     const r = this.isCellsResizable() && !this.isCellLocked(cell) && style.resizeable;
 
     return r;
-  }
+  },
 
   /**
    * Returns {@link cellsResizable}.
    */
   isCellsResizable() {
     return this.cellsResizable;
-  }
+  },
 
   /**
    * Specifies if the graph should allow resizing of cells. This
@@ -2552,9 +2791,9 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param value Boolean indicating if the graph should allow resizing of
    * cells.
    */
-  setCellsResizable(value: boolean) {
+  setCellsResizable(value) {
     this.cellsResizable = value;
-  }
+  },
 
   /**
    * Returns true if the given cell is bendable. This returns {@link cellsBendable}
@@ -2563,18 +2802,18 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} whose bendable state should be returned.
    */
-  isCellBendable(cell: Cell) {
+  isCellBendable(cell) {
     const style = this.getCurrentCellStyle(cell);
 
     return this.isCellsBendable() && !this.isCellLocked(cell) && style.bendable;
-  }
+  },
 
   /**
    * Returns {@link cellsBenadable}.
    */
   isCellsBendable() {
     return this.cellsBendable;
-  }
+  },
 
   /**
    * Specifies if the graph should allow bending of edges. This
@@ -2583,9 +2822,9 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param value Boolean indicating if the graph should allow bending of
    * edges.
    */
-  setCellsBendable(value: boolean) {
+  setCellsBendable(value) {
     this.cellsBendable = value;
-  }
+  },
 
   /**
    * Returns true if the size of the given cell should automatically be
@@ -2595,18 +2834,18 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} that should be resized.
    */
-  isAutoSizeCell(cell: Cell) {
+  isAutoSizeCell(cell) {
     const style = this.getCurrentCellStyle(cell);
 
     return this.isAutoSizeCells() || style.autosize;
-  }
+  },
 
   /**
    * Returns {@link autoSizeCells}.
    */
   isAutoSizeCells() {
     return this.autoSizeCells;
-  }
+  },
 
   /**
    * Specifies if cell sizes should be automatically updated after a label
@@ -2617,9 +2856,9 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param value Boolean indicating if cells should be resized
    * automatically.
    */
-  setAutoSizeCells(value: boolean) {
+  setAutoSizeCells(value) {
     this.autoSizeCells = value;
-  }
+  },
 
   /**
    * Returns true if the parent of the given cell should be extended if the
@@ -2628,57 +2867,57 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} that has been resized.
    */
-  isExtendParent(cell: Cell) {
+  isExtendParent(cell) {
     return !cell.isEdge() && this.isExtendParents();
-  }
+  },
 
   /**
    * Returns {@link extendParents}.
    */
   isExtendParents() {
     return this.extendParents;
-  }
+  },
 
   /**
    * Sets {@link extendParents}.
    *
    * @param value New boolean value for {@link extendParents}.
    */
-  setExtendParents(value: boolean) {
+  setExtendParents(value) {
     this.extendParents = value;
-  }
+  },
 
   /**
    * Returns {@link extendParentsOnAdd}.
    */
-  isExtendParentsOnAdd(cell: Cell) {
+  isExtendParentsOnAdd(cell) {
     return this.extendParentsOnAdd;
-  }
+  },
 
   /**
    * Sets {@link extendParentsOnAdd}.
    *
    * @param value New boolean value for {@link extendParentsOnAdd}.
    */
-  setExtendParentsOnAdd(value: boolean) {
+  setExtendParentsOnAdd(value) {
     this.extendParentsOnAdd = value;
-  }
+  },
 
   /**
    * Returns {@link extendParentsOnMove}.
    */
   isExtendParentsOnMove() {
     return this.extendParentsOnMove;
-  }
+  },
 
   /**
    * Sets {@link extendParentsOnMove}.
    *
    * @param value New boolean value for {@link extendParentsOnAdd}.
    */
-  setExtendParentsOnMove(value: boolean) {
+  setExtendParentsOnMove(value) {
     this.extendParentsOnMove = value;
-  }
+  },
 
   /*****************************************************************************
    * Group: Graph appearance
@@ -2690,9 +2929,9 @@ class GraphCells extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} whose cursor should be returned.
    */
-  getCursorForCell(cell: Cell): string | null {
+  getCursorForCell(cell) {
     return null;
-  }
+  },
 
   /*****************************************************************************
    * Group: Graph display
@@ -2708,7 +2947,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param includeDescendants Optional boolean that specifies if the bounds
    * of all descendants should be included. Default is `false`.
    */
-  getCellBounds(cell: Cell, includeEdges = false, includeDescendants = false) {
+  getCellBounds(cell, includeEdges = false, includeDescendants = false) {
     let cells = new CellArray(cell);
 
     // Includes all connected edges
@@ -2731,7 +2970,7 @@ class GraphCells extends autoImplement<PartialClass>() {
       }
     }
     return result;
-  }
+  },
 
   /**
    * Returns the bounding box for the geometries of the vertices in the
@@ -2765,7 +3004,7 @@ class GraphCells extends autoImplement<PartialClass>() {
    * @param includeEdges Specifies if edge bounds should be included by computing
    * the bounding box for all points in geometry. Default is `false`.
    */
-  getBoundingBoxFromGeometry(cells: CellArray, includeEdges = false) {
+  getBoundingBoxFromGeometry(cells, includeEdges = false) {
     let result = null;
     let tmp: Rectangle | null = null;
 
@@ -2868,7 +3107,7 @@ class GraphCells extends autoImplement<PartialClass>() {
       }
     }
     return result;
-  }
-}
+  },
+};
 
-export default GraphCells;
+mixInto(Graph)(GraphCellsMixin);

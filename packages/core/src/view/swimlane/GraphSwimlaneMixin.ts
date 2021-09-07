@@ -1,6 +1,6 @@
 import Cell from '../cell/datatypes/Cell';
 import Rectangle from '../geometry/Rectangle';
-import utils, { autoImplement, convertPoint, getValue, mod } from '../../util/Utils';
+import { convertPoint, getValue, mixInto, mod } from '../../util/Utils';
 import {
   DEFAULT_STARTSIZE,
   DIRECTION_EAST,
@@ -10,44 +10,94 @@ import {
   SHAPE_SWIMLANE,
 } from '../../util/Constants';
 import CellArray from '../cell/datatypes/CellArray';
-import InternalMouseEvent from '../event/InternalMouseEvent';
 import { getClientX, getClientY } from '../../util/EventUtils';
+import { Graph } from '../Graph';
 
-import type Graph from '../Graph';
-import GraphCells from '../cell/GraphCells';
-import { CellStateStyles } from '../../types';
-import GraphDragDrop from '../drag_drop/GraphDragDrop';
-import GraphPanning from '../panning/GraphPanning';
+import { CellStateStyles, DirectionValue } from '../../types';
+
+declare module '../Graph' {
+  interface Graph {
+    swimlaneSelectionEnabled: boolean;
+    swimlaneNesting: boolean;
+    swimlaneIndicatorColorAttribute: string;
+
+    getSwimlane: (cell: Cell | null) => Cell | null;
+    getSwimlaneAt: (x: number, y: number, parent?: Cell | null) => Cell | null;
+    hitsSwimlaneContent: (swimlane: Cell, x: number, y: number) => boolean;
+    getStartSize: (swimlane: Cell, ignoreState?: boolean) => Rectangle;
+    getSwimlaneDirection: (style: CellStateStyles) => DirectionValue;
+    getActualStartSize: (swimlane: Cell, ignoreState: boolean) => Rectangle;
+    isSwimlane: (cell: Cell, ignoreState?: boolean) => boolean;
+    isValidDropTarget: (cell: Cell, cells: CellArray, evt: MouseEvent) => boolean;
+    getDropTarget: (
+      cells: CellArray,
+      evt: MouseEvent,
+      cell: Cell | null,
+      clone?: boolean
+    ) => Cell | null;
+    isSwimlaneNesting: () => boolean;
+    setSwimlaneNesting: (value: boolean) => void;
+    isSwimlaneSelectionEnabled: () => boolean;
+    setSwimlaneSelectionEnabled: (value: boolean) => void;
+  }
+}
 
 type PartialGraph = Pick<
   Graph,
-  'getDefaultParent' | 'getCurrentRoot' | 'getModel' | 'getView' | 'getContainer'
+  | 'getDefaultParent'
+  | 'getCurrentRoot'
+  | 'getModel'
+  | 'getView'
+  | 'getContainer'
+  | 'getCurrentCellStyle'
+  | 'intersects'
+  | 'isSplitEnabled'
+  | 'isSplitTarget'
+  | 'getPanDx'
+  | 'getPanDy'
 >;
-type PartialCells = Pick<GraphCells, 'getCurrentCellStyle' | 'intersects'>;
-type PartialDragDrop = Pick<GraphDragDrop, 'isSplitEnabled' | 'isSplitTarget'>;
-type PartialPanning = Pick<GraphPanning, 'getPanDx' | 'getPanDy'>;
-type PartialClass = PartialGraph & PartialCells & PartialDragDrop & PartialPanning;
+type PartialSwimlane = Pick<
+  Graph,
+  | 'swimlaneSelectionEnabled'
+  | 'swimlaneNesting'
+  | 'swimlaneIndicatorColorAttribute'
+  | 'getSwimlane'
+  | 'getSwimlaneAt'
+  | 'hitsSwimlaneContent'
+  | 'getStartSize'
+  | 'getSwimlaneDirection'
+  | 'getActualStartSize'
+  | 'isSwimlane'
+  | 'isValidDropTarget'
+  | 'getDropTarget'
+  | 'isSwimlaneNesting'
+  | 'setSwimlaneNesting'
+  | 'isSwimlaneSelectionEnabled'
+  | 'setSwimlaneSelectionEnabled'
+>;
+type PartialType = PartialGraph & PartialSwimlane;
 
-class GraphSwimlane extends autoImplement<PartialClass>() {
+// @ts-expect-error The properties of PartialGraph are defined elsewhere.
+const GraphSwimlaneMixin: PartialType = {
   /**
    * Specifies if swimlanes should be selectable via the content if the
    * mouse is released.
    * @default true
    */
-  swimlaneSelectionEnabled = true;
+  swimlaneSelectionEnabled: true,
 
   /**
    * Specifies if nesting of swimlanes is allowed.
    * @default true
    */
-  swimlaneNesting = true;
+  swimlaneNesting: true,
 
   /**
    * The attribute used to find the color for the indicator if the indicator
    * color is set to 'swimlane'.
    * @default {@link 'fillColor'}
    */
-  swimlaneIndicatorColorAttribute = 'fillColor';
+  swimlaneIndicatorColorAttribute: 'fillColor',
 
   /**
    * Returns the nearest ancestor of the given cell which is a swimlane, or
@@ -55,12 +105,12 @@ class GraphSwimlane extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} for which the ancestor swimlane should be returned.
    */
-  getSwimlane(cell: Cell | null = null) {
+  getSwimlane(cell = null) {
     while (cell && !this.isSwimlane(cell)) {
       cell = cell.getParent();
     }
     return cell;
-  }
+  },
 
   /**
    * Returns the bottom-most swimlane that intersects the given point (x, y)
@@ -71,7 +121,7 @@ class GraphSwimlane extends autoImplement<PartialClass>() {
    * @param parent {@link mxCell} that should be used as the root of the recursion.
    * Default is {@link defaultParent}.
    */
-  getSwimlaneAt(x: number, y: number, parent?: Cell | null): Cell | null {
+  getSwimlaneAt(x, y, parent) {
     if (!parent) {
       parent = this.getCurrentRoot();
 
@@ -103,7 +153,7 @@ class GraphSwimlane extends autoImplement<PartialClass>() {
       }
     }
     return null;
-  }
+  },
 
   /**
    * Returns true if the given coordinate pair is inside the content
@@ -113,7 +163,7 @@ class GraphSwimlane extends autoImplement<PartialClass>() {
    * @param x X-coordinate of the mouse event.
    * @param y Y-coordinate of the mouse event.
    */
-  hitsSwimlaneContent(swimlane: Cell, x: number, y: number) {
+  hitsSwimlaneContent(swimlane, x, y) {
     const state = this.getView().getState(swimlane);
     const size = this.getStartSize(swimlane);
 
@@ -130,7 +180,7 @@ class GraphSwimlane extends autoImplement<PartialClass>() {
       }
     }
     return false;
-  }
+  },
 
   /*****************************************************************************
    * Group: Graph appearance
@@ -145,7 +195,7 @@ class GraphSwimlane extends autoImplement<PartialClass>() {
    * @param swimlane {@link mxCell} whose start size should be returned.
    * @param ignoreState Optional boolean that specifies if cell state should be ignored.
    */
-  getStartSize(swimlane: Cell, ignoreState = false) {
+  getStartSize(swimlane, ignoreState = false) {
     const result = new Rectangle();
     const style = this.getCurrentCellStyle(swimlane, ignoreState);
     const size = parseInt(getValue(style, 'startSize', DEFAULT_STARTSIZE));
@@ -156,12 +206,12 @@ class GraphSwimlane extends autoImplement<PartialClass>() {
       result.width = size;
     }
     return result;
-  }
+  },
 
   /**
    * Returns the direction for the given swimlane style.
    */
-  getSwimlaneDirection(style: CellStateStyles) {
+  getSwimlaneDirection(style) {
     const dir = style.direction ?? DIRECTION_EAST;
     const flipH = style.flipH;
     const flipV = style.flipV;
@@ -186,8 +236,10 @@ class GraphSwimlane extends autoImplement<PartialClass>() {
       n += 2;
     }
 
-    return [DIRECTION_NORTH, DIRECTION_EAST, DIRECTION_SOUTH, DIRECTION_WEST][mod(n, 4)];
-  }
+    return [DIRECTION_NORTH, DIRECTION_EAST, DIRECTION_SOUTH, DIRECTION_WEST][
+      mod(n, 4)
+    ] as DirectionValue;
+  },
 
   /**
    * Returns the actual start size of the given swimlane taking into account
@@ -198,7 +250,7 @@ class GraphSwimlane extends autoImplement<PartialClass>() {
    * @param swimlane {@link mxCell} whose start size should be returned.
    * @param ignoreState Optional boolean that specifies if cell state should be ignored.
    */
-  getActualStartSize(swimlane: Cell, ignoreState = false) {
+  getActualStartSize(swimlane, ignoreState = false) {
     const result = new Rectangle();
 
     if (this.isSwimlane(swimlane, ignoreState)) {
@@ -217,7 +269,7 @@ class GraphSwimlane extends autoImplement<PartialClass>() {
       }
     }
     return result;
-  }
+  },
 
   /**
    * Returns true if the given cell is a swimlane in the graph. A swimlane is
@@ -227,12 +279,12 @@ class GraphSwimlane extends autoImplement<PartialClass>() {
    * @param cell {@link mxCell} to be checked.
    * @param ignoreState Optional boolean that specifies if the cell state should be ignored.
    */
-  isSwimlane(cell: Cell, ignoreState = false) {
+  isSwimlane(cell, ignoreState = false) {
     if (cell && cell.getParent() !== this.getModel().getRoot() && !cell.isEdge()) {
       return this.getCurrentCellStyle(cell, ignoreState).shape === SHAPE_SWIMLANE;
     }
     return false;
-  }
+  },
 
   /*****************************************************************************
    * Group: Graph behaviour
@@ -248,14 +300,14 @@ class GraphSwimlane extends autoImplement<PartialClass>() {
    * @param cells {@link mxCell} that should be dropped into the target.
    * @param evt Mouseevent that triggered the invocation.
    */
-  isValidDropTarget(cell: Cell, cells: CellArray, evt: MouseEvent) {
+  isValidDropTarget(cell, cells, evt) {
     return (
       cell &&
       ((this.isSplitEnabled() && this.isSplitTarget(cell, cells, evt)) ||
         (!cell.isEdge() &&
           (this.isSwimlane(cell) || (cell.getChildCount() > 0 && !cell.isCollapsed()))))
     );
-  }
+  },
 
   /**
    * Returns the given cell if it is a drop target for the given cells or the
@@ -271,12 +323,7 @@ class GraphSwimlane extends autoImplement<PartialClass>() {
    * @param cell {@link mxCell} that is under the mousepointer.
    * @param clone Optional boolean to indicate of cells will be cloned.
    */
-  getDropTarget(
-    cells: CellArray,
-    evt: MouseEvent,
-    cell: Cell | null = null,
-    clone = false
-  ) {
+  getDropTarget(cells, evt, cell = null, clone = false) {
     if (!this.isSwimlaneNesting()) {
       for (let i = 0; i < cells.length; i += 1) {
         if (this.isSwimlane(cells[i])) {
@@ -323,14 +370,14 @@ class GraphSwimlane extends autoImplement<PartialClass>() {
     }
 
     return !this.getModel().isLayer(<Cell>cell) && !parent ? cell : null;
-  }
+  },
 
   /**
    * Returns {@link swimlaneNesting} as a boolean.
    */
   isSwimlaneNesting() {
     return this.swimlaneNesting;
-  }
+  },
 
   /**
    * Specifies if swimlanes can be nested by drag and drop. This is only
@@ -338,16 +385,16 @@ class GraphSwimlane extends autoImplement<PartialClass>() {
    *
    * @param value Boolean indicating if swimlanes can be nested.
    */
-  setSwimlaneNesting(value: boolean) {
+  setSwimlaneNesting(value) {
     this.swimlaneNesting = value;
-  }
+  },
 
   /**
    * Returns {@link swimlaneSelectionEnabled} as a boolean.
    */
   isSwimlaneSelectionEnabled() {
     return this.swimlaneSelectionEnabled;
-  }
+  },
 
   /**
    * Specifies if swimlanes should be selected if the mouse is released
@@ -356,9 +403,9 @@ class GraphSwimlane extends autoImplement<PartialClass>() {
    * @param value Boolean indicating if swimlanes content areas
    * should be selected when the mouse is released over them.
    */
-  setSwimlaneSelectionEnabled(value: boolean) {
+  setSwimlaneSelectionEnabled(value) {
     this.swimlaneSelectionEnabled = value;
-  }
-}
+  },
+};
 
-export default GraphSwimlane;
+mixInto(Graph)(GraphSwimlaneMixin);

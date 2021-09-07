@@ -1,38 +1,77 @@
 import Cell from '../datatypes/Cell';
 import Geometry from '../../geometry/Geometry';
-import { autoImplement } from '../../../util/Utils';
+import { Graph } from '../../Graph';
+import CellArray from '../datatypes/CellArray';
+import { mixInto } from '../../../util/Utils';
 
-import type GraphCells from '../GraphCells';
+declare module '../../Graph' {
+  interface Graph {
+    vertexLabelsMovable: boolean;
+    allowNegativeCoordinates: boolean;
 
-type PartialCells = Pick<GraphCells, 'addCell' | 'getChildCells'>;
-type PartialClass = PartialCells;
+    isAllowNegativeCoordinates: () => boolean;
+    setAllowNegativeCoordinates: (value: boolean) => void;
+    insertVertex: (...args: any[]) => Cell;
+    createVertex: (
+      parent: Cell,
+      id: string,
+      value: any,
+      x: number,
+      y: number,
+      width: number,
+      height: number,
+      style: any,
+      relative: boolean,
+      geometryClass: typeof Geometry
+    ) => Cell;
+    getChildVertices: (parent: Cell) => CellArray;
+    isVertexLabelsMovable: () => boolean;
+    setVertexLabelsMovable: (value: boolean) => void;
+  }
+}
 
-class GraphVertex extends autoImplement<PartialClass>() {
+type PartialGraph = Pick<Graph, 'addCell' | 'getChildCells'>;
+type PartialVertex = Pick<
+  Graph,
+  | 'vertexLabelsMovable'
+  | 'allowNegativeCoordinates'
+  | 'isAllowNegativeCoordinates'
+  | 'setAllowNegativeCoordinates'
+  | 'insertVertex'
+  | 'createVertex'
+  | 'getChildVertices'
+  | 'isVertexLabelsMovable'
+  | 'setVertexLabelsMovable'
+>;
+type PartialType = PartialGraph & PartialVertex;
+
+// @ts-expect-error The properties of PartialGraph are defined elsewhere.
+const GraphVertexMixin: PartialType = {
   /**
    * Specifies the return value for vertices in {@link isLabelMovable}.
    * @default false
    */
-  vertexLabelsMovable = false;
+  vertexLabelsMovable: false,
 
   /**
    * Specifies if negative coordinates for vertices are allowed.
    * @default true
    */
-  allowNegativeCoordinates = true;
+  allowNegativeCoordinates: true,
 
   /**
    * Returns {@link allowNegativeCoordinates}.
    */
   isAllowNegativeCoordinates() {
     return this.allowNegativeCoordinates;
-  }
+  },
 
   /**
    * Sets {@link allowNegativeCoordinates}.
    */
-  setAllowNegativeCoordinates(value: boolean) {
+  setAllowNegativeCoordinates(value) {
     this.allowNegativeCoordinates = value;
-  }
+  },
 
   /**
    * Function: insertVertex
@@ -77,7 +116,7 @@ class GraphVertex extends autoImplement<PartialClass>() {
    * geometryClass - Optional class reference to a class derived from mxGeometry.
    *                 This can be useful for defining custom constraints.
    */
-  insertVertex = (...args: any[]) => {
+  insertVertex(...args) {
     let parent;
     let id;
     let value;
@@ -124,7 +163,7 @@ class GraphVertex extends autoImplement<PartialClass>() {
     );
 
     return this.addCell(vertex, parent);
-  };
+  },
 
   /**
    * Function: createVertex
@@ -132,16 +171,16 @@ class GraphVertex extends autoImplement<PartialClass>() {
    * Hook method that creates the new vertex for <insertVertex>.
    */
   createVertex(
-    parent: Cell,
-    id: string,
-    value: any,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    style: any,
-    relative: boolean = false,
-    geometryClass: typeof Geometry = Geometry
+    parent,
+    id,
+    value,
+    x,
+    y,
+    width,
+    height,
+    style,
+    relative = false,
+    geometryClass = Geometry
   ) {
     // Creates the geometry for the vertex
     const geometry = new geometryClass(x, y, width, height);
@@ -154,16 +193,16 @@ class GraphVertex extends autoImplement<PartialClass>() {
     vertex.setConnectable(true);
 
     return vertex;
-  }
+  },
 
   /**
    * Returns the visible child vertices of the given parent.
    *
    * @param parent {@link mxCell} whose children should be returned.
    */
-  getChildVertices(parent: Cell) {
+  getChildVertices(parent) {
     return this.getChildCells(parent, true, false);
-  }
+  },
 
   /*****************************************************************************
    * Group: Graph Behaviour
@@ -174,14 +213,14 @@ class GraphVertex extends autoImplement<PartialClass>() {
    */
   isVertexLabelsMovable() {
     return this.vertexLabelsMovable;
-  }
+  },
 
   /**
    * Sets {@link vertexLabelsMovable}.
    */
-  setVertexLabelsMovable(value: boolean) {
+  setVertexLabelsMovable(value) {
     this.vertexLabelsMovable = value;
-  }
-}
+  },
+};
 
-export default GraphVertex;
+mixInto(Graph)(GraphVertexMixin);

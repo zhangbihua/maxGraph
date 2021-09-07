@@ -1,4 +1,15 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  Rubberband,
+  ConnectionHandler,
+  GraphHandler,
+  Guide,
+  Point,
+  CellState,
+  EdgeHandler,
+  GraphView,
+  InternalEvent,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -10,19 +21,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    Graph,
-    Rubberband,
-    ConnectionHandler,
-    GraphHandler,
-    Guide,
-    Point,
-    CellState,
-    EdgeHandler,
-    GraphView,
-    InternalEvent,
-  } = maxgraph;
-
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';

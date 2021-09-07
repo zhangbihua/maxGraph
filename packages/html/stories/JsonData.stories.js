@@ -1,5 +1,15 @@
-import maxgraph from '@maxgraph/core';
-import { popup } from '@maxgraph/core/util/gui/mxWindow';
+import {
+  Graph,
+  mxObjectCodec,
+  mxDomHelpers,
+  mxCodecRegistry,
+  InternalEvent,
+  mxClient,
+  mxCodec,
+  mxDomUtils,
+  utils,
+  popup,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -11,18 +21,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    Graph,
-    mxObjectCodec,
-    mxDomHelpers,
-    mxCodecRegistry,
-    InternalEvent,
-    mxClient,
-    mxCodec,
-    mxDomUtils,
-    utils,
-  } = maxgraph;
-
   mxClient.setImageBasePath('/images');
 
   const div = document.createElement('div');

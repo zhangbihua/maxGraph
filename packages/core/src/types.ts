@@ -3,7 +3,7 @@ import type CellState from './view/cell/datatypes/CellState';
 import EventSource from './view/event/EventSource';
 import type InternalMouseEvent from './view/event/InternalMouseEvent';
 import type Shape from './view/geometry/shape/Shape';
-import type { MaxGraph } from './view/Graph';
+import type { Graph } from './view/Graph';
 import type ImageBox from './view/image/ImageBox';
 
 export type CellMap = {
@@ -90,10 +90,12 @@ export type CellStateStyles = {
   labelBorderColor: ColorValue;
   labelPadding: number;
   labelPosition: AlignValue;
+  labelWidth: number;
   loop: Function;
   margin: number;
   movable: boolean;
   noEdgeStyle: boolean;
+  noLabel: boolean;
   opacity: number;
   orthogonal: boolean | null;
   overflow: OverflowValue;
@@ -217,7 +219,7 @@ export type GradientMap = {
 };
 
 export interface GraphPluginConstructor {
-  new (graph: MaxGraph): GraphPlugin;
+  new (graph: Graph): GraphPlugin;
   pluginId: string;
 }
 

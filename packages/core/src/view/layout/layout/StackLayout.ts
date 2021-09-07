@@ -6,11 +6,9 @@
  */
 import GraphLayout from './GraphLayout';
 import Rectangle from '../../geometry/Rectangle';
-import utils, { getNumber, getValue } from '../../../util/Utils';
-import {
-  DEFAULT_STARTSIZE,
-} from '../../../util/Constants';
-import Graph from '../../Graph';
+import { getNumber, getValue } from '../../../util/Utils';
+import { DEFAULT_STARTSIZE } from '../../../util/Constants';
+import { Graph } from '../../Graph';
 import Cell from '../../cell/datatypes/Cell';
 import Geometry from '../../geometry/Geometry';
 import CellArray from '../../cell/datatypes/CellArray';
@@ -151,11 +149,7 @@ class StackLayout extends GraphLayout {
   /**
    * Implements mxGraphLayout.moveCell.
    */
-  moveCell(
-    cell: Cell,
-    x: number,
-    y: number
-  ): void {
+  moveCell(cell: Cell, x: number, y: number): void {
     const model = this.graph.getModel();
     const parent = cell.getParent();
     const horizontal = this.isHorizontal();
@@ -299,11 +293,7 @@ class StackLayout extends GraphLayout {
       if (this.graph.isSwimlane(parent)) {
         // Uses computed style to get latest
         const style = this.graph.getCellStyle(parent);
-        let start = getNumber(
-          style,
-          'startSize',
-          DEFAULT_STARTSIZE
-        );
+        let start = getNumber(style, 'startSize', DEFAULT_STARTSIZE);
         const horz = getValue(style, 'horizontal', true) == 1;
 
         if (pgeo != null) {
@@ -343,11 +333,9 @@ class StackLayout extends GraphLayout {
             if (this.wrap != null && last != null) {
               if (
                 (horizontal &&
-                  last.x + last.width + geo.width + 2 * this.spacing >
-                    this.wrap) ||
+                  last.x + last.width + geo.width + 2 * this.spacing > this.wrap) ||
                 (!horizontal &&
-                  last.y + last.height + geo.height + 2 * this.spacing >
-                    this.wrap)
+                  last.y + last.height + geo.height + 2 * this.spacing > this.wrap)
               ) {
                 last = null;
 
@@ -375,32 +363,24 @@ class StackLayout extends GraphLayout {
               if (horizontal) {
                 geo.x =
                   this.snap(
-                    (this.allowGaps ? Math.max(temp, geo.x) : temp) -
-                      this.marginLeft
+                    (this.allowGaps ? Math.max(temp, geo.x) : temp) - this.marginLeft
                   ) + this.marginLeft;
               } else {
                 geo.y =
                   this.snap(
-                    (this.allowGaps ? Math.max(temp, geo.y) : temp) -
-                      this.marginTop
+                    (this.allowGaps ? Math.max(temp, geo.y) : temp) - this.marginTop
                   ) + this.marginTop;
               }
             } else if (!this.keepFirstLocation) {
               if (horizontal) {
                 geo.x =
                   this.allowGaps && geo.x > x0
-                    ? Math.max(
-                        this.snap(geo.x - this.marginLeft) + this.marginLeft,
-                        x0
-                      )
+                    ? Math.max(this.snap(geo.x - this.marginLeft) + this.marginLeft, x0)
                     : x0;
               } else {
                 geo.y =
                   this.allowGaps && geo.y > y0
-                    ? Math.max(
-                        this.snap(geo.y - this.marginTop) + this.marginTop,
-                        y0
-                      )
+                    ? Math.max(this.snap(geo.y - this.marginTop) + this.marginTop, y0)
                     : y0;
               }
             }
@@ -437,29 +417,14 @@ class StackLayout extends GraphLayout {
           }
         }
 
-        if (
-          this.resizeParent &&
-          pgeo != null &&
-          last != null &&
-          !parent.isCollapsed()
-        ) {
+        if (this.resizeParent && pgeo != null && last != null && !parent.isCollapsed()) {
           this.updateParentGeometry(parent, pgeo, last);
-        } else if (
-          this.resizeLast &&
-          pgeo != null &&
-          last != null &&
-          lastChild != null
-        ) {
+        } else if (this.resizeLast && pgeo != null && last != null && lastChild != null) {
           if (horizontal) {
             last.width =
-              pgeo.width -
-              last.x -
-              this.spacing -
-              this.marginRight -
-              this.marginLeft;
+              pgeo.width - last.x - this.spacing - this.marginRight - this.marginLeft;
           } else {
-            last.height =
-              pgeo.height - last.y - this.spacing - this.marginBottom;
+            last.height = pgeo.height - last.y - this.spacing - this.marginBottom;
           }
 
           this.setChildGeometry(lastChild, last);
@@ -480,10 +445,7 @@ class StackLayout extends GraphLayout {
    * child - The given child of <mxCell>.
    * geo - The specific geometry of <mxGeometry>.
    */
-  setChildGeometry(
-    child: Cell,
-    geo: Geometry
-  ) {
+  setChildGeometry(child: Cell, geo: Geometry) {
     const geo2 = child.getGeometry();
 
     if (
@@ -508,11 +470,7 @@ class StackLayout extends GraphLayout {
    * pgeo - The new <mxGeometry> for parent.
    * last - The last <mxGeometry>.
    */
-  updateParentGeometry(
-    parent: Cell,
-    pgeo: Geometry,
-    last: Geometry
-  ) {
+  updateParentGeometry(parent: Cell, pgeo: Geometry, last: Geometry) {
     const horizontal = this.isHorizontal();
     const model = this.graph.getModel();
 

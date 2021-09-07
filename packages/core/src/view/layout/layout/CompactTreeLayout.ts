@@ -10,11 +10,11 @@ import Point from '../../geometry/Point';
 import GraphLayout from './GraphLayout';
 import CellPath from '../../cell/datatypes/CellPath';
 import Rectangle from '../../geometry/Rectangle';
-import utils, { sortCells } from '../../../util/Utils';
+import { sortCells } from '../../../util/Utils';
 import WeightedCellSorter from './WeightedCellSorter';
 import CellArray from '../../cell/datatypes/CellArray';
 import Cell from '../../cell/datatypes/Cell';
-import Graph from '../../Graph';
+import { Graph } from '../../Graph';
 
 /**
  * @class CompactTreeLayout

@@ -6,13 +6,41 @@ import CellArray from '../cell/datatypes/CellArray';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
 import Geometry from '../geometry/Geometry';
-import { autoImplement, getValue, toRadians } from '../../util/Utils';
+import { getValue, mixInto, toRadians } from '../../util/Utils';
 import Rectangle from '../geometry/Rectangle';
+import { Graph } from '../Graph';
 
-import type Graph from '../Graph';
-import type GraphCells from '../cell/GraphCells';
-import type GraphSelection from '../selection/GraphSelection';
-import type GraphEditing from '../editing/GraphEditing';
+declare module '../Graph' {
+  interface Graph {
+    options: GraphFoldingOptions;
+    collapseExpandResource: string;
+
+    getCollapseExpandResource: () => string;
+    isFoldingEnabled: () => boolean;
+    getFoldableCells: (cells: CellArray, collapse: boolean) => CellArray | null;
+    isCellFoldable: (cell: Cell, collapse: boolean) => boolean;
+    getFoldingImage: (state: CellState) => Image | null;
+    foldCells: (
+      collapse: boolean,
+      recurse: boolean,
+      cells: CellArray | null,
+      checkFoldable: boolean,
+      evt: Event | null
+    ) => CellArray | null;
+    cellsFolded: (
+      cells: CellArray | null,
+      collapse: boolean,
+      recurse: boolean,
+      checkFoldable?: boolean
+    ) => void;
+    swapBounds: (cell: Cell, willCollapse: boolean) => void;
+    updateAlternateBounds: (
+      cell: Cell | null,
+      geo: Geometry | null,
+      willCollapse: boolean
+    ) => void;
+  }
+}
 
 /**
  * GraphFoldingOptions
@@ -35,26 +63,42 @@ type GraphFoldingOptions = {
   collapseToPreferredSize: boolean;
 };
 
-type PartialGraph = Pick<Graph, 'getModel' | 'fireEvent'>;
-type PartialCells = Pick<
-  GraphCells,
+type PartialGraph = Pick<
+  Graph,
+  | 'getModel'
+  | 'fireEvent'
   | 'getCurrentCellStyle'
   | 'isExtendParent'
   | 'extendParent'
   | 'constrainChild'
   | 'getPreferredSizeForCell'
+  | 'getSelectionCells'
+  | 'stopEditing'
 >;
-type PartialSelection = Pick<GraphSelection, 'getSelectionCells'>;
-type PartialEditing = Pick<GraphEditing, 'stopEditing'>;
-type PartialClass = PartialGraph & PartialCells & PartialSelection & PartialEditing;
+type PartialFolding = Pick<
+  Graph,
+  | 'options'
+  | 'collapseExpandResource'
+  | 'getCollapseExpandResource'
+  | 'isFoldingEnabled'
+  | 'getFoldableCells'
+  | 'isCellFoldable'
+  | 'getFoldingImage'
+  | 'foldCells'
+  | 'cellsFolded'
+  | 'swapBounds'
+  | 'updateAlternateBounds'
+>;
+type PartialType = PartialGraph & PartialFolding;
 
-class GraphFolding extends autoImplement<PartialClass>() {
-  options: GraphFoldingOptions = {
+// @ts-expect-error The properties of PartialGraph are defined elsewhere.
+const GraphFoldingMixin: PartialType = {
+  options: {
     foldingEnabled: true,
     collapsedImage: new Image(`${mxClient.imageBasePath}/collapsed.gif`, 9, 9),
     expandedImage: new Image(`${mxClient.imageBasePath}/expanded.gif`, 9, 9),
     collapseToPreferredSize: true,
-  };
+  },
 
   /**
    * Specifies the resource key for the tooltip on the collapse/expand icon.
@@ -62,11 +106,15 @@ class GraphFolding extends autoImplement<PartialClass>() {
    * the tooltip.
    * @default 'collapse-expand'
    */
-  collapseExpandResource: string = mxClient.language != 'none' ? 'collapse-expand' : '';
+  collapseExpandResource: mxClient.language != 'none' ? 'collapse-expand' : '',
 
-  getCollapseExpandResource = () => this.collapseExpandResource;
+  getCollapseExpandResource() {
+    return this.collapseExpandResource;
+  },
 
-  isFoldingEnabled = () => this.options.foldingEnabled;
+  isFoldingEnabled() {
+    return this.options.foldingEnabled;
+  },
 
   /**
    *
@@ -76,11 +124,11 @@ class GraphFolding extends autoImplement<PartialClass>() {
   /**
    * Returns the cells which are movable in the given array of cells.
    */
-  getFoldableCells(cells: CellArray, collapse: boolean = false): CellArray | null {
+  getFoldableCells(cells, collapse = false) {
     return this.getModel().filterCells(cells, (cell: Cell) => {
       return this.isCellFoldable(cell, collapse);
     });
-  }
+  },
 
   /**
    * Returns true if the given cell is foldable. This implementation
@@ -90,16 +138,16 @@ class GraphFolding extends autoImplement<PartialClass>() {
    * @param cell {@link mxCell} whose foldable state should be returned.
    */
   // isCellFoldable(cell: mxCell, collapse: boolean): boolean;
-  isCellFoldable(cell: Cell, collapse: boolean = false): boolean {
+  isCellFoldable(cell, collapse = false) {
     const style = this.getCurrentCellStyle(cell);
     return cell.getChildCount() > 0 && style.foldable;
-  }
+  },
 
   /**
    * Returns the {@link Image} used to display the collapsed state of
    * the specified cell state. This returns null for all edges.
    */
-  getFoldingImage(state: CellState): Image | null {
+  getFoldingImage(state) {
     if (state != null && this.options.foldingEnabled && !state.cell.isEdge()) {
       const tmp = (<Cell>state.cell).isCollapsed();
 
@@ -108,7 +156,7 @@ class GraphFolding extends autoImplement<PartialClass>() {
       }
     }
     return null;
-  }
+  },
 
   /*****************************************************************************
    * Group: Folding
@@ -131,12 +179,12 @@ class GraphFolding extends autoImplement<PartialClass>() {
    */
   // foldCells(collapse: boolean, recurse: boolean, cells: mxCellArray, checkFoldable?: boolean, evt?: Event): mxCellArray;
   foldCells(
-    collapse: boolean = false,
-    recurse: boolean = false,
-    cells: CellArray | null = null,
-    checkFoldable: boolean = false,
-    evt: Event | null = null
-  ): CellArray | null {
+    collapse = false,
+    recurse = false,
+    cells = null,
+    checkFoldable = false,
+    evt = null
+  ) {
     if (cells == null) {
       cells = this.getFoldableCells(this.getSelectionCells(), collapse);
     }
@@ -161,7 +209,7 @@ class GraphFolding extends autoImplement<PartialClass>() {
       this.getModel().endUpdate();
     }
     return cells;
-  }
+  },
 
   /**
    * Sets the collapsed state of the specified cells. This method fires
@@ -176,12 +224,7 @@ class GraphFolding extends autoImplement<PartialClass>() {
    * checked. Default is `false`.
    */
   // cellsFolded(cells: mxCellArray, collapse: boolean, recurse: boolean, checkFoldable?: boolean): void;
-  cellsFolded(
-    cells: CellArray | null = null,
-    collapse: boolean = false,
-    recurse: boolean = false,
-    checkFoldable: boolean = false
-  ): void {
+  cellsFolded(cells = null, collapse = false, recurse = false, checkFoldable = false) {
     if (cells != null && cells.length > 0) {
       this.getModel().beginUpdate();
       try {
@@ -221,7 +264,7 @@ class GraphFolding extends autoImplement<PartialClass>() {
         this.getModel().endUpdate();
       }
     }
-  }
+  },
 
   /**
    * Swaps the alternate and the actual bounds in the geometry of the given
@@ -231,7 +274,7 @@ class GraphFolding extends autoImplement<PartialClass>() {
    * @param willCollapse Boolean indicating if the cell is going to be collapsed.
    */
   // swapBounds(cell: mxCell, willCollapse: boolean): void;
-  swapBounds(cell: Cell, willCollapse: boolean = false): void {
+  swapBounds(cell, willCollapse = false) {
     let geo = cell.getGeometry();
     if (geo != null) {
       geo = <Geometry>geo.clone();
@@ -241,7 +284,7 @@ class GraphFolding extends autoImplement<PartialClass>() {
 
       this.getModel().setGeometry(cell, geo);
     }
-  }
+  },
 
   /**
    * Updates or sets the alternate bounds in the given geometry for the given
@@ -256,11 +299,7 @@ class GraphFolding extends autoImplement<PartialClass>() {
    * @param willCollapse Boolean indicating if the cell is going to be collapsed.
    */
   // updateAlternateBounds(cell: mxCell, geo: mxGeometry, willCollapse: boolean): void;
-  updateAlternateBounds(
-    cell: Cell | null = null,
-    geo: Geometry | null = null,
-    willCollapse: boolean = false
-  ): void {
+  updateAlternateBounds(cell = null, geo = null, willCollapse = false) {
     if (cell != null && geo != null) {
       const style = this.getCurrentCellStyle(cell);
 
@@ -305,7 +344,7 @@ class GraphFolding extends autoImplement<PartialClass>() {
         }
       }
     }
-  }
-}
+  },
+};
 
-export default GraphFolding;
+mixInto(Graph)(GraphFoldingMixin);

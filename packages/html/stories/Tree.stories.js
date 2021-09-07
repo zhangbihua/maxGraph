@@ -1,4 +1,17 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  CylinderShape,
+  CellRenderer,
+  GraphView,
+  ImageBox,
+  mxClient,
+  EdgeStyle,
+  mxKeyHandler,
+  CompactTreeLayout,
+  LayoutManager,
+  Rectangle,
+  Point,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -10,22 +23,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    Graph,
-    Constants,
-    CylinderShape,
-    CellRenderer,
-    GraphView,
-    ImageBox,
-    mxClient,
-    EdgeStyle,
-    mxKeyHandler,
-    CompactTreeLayout,
-    LayoutManager,
-    Rectangle,
-    Point,
-  } = maxgraph;
-
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';

@@ -11,7 +11,7 @@ import EventObject from '../event/EventObject';
 import EventSource from '../event/EventSource';
 import InternalEvent from '../event/InternalEvent';
 import InternalMouseEvent from '../event/InternalMouseEvent';
-import { MaxGraph } from '../Graph';
+import { Graph } from '../Graph';
 
 /**
  * Class: mxPanningManager
@@ -19,7 +19,7 @@ import { MaxGraph } from '../Graph';
  * Implements a handler for panning.
  */
 class PanningManager {
-  constructor(graph: MaxGraph) {
+  constructor(graph: Graph) {
     this.thread = null;
     this.active = false;
     this.tdx = 0;

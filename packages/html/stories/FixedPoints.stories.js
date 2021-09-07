@@ -1,4 +1,13 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  Rubberband,
+  ConnectionHandler,
+  ConnectionConstraint,
+  ConstraintHandler,
+  Point,
+  CellState,
+  EdgeHandler,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 import { intersects } from '@maxgraph/core/util/Utils';
@@ -15,17 +24,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    Graph,
-    Rubberband,
-    ConnectionHandler,
-    ConnectionConstraint,
-    ConstraintHandler,
-    Point,
-    CellState,
-    EdgeHandler,
-  } = maxgraph;
-
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';

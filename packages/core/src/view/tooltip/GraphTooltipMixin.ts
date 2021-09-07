@@ -3,18 +3,33 @@ import { htmlEntities } from '../../util/StringUtils';
 import Resources from '../../util/Resources';
 import Shape from '../geometry/shape/Shape';
 import Cell from '../cell/datatypes/Cell';
-import { autoImplement } from '../../util/Utils';
-
-import type Graph from '../Graph';
-import type GraphFolding from '../folding/GraphFolding';
+import { Graph } from '../Graph';
 import SelectionCellsHandler from '../selection/SelectionCellsHandler';
 import TooltipHandler from './TooltipHandler';
+import { mixInto } from '../../util/Utils';
 
-type PartialGraph = Pick<Graph, 'convertValueToString' | 'getPlugin'>;
-type PartialFolding = Pick<GraphFolding, 'getCollapseExpandResource'>;
-type PartialClass = PartialGraph & PartialFolding;
+declare module '../Graph' {
+  interface Graph {
+    getTooltip: (
+      state: CellState,
+      node: HTMLElement | SVGElement,
+      x: number,
+      y: number
+    ) => HTMLElement | string | null;
+    getTooltipForCell: (cell: Cell) => HTMLElement | string;
+    setTooltips: (enabled: boolean) => void;
+  }
+}
 
-class GraphTooltip extends autoImplement<PartialClass>() {
+type PartialGraph = Pick<
+  Graph,
+  'convertValueToString' | 'getPlugin' | 'getCollapseExpandResource'
+>;
+type PartialTooltip = Pick<Graph, 'getTooltip' | 'getTooltipForCell' | 'setTooltips'>;
+type PartialType = PartialGraph & PartialTooltip;
+
+// @ts-expect-error The properties of PartialGraph are defined elsewhere.
+const GraphTooltipMixin: PartialType = {
   /**
    * Returns the string or DOM node that represents the tooltip for the given
    * state, node and coordinate pair. This implementation checks if the given
@@ -30,7 +45,7 @@ class GraphTooltip extends autoImplement<PartialClass>() {
    * @param x X-coordinate of the mouse.
    * @param y Y-coordinate of the mouse.
    */
-  getTooltip(state: CellState, node: HTMLElement | SVGElement, x: number, y: number) {
+  getTooltip(state, node, x, y) {
     let tip: HTMLElement | string | null = null;
 
     // Checks if the mouse is over the folding icon
@@ -70,7 +85,7 @@ class GraphTooltip extends autoImplement<PartialClass>() {
     }
 
     return tip;
-  }
+  },
 
   /**
    * Returns the string or DOM node to be used as the tooltip for the given
@@ -90,7 +105,7 @@ class GraphTooltip extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} whose tooltip should be returned.
    */
-  getTooltipForCell(cell: Cell) {
+  getTooltipForCell(cell) {
     let tip = null;
 
     if (cell && 'getTooltip' in cell) {
@@ -101,7 +116,7 @@ class GraphTooltip extends autoImplement<PartialClass>() {
     }
 
     return tip;
-  }
+  },
 
   /*****************************************************************************
    * Group: Graph behaviour
@@ -113,11 +128,11 @@ class GraphTooltip extends autoImplement<PartialClass>() {
    *
    * @param enabled Boolean indicating if tooltips should be enabled.
    */
-  setTooltips(enabled: boolean) {
+  setTooltips(enabled) {
     const tooltipHandler = this.getPlugin('TooltipHandler') as TooltipHandler;
 
     tooltipHandler.setEnabled(enabled);
-  }
-}
+  },
+};
 
-export default GraphTooltip;
+mixInto(Graph)(GraphTooltipMixin);

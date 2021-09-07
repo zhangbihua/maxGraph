@@ -1,4 +1,11 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  InternalEvent,
+  Rubberband,
+  Rectangle,
+  Point,
+  utils,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -18,8 +25,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const { Graph, InternalEvent, Rubberband, Rectangle, Point, utils } = maxgraph;
-
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'auto';

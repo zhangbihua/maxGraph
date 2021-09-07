@@ -29,7 +29,7 @@ import Point from '../../geometry/Point';
 import { getRotatedPoint, intersects, mod, toRadians } from '../../../util/Utils';
 import mxClient from '../../../mxClient';
 import { isMouseEvent, isShiftDown } from '../../../util/EventUtils';
-import { MaxGraph } from '../../Graph';
+import { Graph } from '../../Graph';
 import CellState from '../datatypes/CellState';
 import Image from '../../image/ImageBox';
 import Cell from '../datatypes/Cell';
@@ -74,7 +74,7 @@ class VertexHandler {
     // VML dialect required here for event transparency in IE
     this.selectionBorder.dialect = DIALECT_SVG;
     this.selectionBorder.pointerEvents = false;
-    this.selectionBorder.rotation = Number(this.state.style.rotation || '0');
+    this.selectionBorder.rotation = this.state.style.rotation ?? 0;
     this.selectionBorder.init(this.graph.getView().getOverlayPane());
     InternalEvent.redirectMouseEvents(this.selectionBorder.node, this.graph, this.state);
 
@@ -193,7 +193,7 @@ class VertexHandler {
    *
    * Reference to the enclosing <mxGraph>.
    */
-  graph: MaxGraph;
+  graph: Graph;
 
   /**
    * Variable: state
@@ -2009,7 +2009,7 @@ class VertexHandler {
     }
 
     if (this.selectionBorder != null) {
-      this.selectionBorder.rotation = Number(this.state.style.rotation || '0');
+      this.selectionBorder.rotation = this.state.style.rotation ?? 0;
     }
 
     if (this.edgeHandlers != null) {
@@ -2096,7 +2096,7 @@ class VertexHandler {
           // VML dialect required here for event transparency in IE
           this.parentHighlight.dialect = DIALECT_SVG;
           this.parentHighlight.pointerEvents = false;
-          this.parentHighlight.rotation = Number(pstate.style.rotation || '0');
+          this.parentHighlight.rotation = pstate.style.rotation ?? 0;
           this.parentHighlight.init(this.graph.getView().getOverlayPane());
           this.parentHighlight.redraw();
 
@@ -2122,7 +2122,7 @@ class VertexHandler {
         this.preview.bounds.height = Math.max(0, this.preview.bounds.height - 1);
       }
 
-      this.preview.rotation = Number(this.state.style.rotation || '0');
+      this.preview.rotation = this.state.style.rotation ?? 0;
       this.preview.redraw();
     }
 

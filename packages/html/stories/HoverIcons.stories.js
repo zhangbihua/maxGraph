@@ -1,4 +1,12 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  InternalEvent,
+  Rubberband,
+  ImageBox,
+  Rectangle,
+  utils,
+  ConnectionHandler,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -14,16 +22,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    Graph,
-    InternalEvent,
-    Rubberband,
-    ImageBox,
-    Rectangle,
-    utils,
-    ConnectionHandler,
-  } = maxgraph;
-
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';

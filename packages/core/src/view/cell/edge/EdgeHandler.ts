@@ -31,7 +31,7 @@ import {
   OUTLINE_HIGHLIGHT_COLOR,
   OUTLINE_HIGHLIGHT_STROKEWIDTH,
 } from '../../../util/Constants';
-import utils, {
+import {
   contains,
   convertPoint,
   equalPoints,
@@ -56,14 +56,13 @@ import {
   isMouseEvent,
   isShiftDown,
 } from '../../../util/EventUtils';
-import { MaxGraph } from '../../Graph';
+import { Graph } from '../../Graph';
 import CellState from '../datatypes/CellState';
 import Shape from '../../geometry/shape/Shape';
 import { CellHandle, ColorValue, Listenable } from '../../../types';
 import InternalMouseEvent from '../../event/InternalMouseEvent';
 import Cell from '../datatypes/Cell';
 import ImageBox from '../../image/ImageBox';
-import Marker from '../../geometry/shape/edge/Marker';
 import EventSource from '../../event/EventSource';
 import GraphHandler from '../../GraphHandler';
 
@@ -175,7 +174,7 @@ class EdgeHandler {
    *
    * Reference to the enclosing <mxGraph>.
    */
-  graph: MaxGraph;
+  graph: Graph;
 
   /**
    * Variable: state
@@ -672,7 +671,7 @@ class EdgeHandler {
       };
     }
 
-    return new MyMarker(this.graph);
+    return new MyMarker(this.graph) as CellMarker;
   }
 
   /**

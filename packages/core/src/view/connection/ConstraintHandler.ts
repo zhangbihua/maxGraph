@@ -20,7 +20,7 @@ import Rectangle from '../geometry/Rectangle';
 import ImageShape from '../geometry/shape/node/ImageShape';
 import RectangleShape from '../geometry/shape/node/RectangleShape';
 import { isShiftDown } from '../../util/EventUtils';
-import { MaxGraph } from '../Graph';
+import { Graph } from '../Graph';
 import CellState from '../cell/datatypes/CellState';
 import InternalMouseEvent from '../event/InternalMouseEvent';
 import ConnectionConstraint from './ConnectionConstraint';
@@ -35,7 +35,7 @@ import Cell from '../cell/datatypes/Cell';
  * @class ConstraintHandler
  */
 class ConstraintHandler {
-  constructor(graph: MaxGraph) {
+  constructor(graph: Graph) {
     this.graph = graph;
 
     // Adds a graph model listener to update the current focus on changes
@@ -66,7 +66,7 @@ class ConstraintHandler {
   /**
    * Reference to the enclosing {@link mxGraph}.
    */
-  graph: MaxGraph;
+  graph: Graph;
 
   resetHandler: () => void;
 

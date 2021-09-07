@@ -6,7 +6,7 @@
  */
 import CompactTreeLayout from './CompactTreeLayout';
 import Cell from '../../cell/datatypes/Cell';
-import Graph from '../../Graph';
+import { Graph } from '../../Graph';
 import CellArray from '../../cell/datatypes/CellArray';
 
 /**
@@ -108,8 +108,7 @@ class RadialTreeLayout extends CompactTreeLayout {
    */
   isVertexIgnored(vertex: Cell): boolean {
     return (
-      super.isVertexIgnored(vertex) ||
-      this.graph.getConnections(vertex).length === 0
+      super.isVertexIgnored(vertex) || this.graph.getConnections(vertex).length === 0
     );
   }
 
@@ -166,8 +165,7 @@ class RadialTreeLayout extends CompactTreeLayout {
 
     // Extend out row so they meet the maximum gradient and convert to polar co-ords
     for (let i = 0; i < this.row.length; i += 1) {
-      const xLeftLimit =
-        this.centerX - this.nodeDistance - maxLeftGrad * this.rowRadi[i];
+      const xLeftLimit = this.centerX - this.nodeDistance - maxLeftGrad * this.rowRadi[i];
       const xRightLimit =
         this.centerX + this.nodeDistance + maxRightGrad * this.rowRadi[i];
       const fullWidth = xRightLimit - xLeftLimit;
@@ -221,12 +219,8 @@ class RadialTreeLayout extends CompactTreeLayout {
         const vertexBounds = this.getVertexBounds(node.cell);
         this.setVertexLocation(
           node.cell,
-          this.centerX -
-            vertexBounds.width / 2 +
-            this.rowRadi[i] * Math.cos(node.theta),
-          this.centerY -
-            vertexBounds.height / 2 +
-            this.rowRadi[i] * Math.sin(node.theta)
+          this.centerX - vertexBounds.width / 2 + this.rowRadi[i] * Math.cos(node.theta),
+          this.centerY - vertexBounds.height / 2 + this.rowRadi[i] * Math.sin(node.theta)
         );
       }
     }
@@ -272,8 +266,7 @@ class RadialTreeLayout extends CompactTreeLayout {
           vertexBounds.x + vertexBounds.width / 2,
           this.rowMaxCenX[rowNum]
         );
-        this.rowRadi[rowNum] =
-          vertexBounds.y - this.getVertexBounds(this.root).y;
+        this.rowRadi[rowNum] = vertexBounds.y - this.getVertexBounds(this.root).y;
 
         if (child.child != null) {
           rowHasChildren = true;

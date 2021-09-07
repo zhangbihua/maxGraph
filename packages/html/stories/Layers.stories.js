@@ -1,4 +1,4 @@
-import maxgraph from '@maxgraph/core';
+import { Graph, mxDomHelpers, Cell, Model, Point } from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -10,8 +10,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const { Graph, mxDomHelpers, Cell, GraphModel, Point } = maxgraph;
-
   const div = document.createElement('div');
 
   const container = document.createElement('div');
@@ -29,7 +27,7 @@ const Template = ({ label, ...args }) => {
   const root = new Cell();
   const layer0 = root.insert(new Cell());
   const layer1 = root.insert(new Cell());
-  const model = new GraphModel(root);
+  const model = new Model(root);
 
   const graph = new Graph(container, model);
 

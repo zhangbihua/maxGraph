@@ -1,7 +1,7 @@
 import Cell from './datatypes/Cell';
 import CellArray from './datatypes/CellArray';
 import Dictionary from '../../util/Dictionary';
-import Graph from '../Graph';
+import { Graph } from '../Graph';
 
 class TreeTraversal {
   dependencies = ['connections'];

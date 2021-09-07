@@ -1,29 +1,66 @@
-import { autoImplement } from '../../util/Utils';
+import { mixInto } from '../../util/Utils';
 import Point from '../geometry/Point';
 import Rectangle from '../geometry/Rectangle';
+import { Graph } from '../Graph';
 
-import type Graph from '../Graph';
+declare module '../Graph' {
+  interface Graph {
+    snapTolerance: number;
+    gridSize: number;
+    gridEnabled: boolean;
+
+    getSnapTolerance: () => number;
+    snap: (value: number) => number;
+    snapDelta: (
+      delta: Point,
+      bounds: Rectangle,
+      ignoreGrid: boolean,
+      ignoreHorizontal: boolean,
+      ignoreVertical: boolean
+    ) => Point;
+    isGridEnabled: () => boolean;
+    setGridEnabled: (value: boolean) => void;
+    getGridSize: () => number;
+    setGridSize: (value: number) => void;
+  }
+}
 
 type PartialGraph = Pick<Graph, 'getView'>;
-type PartialClass = PartialGraph;
+type PartialSnap = Pick<
+  Graph,
+  | 'snapTolerance'
+  | 'gridSize'
+  | 'gridEnabled'
+  | 'getSnapTolerance'
+  | 'snap'
+  | 'snapDelta'
+  | 'isGridEnabled'
+  | 'setGridEnabled'
+  | 'getGridSize'
+  | 'setGridSize'
+>;
+type PartialType = PartialGraph & PartialSnap;
 
-class GraphSnap extends autoImplement<PartialClass>() {
+// @ts-expect-error The properties of PartialGraph are defined elsewhere.
+const GraphSnapMixin: PartialType = {
   // TODO: Document me!
-  snapTolerance: number = 0;
+  snapTolerance: 0,
 
-  getSnapTolerance = () => this.snapTolerance;
+  getSnapTolerance() {
+    return this.snapTolerance;
+  },
 
   /**
    * Specifies the grid size.
    * @default 10
    */
-  gridSize = 10;
+  gridSize: 10,
 
   /**
    * Specifies if the grid is enabled. This is used in {@link snap}.
    * @default true
    */
-  gridEnabled = true;
+  gridEnabled: true,
 
   /*****************************************************************************
    * Group: Graph display
@@ -34,12 +71,12 @@ class GraphSnap extends autoImplement<PartialClass>() {
    *
    * @param value Numeric value to be snapped to the grid.
    */
-  snap(value: number) {
+  snap(value) {
     if (this.gridEnabled) {
       value = Math.round(value / this.gridSize) * this.gridSize;
     }
     return value;
-  }
+  },
 
   /**
    * Function: snapDelta
@@ -47,8 +84,8 @@ class GraphSnap extends autoImplement<PartialClass>() {
    * Snaps the given delta with the given scaled bounds.
    */
   snapDelta(
-    delta: Point,
-    bounds: Rectangle,
+    delta,
+    bounds,
     ignoreGrid = false,
     ignoreHorizontal = false,
     ignoreVertical = false
@@ -102,7 +139,7 @@ class GraphSnap extends autoImplement<PartialClass>() {
       }
     }
     return delta;
-  }
+  },
 
   /*****************************************************************************
    * Group: Graph behaviour
@@ -113,44 +150,30 @@ class GraphSnap extends autoImplement<PartialClass>() {
    */
   isGridEnabled() {
     return this.gridEnabled;
-  }
+  },
 
   /**
    * Specifies if the grid should be enabled.
    *
    * @param value Boolean indicating if the grid should be enabled.
    */
-  setGridEnabled(value: boolean) {
+  setGridEnabled(value) {
     this.gridEnabled = value;
-  }
+  },
 
   /**
    * Returns {@link gridSize}.
    */
   getGridSize() {
     return this.gridSize;
-  }
+  },
 
   /**
    * Sets {@link gridSize}.
    */
-  setGridSize(value: number) {
+  setGridSize(value) {
     this.gridSize = value;
-  }
+  },
+};
 
-  /**
-   * Returns {@link tolerance}.
-   */
-  getTolerance() {
-    return this.snapTolerance;
-  }
-
-  /**
-   * Sets {@link tolerance}.
-   */
-  setTolerance(value: number) {
-    this.snapTolerance = value;
-  }
-}
-
-export default GraphSnap;
+mixInto(Graph)(GraphSnapMixin);

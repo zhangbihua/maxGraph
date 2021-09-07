@@ -1,16 +1,40 @@
 import Cell from '../cell/datatypes/Cell';
 import CellArray from '../cell/datatypes/CellArray';
-import { autoImplement, sortCells } from '../../util/Utils';
+import { mixInto, sortCells } from '../../util/Utils';
 import Geometry from '../geometry/Geometry';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
 import Rectangle from '../geometry/Rectangle';
 import Point from '../geometry/Point';
-import Graph from '../Graph';
-import GraphSelection from '../selection/GraphSelection';
-import GraphCells from '../cell/GraphCells';
-import GraphSwimlane from '../swimlane/GraphSwimlane';
-import GraphEdge from '../cell/edge/GraphEdge';
+import { Graph } from '../Graph';
+
+declare module '../Graph' {
+  interface Graph {
+    groupCells: (group: Cell, border: number, cells: CellArray) => Cell;
+    getCellsForGroup: (cells: CellArray) => CellArray;
+    getBoundsForGroup: (
+      group: Cell,
+      children: CellArray,
+      border: number | null
+    ) => Rectangle | null;
+    createGroupCell: (cells: CellArray) => Cell;
+    ungroupCells: (cells: CellArray) => CellArray;
+    getCellsForUngroup: () => CellArray;
+    removeCellsAfterUngroup: (cells: CellArray) => void;
+    removeCellsFromParent: (cells: CellArray) => CellArray;
+    updateGroupBounds: (
+      cells: CellArray,
+      border: number,
+      moveGroup: boolean,
+      topBorder: number,
+      rightBorder: number,
+      bottomBorder: number,
+      leftBorder: number
+    ) => CellArray;
+    enterGroup: (cell: Cell) => void;
+    exitGroup: () => void;
+  }
+}
 
 type PartialGraph = Pick<
   Graph,
@@ -21,9 +45,6 @@ type PartialGraph = Pick<
   | 'batchUpdate'
   | 'isValidRoot'
   | 'getCurrentRoot'
->;
-type PartialCells = Pick<
-  GraphCells,
   | 'cellsAdded'
   | 'cellsMoved'
   | 'cellsResized'
@@ -31,23 +52,33 @@ type PartialCells = Pick<
   | 'cellsRemoved'
   | 'getChildCells'
   | 'moveCells'
+  | 'addAllEdges'
+  | 'getSelectionCells'
+  | 'getSelectionCell'
+  | 'clearSelection'
+  | 'setSelectionCell'
+  | 'isSwimlane'
+  | 'getStartSize'
+  | 'getActualStartSize'
 >;
-type PartialEdge = Pick<GraphEdge, 'addAllEdges'>;
-type PartialSelection = Pick<
-  GraphSelection,
-  'getSelectionCells' | 'getSelectionCell' | 'clearSelection' | 'setSelectionCell'
+type PartialGrouping = Pick<
+  Graph,
+  | 'groupCells'
+  | 'getCellsForGroup'
+  | 'getBoundsForGroup'
+  | 'createGroupCell'
+  | 'ungroupCells'
+  | 'getCellsForUngroup'
+  | 'removeCellsAfterUngroup'
+  | 'removeCellsFromParent'
+  | 'updateGroupBounds'
+  | 'enterGroup'
+  | 'exitGroup'
 >;
-type PartialSwimlane = Pick<
-  GraphSwimlane,
-  'isSwimlane' | 'getStartSize' | 'getActualStartSize'
->;
-type PartialClass = PartialGraph &
-  PartialCells &
-  PartialEdge &
-  PartialSelection &
-  PartialSwimlane;
+type PartialType = PartialGraph & PartialGrouping;
 
-class GraphGrouping extends autoImplement<PartialClass>() {
+// @ts-expect-error The properties of PartialGraph are defined elsewhere.
+const GraphGroupingMixin: PartialType = {
   /*****************************************************************************
    * Group: Grouping
    *****************************************************************************/
@@ -66,13 +97,9 @@ class GraphGrouping extends autoImplement<PartialClass>() {
    * @param cells Optional array of {@link Cell} to be grouped. If `null` is specified
    * then the selection cells are used.
    */
-  // groupCells(group: mxCell | null, border?: number, cells?: mxCellArray): mxCell;
-  groupCells(
-    group: Cell,
-    border: number = 0,
-    cells: CellArray = sortCells(this.getSelectionCells(), true)
-  ) {
-    cells = this.getCellsForGroup(cells);
+  groupCells(group, border = 0, cells) {
+    if (!cells) cells = sortCells(this.getSelectionCells(), true);
+    if (!cells) cells = this.getCellsForGroup(cells);
 
     if (group == null) {
       group = this.createGroupCell(cells);
@@ -133,13 +160,13 @@ class GraphGrouping extends autoImplement<PartialClass>() {
       }
     }
     return group;
-  }
+  },
 
   /**
    * Returns the cells with the same parent as the first cell
    * in the given array.
    */
-  getCellsForGroup(cells: CellArray): CellArray {
+  getCellsForGroup(cells) {
     const result = new CellArray();
     if (cells != null && cells.length > 0) {
       const parent = cells[0].getParent();
@@ -153,16 +180,12 @@ class GraphGrouping extends autoImplement<PartialClass>() {
       }
     }
     return result;
-  }
+  },
 
   /**
    * Returns the bounds to be used for the given group and children.
    */
-  getBoundsForGroup(
-    group: Cell,
-    children: CellArray,
-    border: number | null
-  ): Rectangle | null {
+  getBoundsForGroup(group, children, border) {
     const result = this.getBoundingBoxFromGeometry(children, true);
     if (result != null) {
       if (this.isSwimlane(group)) {
@@ -183,7 +206,7 @@ class GraphGrouping extends autoImplement<PartialClass>() {
       }
     }
     return result;
-  }
+  },
 
   /**
    * Hook for creating the group cell to hold the given array of {@link Cell} if
@@ -201,14 +224,13 @@ class GraphGrouping extends autoImplement<PartialClass>() {
    *   return group;
    * };
    */
-  // createGroupCell(cells: mxCellArray): mxCell;
-  createGroupCell(cells: CellArray) {
+  createGroupCell(cells) {
     const group = new Cell('');
     group.setVertex(true);
     group.setConnectable(false);
 
     return group;
-  }
+  },
 
   /**
    * Ungroups the given cells by moving the children the children to their
@@ -218,8 +240,7 @@ class GraphGrouping extends autoImplement<PartialClass>() {
    * @param cells Array of cells to be ungrouped. If null is specified then the
    * selection cells are used.
    */
-  // ungroupCells(cells: mxCellArray): mxCellArray;
-  ungroupCells(cells: CellArray) {
+  ungroupCells(cells) {
     let result: CellArray = new CellArray();
 
     if (cells == null) {
@@ -264,14 +285,14 @@ class GraphGrouping extends autoImplement<PartialClass>() {
       }
     }
     return result;
-  }
+  },
 
   /**
    * Function: getCellsForUngroup
    *
    * Returns the selection cells that can be ungrouped.
    */
-  getCellsForUngroup(): CellArray {
+  getCellsForUngroup() {
     const cells = this.getSelectionCells();
 
     // Finds the cells with children
@@ -283,16 +304,16 @@ class GraphGrouping extends autoImplement<PartialClass>() {
       }
     }
     return tmp;
-  }
+  },
 
   /**
    * Hook to remove the groups after {@link ungroupCells}.
    *
    * @param cells Array of {@link Cell} that were ungrouped.
    */
-  removeCellsAfterUngroup(cells: CellArray): void {
+  removeCellsAfterUngroup(cells) {
     this.cellsRemoved(this.addAllEdges(cells));
-  }
+  },
 
   /**
    * Removes the specified cells from their parents and adds them to the
@@ -300,7 +321,7 @@ class GraphGrouping extends autoImplement<PartialClass>() {
    *
    * @param cells Array of {@link Cell} to be removed from their parents.
    */
-  removeCellsFromParent(cells: CellArray): CellArray {
+  removeCellsFromParent(cells) {
     if (cells == null) {
       cells = this.getSelectionCells();
     }
@@ -317,7 +338,7 @@ class GraphGrouping extends autoImplement<PartialClass>() {
       this.getModel().endUpdate();
     }
     return cells;
-  }
+  },
 
   /**
    * Function: updateGroupBounds
@@ -340,14 +361,14 @@ class GraphGrouping extends autoImplement<PartialClass>() {
    * leftBorder - Optional top border to be added in the group. Default is 0.
    */
   updateGroupBounds(
-    cells: CellArray,
-    border: number = 0,
-    moveGroup: boolean = false,
-    topBorder: number = 0,
-    rightBorder: number = 0,
-    bottomBorder: number = 0,
-    leftBorder: number = 0
-  ): CellArray {
+    cells,
+    border = 0,
+    moveGroup = false,
+    topBorder = 0,
+    rightBorder = 0,
+    bottomBorder = 0,
+    leftBorder = 0
+  ) {
     if (cells == null) {
       cells = this.getSelectionCells();
     }
@@ -402,7 +423,7 @@ class GraphGrouping extends autoImplement<PartialClass>() {
       }
     });
     return cells;
-  }
+  },
 
   /*****************************************************************************
    * Group: Drilldown
@@ -416,25 +437,25 @@ class GraphGrouping extends autoImplement<PartialClass>() {
    * @param cell Optional {@link Cell} to be used as the new root. Default is the
    * selection cell.
    */
-  enterGroup(cell: Cell): void {
+  enterGroup(cell) {
     cell = cell || this.getSelectionCell();
 
     if (cell != null && this.isValidRoot(cell)) {
       this.getView().setCurrentRoot(cell);
       this.clearSelection();
     }
-  }
+  },
 
   /**
    * Changes the current root to the next valid root in the displayed cell
    * hierarchy.
    */
-  exitGroup(): void {
+  exitGroup() {
     const root = this.getModel().getRoot();
     const current = this.getCurrentRoot();
 
     if (current != null) {
-      let next = current.getParent();
+      let next = current.getParent() as Cell;
 
       // Finds the next valid root in the hierarchy
       while (next !== root && !this.isValidRoot(next) && next.getParent() !== root) {
@@ -456,7 +477,7 @@ class GraphGrouping extends autoImplement<PartialClass>() {
         this.setSelectionCell(current);
       }
     }
-  }
-}
+  },
+};
 
-export default GraphGrouping;
+mixInto(Graph)(GraphGroupingMixin);

@@ -9,7 +9,7 @@ import { fit, getScrollOrigin } from '../../util/Utils';
 import { TOOLTIP_VERTICAL_OFFSET } from '../../util/Constants';
 import { getSource, isMouseEvent } from '../../util/EventUtils';
 import { isNode } from '../../util/DomUtils';
-import { MaxGraph } from '../Graph';
+import { Graph } from '../Graph';
 import CellState from '../cell/datatypes/CellState';
 import InternalMouseEvent from '../event/InternalMouseEvent';
 import PopupMenuHandler from '../popups_menus/PopupMenuHandler';
@@ -44,7 +44,7 @@ import EventSource from '../event/EventSource';
 class TooltipHandler implements GraphPlugin {
   static pluginId = 'TooltipHandler';
 
-  constructor(graph: MaxGraph) {
+  constructor(graph: Graph) {
     this.graph = graph;
     this.delay = 500;
     this.graph.addMouseListener(this);
@@ -90,7 +90,7 @@ class TooltipHandler implements GraphPlugin {
    *
    * Reference to the enclosing <mxGraph>.
    */
-  graph: MaxGraph;
+  graph: Graph;
 
   /**
    * Variable: delay

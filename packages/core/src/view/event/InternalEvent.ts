@@ -7,7 +7,6 @@
 import InternalMouseEvent from './InternalMouseEvent';
 import mxClient from '../../mxClient';
 import { isConsumed, isMouseEvent } from '../../util/EventUtils';
-import graph from '../Graph';
 import CellState from '../cell/datatypes/CellState';
 import {
   EventCache,
@@ -16,6 +15,7 @@ import {
   Listenable,
   MouseEventListener,
 } from '../../types';
+import { Graph } from '../Graph';
 
 // Checks if passive event listeners are supported
 // see https://github.com/Modernizr/Modernizr/issues/1894
@@ -230,7 +230,7 @@ class InternalEvent {
    */
   static redirectMouseEvents(
     node: Listenable,
-    graph: graph,
+    graph: Graph,
     state: CellState | ((evt: Event) => CellState | null) | null = null,
     down: MouseEventListener | null = null,
     move: MouseEventListener | null = null,

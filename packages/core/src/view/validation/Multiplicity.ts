@@ -7,8 +7,8 @@
 
 import Resources from '../../util/Resources';
 import { isNode } from '../../util/DomUtils';
-import Cell from "../cell/datatypes/Cell";
-import graph from "../Graph";
+import Cell from '../cell/datatypes/Cell';
+import { Graph } from '../Graph';
 
 /**
  * @class Multiplicity
@@ -41,7 +41,7 @@ class Multiplicity {
     validNeighbors: string[],
     countError: string,
     typeError: string,
-    validNeighborsAllowed: boolean=true
+    validNeighborsAllowed: boolean = true
   ) {
     this.source = source;
     this.type = type;
@@ -131,13 +131,14 @@ class Multiplicity {
    * @param sourceOut Number of outgoing edges from the source terminal.
    * @param targetIn Number of incoming edges for the target terminal.
    */
-  check(graph: graph,
-        edge: Cell,
-        source: Cell,
-        target: Cell,
-        sourceOut: number,
-        targetIn: number): string | null {
-
+  check(
+    graph: Graph,
+    edge: Cell,
+    source: Cell,
+    target: Cell,
+    sourceOut: number,
+    targetIn: number
+  ): string | null {
     let error = '';
 
     if (
@@ -172,11 +173,7 @@ class Multiplicity {
    * Checks if there are any valid neighbours in {@link validNeighbors}. This is only
    * called if {@link validNeighbors} is a non-empty array.
    */
-  checkNeighbors(graph: graph,
-                 edge: Cell,
-                 source: Cell,
-                 target: Cell): boolean {
-
+  checkNeighbors(graph: Graph, edge: Cell, source: Cell, target: Cell): boolean {
     const sourceValue = source.getValue();
     const targetValue = target.getValue();
     let isValid = !this.validNeighborsAllowed;
@@ -200,9 +197,7 @@ class Multiplicity {
    * given cell is the source or target of the given edge, depending on
    * {@link source}. This implementation uses {@link checkType} on the terminal's value.
    */
-  checkTerminal(graph: graph,
-                edge: Cell,
-                terminal: Cell): boolean {
+  checkTerminal(graph: Graph, edge: Cell, terminal: Cell): boolean {
     const value = terminal.getValue();
 
     return this.checkType(graph, value, this.type, this.attr, this.value);
@@ -211,14 +206,19 @@ class Multiplicity {
   /**
    * Checks the type of the given value.
    */
-  checkType(graph: graph,
-            value: string | Element | Cell,
-            type: string,
-            attr?: string,
-            attrValue?: any): boolean {
-
+  checkType(
+    graph: Graph,
+    value: string | Element | Cell,
+    type: string,
+    attr?: string,
+    attrValue?: any
+  ): boolean {
     if (value != null) {
-      if (typeof value !== 'string' && 'nodeType' in value && !Number.isNaN(value.nodeType)) {
+      if (
+        typeof value !== 'string' &&
+        'nodeType' in value &&
+        !Number.isNaN(value.nodeType)
+      ) {
         // Checks if value is a DOM node
         return isNode(value, type, attr, attrValue);
       }

@@ -20,7 +20,7 @@ import PanningManager from './PanningManager';
 import InternalMouseEvent from '../event/InternalMouseEvent';
 
 import type { GraphPlugin, MouseEventListener } from '../../types';
-import type { MaxGraph } from '../Graph';
+import type { Graph } from '../Graph';
 
 /**
  * Class: mxPanningHandler
@@ -54,7 +54,7 @@ import type { MaxGraph } from '../Graph';
 class PanningHandler extends EventSource implements GraphPlugin {
   static pluginId = 'PanningHandler';
 
-  constructor(graph: MaxGraph) {
+  constructor(graph: Graph) {
     super();
 
     this.graph = graph;
@@ -117,7 +117,7 @@ class PanningHandler extends EventSource implements GraphPlugin {
    *
    * Reference to the enclosing <mxGraph>.
    */
-  graph: MaxGraph;
+  graph: Graph;
 
   panningManager: PanningManager;
 

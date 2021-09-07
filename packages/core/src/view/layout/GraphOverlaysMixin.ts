@@ -4,10 +4,24 @@ import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
 import Image from '../image/ImageBox';
 import InternalMouseEvent from '../event/InternalMouseEvent';
-import { autoImplement } from '../../util/Utils';
+import { Graph } from '../Graph';
+import { mixInto } from '../../util/Utils';
 
-import type Graph from '../Graph';
-import type GraphSelection from '../selection/GraphSelection';
+declare module '../Graph' {
+  interface Graph {
+    addCellOverlay: (cell: Cell, overlay: CellOverlay) => CellOverlay;
+    getCellOverlays: (cell: Cell) => CellOverlay[];
+    removeCellOverlay: (cell: Cell, overlay: CellOverlay | null) => CellOverlay | null;
+    removeCellOverlays: (cell: Cell) => CellOverlay[];
+    clearCellOverlays: (cell: Cell | null) => void;
+    setCellWarning: (
+      cell: Cell,
+      warning: string | null,
+      img?: Image,
+      isSelect?: boolean
+    ) => CellOverlay | null;
+  }
+}
 
 type PartialGraph = Pick<
   Graph,
@@ -17,11 +31,21 @@ type PartialGraph = Pick<
   | 'isEnabled'
   | 'getWarningImage'
   | 'getCellRenderer'
+  | 'setSelectionCell'
 >;
-type PartialSelection = Pick<GraphSelection, 'setSelectionCell'>;
-type PartialClass = PartialGraph & PartialSelection;
+type PartialOverlays = Pick<
+  Graph,
+  | 'addCellOverlay'
+  | 'getCellOverlays'
+  | 'removeCellOverlay'
+  | 'removeCellOverlays'
+  | 'clearCellOverlays'
+  | 'setCellWarning'
+>;
+type PartialType = PartialGraph & PartialOverlays;
 
-class GraphOverlays extends autoImplement<PartialClass>() {
+// @ts-expect-error The properties of PartialGraph are defined elsewhere.
+const GraphOverlaysMixin: PartialType = {
   /*****************************************************************************
    * Group: Overlays
    *****************************************************************************/
@@ -33,7 +57,7 @@ class GraphOverlays extends autoImplement<PartialClass>() {
    * @param cell {@link mxCell} to add the overlay for.
    * @param overlay {@link mxCellOverlay} to be added for the cell.
    */
-  addCellOverlay(cell: Cell, overlay: CellOverlay): CellOverlay {
+  addCellOverlay(cell, overlay) {
     cell.overlays.push(overlay);
 
     // Immediately update the cell display if the state exists
@@ -47,7 +71,7 @@ class GraphOverlays extends autoImplement<PartialClass>() {
       new EventObject(InternalEvent.ADD_OVERLAY, 'cell', cell, 'overlay', overlay)
     );
     return overlay;
-  }
+  },
 
   /**
    * Returns the array of {@link mxCellOverlays} for the given cell or null, if
@@ -55,9 +79,9 @@ class GraphOverlays extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} whose overlays should be returned.
    */
-  getCellOverlays(cell: Cell) {
+  getCellOverlays(cell) {
     return cell.overlays;
-  }
+  },
 
   /**
    * Removes and returns the given {@link CellOverlay} from the given cell. This
@@ -68,7 +92,7 @@ class GraphOverlays extends autoImplement<PartialClass>() {
    * @param overlay Optional {@link CellOverlay} to be removed.
    */
   // removeCellOverlay(cell: mxCell, overlay: mxCellOverlay): mxCellOverlay;
-  removeCellOverlay(cell: Cell, overlay: CellOverlay | null = null) {
+  removeCellOverlay(cell, overlay = null) {
     if (!overlay) {
       this.removeCellOverlays(cell);
     } else {
@@ -93,7 +117,7 @@ class GraphOverlays extends autoImplement<PartialClass>() {
     }
 
     return overlay;
-  }
+  },
 
   /**
    * Removes all {@link mxCellOverlays} from the given cell. This method
@@ -102,7 +126,7 @@ class GraphOverlays extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} whose overlays should be removed
    */
-  removeCellOverlays(cell: Cell) {
+  removeCellOverlays(cell) {
     const { overlays } = cell;
 
     cell.overlays = [];
@@ -127,7 +151,7 @@ class GraphOverlays extends autoImplement<PartialClass>() {
     }
 
     return overlays;
-  }
+  },
 
   /**
    * Removes all {@link mxCellOverlays} in the graph for the given cell and all its
@@ -138,7 +162,7 @@ class GraphOverlays extends autoImplement<PartialClass>() {
    * @param cell Optional {@link Cell} that represents the root of the subtree to
    * remove the overlays from. Default is the root in the model.
    */
-  clearCellOverlays(cell: Cell | null = null) {
+  clearCellOverlays(cell = null) {
     cell = cell ?? this.getModel().getRoot();
 
     if (!cell) return;
@@ -152,7 +176,7 @@ class GraphOverlays extends autoImplement<PartialClass>() {
       const child = cell.getChildAt(i);
       this.clearCellOverlays(child); // recurse
     }
-  }
+  },
 
   /**
    * Creates an overlay for the given cell using the warning and image or
@@ -173,12 +197,9 @@ class GraphOverlays extends autoImplement<PartialClass>() {
    * @param isSelect Optional boolean indicating if a click on the overlay
    * should select the corresponding cell. Default is `false`.
    */
-  setCellWarning(
-    cell: Cell,
-    warning: string | null = null,
-    img: Image = this.getWarningImage(),
-    isSelect = false
-  ) {
+  setCellWarning(cell, warning = null, img, isSelect = false) {
+    img = img ?? this.getWarningImage();
+
     if (warning && warning.length > 0) {
       // Creates the overlay with the image and warning
       const overlay = new CellOverlay(img, `<font color=red>${warning}</font>`);
@@ -201,7 +222,7 @@ class GraphOverlays extends autoImplement<PartialClass>() {
     this.removeCellOverlays(cell);
 
     return null;
-  }
-}
+  },
+};
 
-export default GraphOverlays;
+mixInto(Graph)(GraphOverlaysMixin);

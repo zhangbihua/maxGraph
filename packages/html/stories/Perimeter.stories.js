@@ -1,4 +1,4 @@
-import maxgraph from '@maxgraph/core';
+import { Graph, Rubberband, GraphView, utils } from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -14,8 +14,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const { Graph, Rubberband, GraphView, utils } = maxgraph;
-
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';

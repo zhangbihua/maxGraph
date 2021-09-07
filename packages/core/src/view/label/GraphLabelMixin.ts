@@ -1,18 +1,48 @@
+import { mixInto } from '../../util/Utils';
 import Cell from '../cell/datatypes/Cell';
-import { autoImplement, getValue } from '../../util/Utils';
+import { Graph } from '../Graph';
 
-import type Graph from '../Graph';
-import type GraphCells from '../cell/GraphCells';
-import type GraphEdge from '../cell/edge/GraphEdge';
-import type GraphVertex from '../cell/vertex/GraphVertex';
+declare module '../Graph' {
+  interface Graph {
+    labelsVisible: boolean;
+    htmlLabels: boolean;
 
-type PartialGraph = Pick<Graph, 'convertValueToString'>;
-type PartialCells = Pick<GraphCells, 'getCurrentCellStyle' | 'isCellLocked'>;
-type PartialEdge = Pick<GraphEdge, 'isEdgeLabelsMovable'>;
-type PartialVertex = Pick<GraphVertex, 'isVertexLabelsMovable'>;
-type PartialClass = PartialGraph & PartialCells & PartialEdge & PartialVertex;
+    getLabel: (cell: Cell) => string | null;
+    isHtmlLabel: (cell: Cell) => boolean;
+    isLabelsVisible: () => boolean;
+    isHtmlLabels: () => boolean;
+    setHtmlLabels: (value: boolean) => void;
+    isWrapping: (cell: Cell) => boolean;
+    isLabelClipped: (cell: Cell) => boolean;
+    isLabelMovable: (cell: Cell) => boolean;
+  }
+}
 
-class GraphLabel extends autoImplement<PartialClass>() {
+type PartialGraph = Pick<
+  Graph,
+  | 'convertValueToString'
+  | 'getCurrentCellStyle'
+  | 'isCellLocked'
+  | 'isEdgeLabelsMovable'
+  | 'isVertexLabelsMovable'
+>;
+type PartialLabel = Pick<
+  Graph,
+  | 'labelsVisible'
+  | 'htmlLabels'
+  | 'getLabel'
+  | 'isHtmlLabel'
+  | 'isLabelsVisible'
+  | 'isHtmlLabels'
+  | 'setHtmlLabels'
+  | 'isWrapping'
+  | 'isLabelClipped'
+  | 'isLabelMovable'
+>;
+type PartialType = PartialGraph & PartialLabel;
+
+// @ts-expect-error The properties of PartialGraph are defined elsewhere.
+const GraphLabelMixin: PartialType = {
   /**
    * Returns a string or DOM node that represents the label for the given
    * cell. This implementation uses {@link convertValueToString} if {@link labelsVisible}
@@ -61,19 +91,19 @@ class GraphLabel extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} whose label should be returned.
    */
-  getLabel(cell: Cell) {
+  getLabel(cell) {
     let result: string | null = '';
 
     if (this.isLabelsVisible() && cell != null) {
       const style = this.getCurrentCellStyle(cell);
 
-      if (!getValue(style, 'noLabel', false)) {
+      if (!(style.noLabel ?? false)) {
         result = this.convertValueToString(cell);
       }
     }
 
     return result;
-  }
+  },
 
   /**
    * Returns true if the label must be rendered as HTML markup. The default
@@ -81,37 +111,39 @@ class GraphLabel extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} whose label should be displayed as HTML markup.
    */
-  isHtmlLabel(cell: Cell): boolean {
+  isHtmlLabel(cell) {
     return this.isHtmlLabels();
-  }
+  },
 
   /**
    * Specifies if labels should be visible. This is used in {@link getLabel}. Default
    * is true.
    */
-  labelsVisible: boolean = true;
+  labelsVisible: true,
 
-  isLabelsVisible = () => this.labelsVisible;
+  isLabelsVisible() {
+    return this.labelsVisible;
+  },
 
   /**
    * Specifies the return value for {@link isHtmlLabel}.
    * @default false
    */
-  htmlLabels: boolean = false;
+  htmlLabels: false,
 
   /**
    * Returns {@link htmlLabels}.
    */
-  isHtmlLabels(): boolean {
+  isHtmlLabels() {
     return this.htmlLabels;
-  }
+  },
 
   /**
    * Sets {@link htmlLabels}.
    */
-  setHtmlLabels(value: boolean): void {
+  setHtmlLabels(value: boolean) {
     this.htmlLabels = value;
-  }
+  },
 
   /**
    * This enables wrapping for HTML labels.
@@ -154,9 +186,9 @@ class GraphLabel extends autoImplement<PartialClass>() {
    *
    * @param state {@link mxCell} whose label should be wrapped.
    */
-  isWrapping(cell: Cell): boolean {
+  isWrapping(cell) {
     return this.getCurrentCellStyle(cell).whiteSpace === 'wrap';
-  }
+  },
 
   /**
    * Returns true if the overflow portion of labels should be hidden. If this
@@ -166,9 +198,9 @@ class GraphLabel extends autoImplement<PartialClass>() {
    *
    * @param state {@link mxCell} whose label should be clipped.
    */
-  isLabelClipped(cell: Cell): boolean {
+  isLabelClipped(cell) {
     return this.getCurrentCellStyle(cell).overflow === 'hidden';
-  }
+  },
 
   /**
    * Returns true if the given edges's label is moveable. This returns
@@ -177,13 +209,13 @@ class GraphLabel extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} whose label should be moved.
    */
-  isLabelMovable(cell: Cell): boolean {
+  isLabelMovable(cell) {
     return (
       !this.isCellLocked(cell) &&
       ((cell.isEdge() && this.isEdgeLabelsMovable()) ||
         (cell.isVertex() && this.isVertexLabelsMovable()))
     );
-  }
-}
+  },
+};
 
-export default GraphLabel;
+mixInto(Graph)(GraphLabelMixin);

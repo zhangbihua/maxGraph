@@ -1,4 +1,11 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  mxKeyHandler,
+  utils,
+  mxDomUtils,
+  CloneUtils,
+  EventUtils,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -10,8 +17,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const { Graph, mxKeyHandler, utils, mxDomUtils, CloneUtils, EventUtils } = maxgraph;
-
   const div = document.createElement('div');
   div.innerHTML = `
     Double-click the upper/lower half of the cell to edit different fields

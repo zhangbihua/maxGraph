@@ -40,5 +40,5 @@ class mxGraphCodec extends mxObjectCodec {
   }
 }
 
-mxCodecRegistry.register(new mxGraphCodec());
+// mxCodecRegistry.register(new mxGraphCodec());
 export default mxGraphCodec;

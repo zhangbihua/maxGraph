@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 import MxHierarchicalLayoutStage from './HierarchicalLayoutStage';
-import utils, { remove } from '../../../../../util/Utils';
+import { remove } from '../../../../../util/Utils';
 import CellPath from '../../../../cell/datatypes/CellPath';
 import { clone } from '../../../../../util/CloneUtils';
 

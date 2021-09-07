@@ -1,4 +1,4 @@
-import maxgraph from '@maxgraph/core';
+import { Graph, Constants } from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 import { clone } from '@maxgraph/core/util/CloneUtils';
@@ -13,8 +13,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const { Graph, Constants } = maxgraph;
-
   const div = document.createElement('div');
 
   const container = document.createElement('div');

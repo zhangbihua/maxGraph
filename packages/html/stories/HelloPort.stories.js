@@ -1,4 +1,12 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  Rubberband,
+  EdgeStyle,
+  Point,
+  Constants,
+  mxDomHelpers,
+  mxClient,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 import { popup } from '@maxgraph/core/util/gui/mxWindow';
@@ -16,16 +24,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    Graph,
-    Rubberband,
-    EdgeStyle,
-    Point,
-    Constants,
-    mxDomHelpers,
-    mxClient,
-  } = maxgraph;
-
   mxClient.setImageBasePath('/images');
 
   const div = document.createElement('div');

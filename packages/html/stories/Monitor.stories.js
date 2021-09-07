@@ -1,4 +1,14 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  EdgeStyle,
+  mxDomHelpers,
+  mxXmlUtils,
+  Perimeter,
+  utils,
+  Constants,
+  CloneUtils,
+  mxCodec,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -10,18 +20,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    Graph,
-    EdgeStyle,
-    mxDomHelpers,
-    mxXmlUtils,
-    Perimeter,
-    utils,
-    Constants,
-    CloneUtils,
-    mxCodec,
-  } = maxgraph;
-
   const div = document.createElement('div');
 
   const container = document.createElement('div');

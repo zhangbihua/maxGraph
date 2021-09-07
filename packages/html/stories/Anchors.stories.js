@@ -1,4 +1,14 @@
-import mxgraph from '@mxgraph/core';
+import {
+  Graph,
+  InternalEvent,
+  Rubberband,
+  ConnectionHandler,
+  ConnectionConstraint,
+  Geometry,
+  Polyline,
+  Point,
+  CellState,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -14,18 +24,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    Graph,
-    InternalEvent,
-    Rubberband,
-    ConnectionHandler,
-    ConnectionConstraint,
-    Geometry,
-    Polyline,
-    Point,
-    CellState,
-  } = mxgraph;
-
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';

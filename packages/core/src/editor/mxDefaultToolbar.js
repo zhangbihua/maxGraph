@@ -8,7 +8,7 @@
 import mxClient from '../mxClient';
 import mxToolbar from '../util/gui/mxToolbar';
 import Geometry from '../view/geometry/Geometry';
-import utils, { convertPoint } from '../util/Utils';
+import { convertPoint } from '../util/Utils';
 import InternalEvent from '../view/event/InternalEvent';
 import { getClientX, getClientY } from '../util/EventUtils';
 import { makeDraggable } from '../util/GestureUtils';
@@ -265,14 +265,7 @@ class mxDefaultToolbar {
       InternalEvent.consume(evt);
     };
 
-    const img = this.toolbar.addMode(
-      title,
-      icon,
-      clickHandler,
-      pressed,
-      null,
-      toggle
-    );
+    const img = this.toolbar.addMode(title, icon, clickHandler, pressed, null, toggle);
 
     // Creates a wrapper function that calls the click handler without
     // the graph argument
@@ -307,10 +300,7 @@ class mxDefaultToolbar {
       !this.connectOnDrop ||
       !target.isConnectable()
     ) {
-      while (
-        target != null &&
-        !graph.isValidDropTarget(target, [vertex], evt)
-      ) {
+      while (target != null && !graph.isValidDropTarget(target, [vertex], evt)) {
         target = target.getParent();
       }
       this.insert(vertex, evt, target);
@@ -337,10 +327,7 @@ class mxDefaultToolbar {
       const pt = convertPoint(graph.container, x, y);
 
       // Splits the target edge or inserts into target group
-      if (
-        graph.isSplitEnabled() &&
-        graph.isSplitTarget(target, [vertex], evt)
-      ) {
+      if (graph.isSplitEnabled() && graph.isSplitTarget(target, [vertex], evt)) {
         return graph.splitEdge(target, [vertex], null, pt.x, pt.y);
       }
       return this.editor.addVertex(target, vertex, pt.x, pt.y);
@@ -428,7 +415,7 @@ class mxDefaultToolbar {
     sprite.setAttribute('src', img.getAttribute('src'));
 
     // Handles delayed loading of the images
-    const loader = evt => {
+    const loader = (evt) => {
       // Preview uses the image node with double size. Later this can be
       // changed to use a separate preview and guides, but for this the
       // dropHandler must use the additional x- and y-arguments and the

@@ -25,7 +25,7 @@ import Dictionary from '../util/Dictionary';
 import CellHighlight from './selection/CellHighlight';
 import Rectangle from './geometry/Rectangle';
 import { getClientX, getClientY, isAltDown, isMultiTouchEvent } from '../util/EventUtils';
-import { MaxGraph } from './Graph';
+import { Graph } from './Graph';
 import Guide from '../util/Guide';
 import Shape from './geometry/shape/Shape';
 import InternalMouseEvent from './event/InternalMouseEvent';
@@ -63,7 +63,7 @@ import ConnectionHandler from './connection/ConnectionHandler';
 class GraphHandler implements GraphPlugin {
   static pluginId = 'GraphHandler';
 
-  constructor(graph: MaxGraph) {
+  constructor(graph: Graph) {
     this.graph = graph;
     this.graph.addMouseListener(this);
 
@@ -166,7 +166,7 @@ class GraphHandler implements GraphPlugin {
    *
    * Reference to the enclosing <mxGraph>.
    */
-  graph: MaxGraph;
+  graph: Graph;
 
   panHandler: () => void;
   escapeHandler: (sender: EventSource, evt: EventObject) => void;

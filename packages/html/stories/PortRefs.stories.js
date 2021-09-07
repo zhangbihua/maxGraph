@@ -1,4 +1,16 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  Rubberband,
+  Point,
+  EdgeHandler,
+  ConstraintHandler,
+  ImageBox,
+  Shape,
+  TriangleShape,
+  Constants,
+  ConnectionConstraint,
+  mxClient,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -10,20 +22,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    Graph,
-    Rubberband,
-    Point,
-    EdgeHandler,
-    ConstraintHandler,
-    ImageBox,
-    Shape,
-    TriangleShape,
-    Constants,
-    ConnectionConstraint,
-    mxClient,
-  } = maxgraph;
-
   mxClient.setImageBasePath('/images');
 
   const container = document.createElement('div');

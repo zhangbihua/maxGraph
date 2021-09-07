@@ -1,4 +1,4 @@
-import maxgraph from '@maxgraph/core';
+import { Graph, Point } from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -12,8 +12,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const { Graph, Point } = maxgraph;
-
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';

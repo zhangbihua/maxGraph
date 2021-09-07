@@ -8,7 +8,6 @@
 import mxClient from '../../mxClient';
 import InternalEvent from '../../view/event/InternalEvent';
 import { getInnerHtml, write } from '../DomUtils';
-import utils from '../Utils';
 import mxWindow, { popup } from './mxWindow';
 
 /**
@@ -146,10 +145,7 @@ class mxLog {
         const elt = mxLog.window.getElement();
 
         const resizeHandler = (sender, evt) => {
-          mxLog.textarea.style.height = `${Math.max(
-            0,
-            elt.offsetHeight - 70
-          )}px`;
+          mxLog.textarea.style.height = `${Math.max(0, elt.offsetHeight - 70)}px`;
         };
 
         mxLog.window.addListener(InternalEvent.RESIZE_END, resizeHandler);
@@ -313,10 +309,7 @@ class mxLog {
       mxLog.textarea.value = mxLog.textarea.value + string;
 
       // Workaround for no update in Presto 2.5.22 (Opera 10.5)
-      if (
-        navigator.userAgent != null &&
-        navigator.userAgent.indexOf('Presto/2.5') >= 0
-      ) {
+      if (navigator.userAgent != null && navigator.userAgent.indexOf('Presto/2.5') >= 0) {
         mxLog.textarea.style.visibility = 'hidden';
         mxLog.textarea.style.visibility = 'visible';
       }
@@ -344,6 +337,6 @@ class mxLog {
 
     mxLog.write(`${string}\n`);
   }
-};
+}
 
 export default mxLog;

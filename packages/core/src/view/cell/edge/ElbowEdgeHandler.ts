@@ -17,7 +17,7 @@ import Point from '../../geometry/Point';
 import EdgeStyle from '../../style/EdgeStyle';
 import Resources from '../../../util/Resources';
 import Rectangle from '../../geometry/Rectangle';
-import utils, { intersects } from '../../../util/Utils';
+import { intersects } from '../../../util/Utils';
 import mxClient from '../../../mxClient';
 import { isConsumed } from '../../../util/EventUtils';
 import CellState from '../datatypes/CellState';

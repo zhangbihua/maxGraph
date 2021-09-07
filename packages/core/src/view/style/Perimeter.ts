@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import utils, { intersection } from '../../util/Utils';
+import { intersection } from '../../util/Utils';
 import Point from '../geometry/Point';
 import {
   DIRECTION_EAST,
@@ -311,8 +311,7 @@ class Perimeter {
     orthogonal: boolean = false
   ): Point | null {
     const direction = vertex != null ? vertex.style.direction : null;
-    const vertical =
-      direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH;
+    const vertical = direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH;
 
     const { x } = bounds;
     const { y } = bounds;
@@ -395,10 +394,7 @@ class Perimeter {
         cy = pt.y;
       }
 
-      if (
-        (vertical && next.x <= x + w / 2) ||
-        (!vertical && next.y <= y + h / 2)
-      ) {
+      if ((vertical && next.x <= x + w / 2) || (!vertical && next.y <= y + h / 2)) {
         result = intersection(
           next.x,
           next.y,
@@ -410,16 +406,7 @@ class Perimeter {
           corner.y
         );
       } else {
-        result = intersection(
-          next.x,
-          next.y,
-          cx,
-          cy,
-          corner.x,
-          corner.y,
-          end.x,
-          end.y
-        );
+        result = intersection(next.x, next.y, cx, cy, corner.x, corner.y, end.x, end.y);
       }
     }
 
@@ -460,8 +447,7 @@ class Perimeter {
       vertex != null
         ? Perimeter.getValue(vertex.style, 'direction', DIRECTION_EAST)
         : DIRECTION_EAST;
-    const vertical =
-      direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH;
+    const vertical = direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH;
     let a = new Point();
     let b = new Point();
 
@@ -735,7 +721,11 @@ class Perimeter {
     return result;
   }
 
-  private static getValue(style: CellStateStyles, direction: string, DIRECTION_EAST: string) {
+  private static getValue(
+    style: CellStateStyles,
+    direction: string,
+    DIRECTION_EAST: string
+  ) {
     return '';
   }
 }

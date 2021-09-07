@@ -1,5 +1,5 @@
 {
-  "name": "@mxgraph/html",
+  "name": "@maxgraph/html",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@mxgraph/core": "*"
+    "@maxgraph/core": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.13.15",

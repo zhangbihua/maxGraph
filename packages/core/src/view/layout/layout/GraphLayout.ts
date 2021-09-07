@@ -9,7 +9,7 @@ import Dictionary from '../../../util/Dictionary';
 import Rectangle from '../../geometry/Rectangle';
 import Geometry from '../../geometry/Geometry';
 import Point from '../../geometry/Point';
-import Graph from '../../Graph';
+import { Graph } from '../../Graph';
 import Cell from '../../cell/datatypes/Cell';
 import CellArray from '../../cell/datatypes/CellArray';
 
@@ -134,7 +134,13 @@ class GraphLayout {
    * null for the first step of the traversal.
    * @param visited Optional {@link Dictionary} of cell paths for the visited cells.
    */
-  traverse(vertex: Cell, directed?: boolean, func?: Function, edge?: Cell, visited?: Dictionary<Cell, boolean>): void {
+  traverse(
+    vertex: Cell,
+    directed?: boolean,
+    func?: Function,
+    edge?: Cell,
+    visited?: Dictionary<Cell, boolean>
+  ): void {
     if (func != null && vertex != null) {
       directed = directed != null ? directed : true;
       visited = visited || new Dictionary();
@@ -320,11 +326,7 @@ class GraphLayout {
       if (this.useBoundingBox) {
         const state = this.graph.getView().getState(cell);
 
-        if (
-          state != null &&
-          state.text != null &&
-          state.text.boundingBox != null
-        ) {
+        if (state != null && state.text != null && state.text.boundingBox != null) {
           const { scale } = this.graph.getView();
           const box = state.text.boundingBox;
 
@@ -376,20 +378,14 @@ class GraphLayout {
     if (this.useBoundingBox) {
       const state = this.graph.getView().getState(cell);
 
-      if (
-        state != null &&
-        state.text != null &&
-        state.text.boundingBox != null
-      ) {
+      if (state != null && state.text != null && state.text.boundingBox != null) {
         const { scale } = this.graph.getView();
         const tmp = state.text.boundingBox;
 
         const dx0 = Math.max(state.x - tmp.x, 0) / scale;
         const dy0 = Math.max(state.y - tmp.y, 0) / scale;
-        const dx1 =
-          Math.max(tmp.x + tmp.width - (state.x + state.width), 0) / scale;
-        const dy1 =
-          Math.max(tmp.y + tmp.height - (state.y + state.height), 0) / scale;
+        const dx1 = Math.max(tmp.x + tmp.width - (state.x + state.width), 0) / scale;
+        const dy1 = Math.max(tmp.y + tmp.height - (state.y + state.height), 0) / scale;
 
         geo = new Rectangle(
           geo.x - dx0,

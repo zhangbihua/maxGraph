@@ -1,4 +1,4 @@
-import maxgraph from '@maxgraph/core';
+import { Graph, mxDomHelpers } from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -10,8 +10,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const { Graph, mxDomHelpers } = maxgraph;
-
   const div = document.createElement('div');
 
   const container = document.createElement('div');

@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import utils, { setOpacity } from '../Utils';
+import { setOpacity } from '../Utils';
 import GeometryChange from '../../view/geometry/GeometryChange';
 import TerminalChange from '../../view/cell/edge/TerminalChange';
 import ValueChange from '../../view/cell/ValueChange';
@@ -56,17 +56,12 @@ class mxEffects {
           change instanceof ChildChange ||
           change instanceof StyleChange
         ) {
-          const state = graph
-            .getView()
-            .getState(change.cell || change.child, false);
+          const state = graph.getView().getState(change.cell || change.child, false);
 
           if (state != null) {
             isRequired = true;
 
-            if (
-              change.constructor !== GeometryChange ||
-              change.cell.isEdge()
-            ) {
+            if (change.constructor !== GeometryChange || change.cell.isEdge()) {
               setOpacity(state.shape.node, (100 * step) / maxStep);
             } else {
               const { scale } = graph.getView();
@@ -74,10 +69,8 @@ class mxEffects {
               const dx = (change.geometry.x - change.previous.x) * scale;
               const dy = (change.geometry.y - change.previous.y) * scale;
 
-              const sx =
-                (change.geometry.width - change.previous.width) * scale;
-              const sy =
-                (change.geometry.height - change.previous.height) * scale;
+              const sx = (change.geometry.width - change.previous.width) * scale;
+              const sy = (change.geometry.height - change.previous.height) * scale;
 
               if (step === 0) {
                 state.x -= dx;
@@ -94,11 +87,7 @@ class mxEffects {
               graph.cellRenderer.redraw(state);
 
               // Fades all connected edges and children
-              mxEffects.cascadeOpacity(
-                graph,
-                change.cell,
-                (100 * step) / maxStep
-              );
+              mxEffects.cascadeOpacity(graph, change.cell, (100 * step) / maxStep);
             }
           }
         }

@@ -1,21 +1,65 @@
-import { autoImplement, hasScrollbars } from '../../util/Utils';
+import { hasScrollbars, mixInto } from '../../util/Utils';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
 import PanningHandler from './PanningHandler';
-import Graph from '../Graph';
+import { Graph } from '../Graph';
 import Cell from '../cell/datatypes/Cell';
 import Rectangle from '../geometry/Rectangle';
 import Point from '../geometry/Point';
-import GraphEvents from '../event/GraphEvents';
 import SelectionCellsHandler from '../selection/SelectionCellsHandler';
 
-type PartialGraph = Pick<Graph, 'getContainer' | 'getView' | 'getPlugin'>;
-type PartialEvents = Pick<GraphEvents, 'fireEvent'>;
-type PartialClass = PartialGraph & PartialEvents;
+declare module '../Graph' {
+  interface Graph {
+    shiftPreview1: HTMLElement | null;
+    shiftPreview2: HTMLElement | null;
+    useScrollbarsForPanning: boolean;
+    timerAutoScroll: boolean;
+    allowAutoPanning: boolean;
+    panDx: number;
+    panDy: number;
 
-class GraphPanning extends autoImplement<PartialClass>() {
-  shiftPreview1: HTMLElement | null = null;
-  shiftPreview2: HTMLElement | null = null;
+    isUseScrollbarsForPanning: () => boolean;
+    isTimerAutoScroll: () => boolean;
+    isAllowAutoPanning: () => boolean;
+    getPanDx: () => number;
+    setPanDx: (dx: number) => void;
+    getPanDy: () => number;
+    setPanDy: (dy: number) => void;
+    panGraph: (dx: number, dy: number) => void;
+    scrollCellToVisible: (cell: Cell, center?: boolean) => void;
+    scrollRectToVisible: (rect: Rectangle) => boolean;
+    setPanning: (enabled: boolean) => void;
+  }
+}
+
+type PartialGraph = Pick<Graph, 'getContainer' | 'getView' | 'getPlugin' | 'fireEvent'>;
+type PartialPanning = Pick<
+  Graph,
+  | 'shiftPreview1'
+  | 'shiftPreview2'
+  | 'useScrollbarsForPanning'
+  | 'timerAutoScroll'
+  | 'allowAutoPanning'
+  | 'panDx'
+  | 'panDy'
+  | 'isUseScrollbarsForPanning'
+  | 'isTimerAutoScroll'
+  | 'isAllowAutoPanning'
+  | 'getPanDx'
+  | 'setPanDx'
+  | 'getPanDy'
+  | 'setPanDy'
+  | 'panGraph'
+  | 'scrollCellToVisible'
+  | 'scrollRectToVisible'
+  | 'setPanning'
+>;
+type PartialType = PartialGraph & PartialPanning;
+
+// @ts-expect-error The properties of PartialGraph are defined elsewhere.
+const GraphPanningMixin: PartialType = {
+  shiftPreview1: null,
+  shiftPreview2: null,
 
   /**
    * Specifies if scrollbars should be used for panning in {@link panGraph} if
@@ -24,9 +68,11 @@ class GraphPanning extends autoImplement<PartialClass>() {
    * then no panning occurs if this is `true`.
    * @default true
    */
-  useScrollbarsForPanning = true;
+  useScrollbarsForPanning: true,
 
-  isUseScrollbarsForPanning = () => this.useScrollbarsForPanning;
+  isUseScrollbarsForPanning() {
+    return this.useScrollbarsForPanning;
+  },
 
   /**
    * Specifies if autoscrolling should be carried out via mxPanningManager even
@@ -36,9 +82,11 @@ class GraphPanning extends autoImplement<PartialClass>() {
    * are visible and scrollable in all directions.
    * @default false
    */
-  timerAutoScroll = false;
+  timerAutoScroll: false,
 
-  isTimerAutoScroll = () => this.timerAutoScroll;
+  isTimerAutoScroll() {
+    return this.timerAutoScroll;
+  },
 
   /**
    * Specifies if panning via {@link panGraph} should be allowed to implement autoscroll
@@ -47,27 +95,39 @@ class GraphPanning extends autoImplement<PartialClass>() {
    * positive value.
    * @default false
    */
-  allowAutoPanning = false;
+  allowAutoPanning: false,
 
-  isAllowAutoPanning = () => this.allowAutoPanning;
+  isAllowAutoPanning() {
+    return this.allowAutoPanning;
+  },
 
   /**
    * Current horizontal panning value.
    * @default 0
    */
-  panDx = 0;
+  panDx: 0,
 
-  getPanDx = () => this.panDx;
-  setPanDx = (dx: number) => (this.panDx = dx);
+  getPanDx() {
+    return this.panDx;
+  },
+
+  setPanDx(dx) {
+    this.panDx = dx;
+  },
 
   /**
    * Current vertical panning value.
    * @default 0
    */
-  panDy = 0;
+  panDy: 0,
 
-  getPanDy = () => this.panDy;
-  setPanDy = (dy: number) => (this.panDy = dy);
+  getPanDy() {
+    return this.panDy;
+  },
+
+  setPanDy(dy) {
+    this.panDy = dy;
+  },
 
   /**
    * Shifts the graph display by the given amount. This is used to preview
@@ -77,7 +137,7 @@ class GraphPanning extends autoImplement<PartialClass>() {
    * @param dx Amount to shift the graph along the x-axis.
    * @param dy Amount to shift the graph along the y-axis.
    */
-  panGraph(dx: number, dy: number) {
+  panGraph(dx, dy) {
     const container = this.getContainer();
 
     if (this.useScrollbarsForPanning && hasScrollbars(container)) {
@@ -175,7 +235,7 @@ class GraphPanning extends autoImplement<PartialClass>() {
 
       this.fireEvent(new EventObject(InternalEvent.PAN));
     }
-  }
+  },
 
   /**
    * Pans the graph so that it shows the given cell. Optionally the cell may
@@ -192,7 +252,7 @@ class GraphPanning extends autoImplement<PartialClass>() {
    * @param cell {@link mxCell} to be made visible.
    * @param center Optional boolean flag. Default is `false`.
    */
-  scrollCellToVisible(cell: Cell, center = false) {
+  scrollCellToVisible(cell, center = false) {
     const x = -this.getView().translate.x;
     const y = -this.getView().translate.y;
 
@@ -221,14 +281,14 @@ class GraphPanning extends autoImplement<PartialClass>() {
         this.getView().setTranslate(tr2.x, tr2.y);
       }
     }
-  }
+  },
 
   /**
    * Pans the graph so that it shows the given rectangle.
    *
    * @param rect {@link mxRectangle} to be made visible.
    */
-  scrollRectToVisible(rect: Rectangle) {
+  scrollRectToVisible(rect) {
     let isChanged = false;
 
     const container = <HTMLElement>this.getContainer();
@@ -311,7 +371,7 @@ class GraphPanning extends autoImplement<PartialClass>() {
     }
 
     return isChanged;
-  }
+  },
 
   /*****************************************************************************
    * Group: Graph behaviour
@@ -323,11 +383,11 @@ class GraphPanning extends autoImplement<PartialClass>() {
    *
    * @param enabled Boolean indicating if panning should be enabled.
    */
-  setPanning(enabled: boolean) {
+  setPanning(enabled) {
     const panningHandler = this.getPlugin('PanningHandler') as PanningHandler;
 
     if (panningHandler) panningHandler.panningEnabled = enabled;
-  }
-}
+  },
+};
 
-export default GraphPanning;
+mixInto(Graph)(GraphPanningMixin);

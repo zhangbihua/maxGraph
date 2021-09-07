@@ -3,12 +3,26 @@ import Resources from '../../util/Resources';
 import { isNode } from '../../util/DomUtils';
 import CellState from '../cell/datatypes/CellState';
 import Multiplicity from './Multiplicity';
-import { autoImplement } from '../../util/Utils';
+import { Graph } from '../Graph';
+import { mixInto } from '../../util/Utils';
 
-import type Graph from '../Graph';
-import type GraphEdge from '../cell/edge/GraphEdge';
-import type GraphConnections from '../connection/GraphConnections';
-import type GraphOverlays from '../layout/GraphOverlays';
+declare module '../Graph' {
+  interface Graph {
+    multiplicities: Multiplicity[];
+
+    validationAlert: (message: string) => void;
+    isEdgeValid: (edge: Cell | null, source: Cell, target: Cell) => boolean;
+    getEdgeValidationError: (
+      edge: Cell | null,
+      source: Cell | null,
+      target: Cell | null
+    ) => string | null;
+    validateEdge: (edge: Cell, source: Cell, target: Cell) => string | null;
+    validateGraph: (cell: Cell | null, context: any) => string | null;
+    getCellValidationError: (cell: Cell) => string | null;
+    validateCell: (cell: Cell, context: CellState) => string | null;
+  }
+}
 
 type PartialGraph = Pick<
   Graph,
@@ -19,18 +33,30 @@ type PartialGraph = Pick<
   | 'isValidRoot'
   | 'getContainsValidationErrorsResource'
   | 'getAlreadyConnectedResource'
+  | 'isAllowDanglingEdges'
+  | 'isValidConnection'
+  | 'setCellWarning'
 >;
-type PartialEdge = Pick<GraphEdge, 'isAllowDanglingEdges'>;
-type PartialConnections = Pick<GraphConnections, 'isValidConnection'>;
-type PartialOverlays = Pick<GraphOverlays, 'setCellWarning'>;
-type PartialClass = PartialGraph & PartialEdge & PartialConnections & PartialOverlays;
+type PartialValidation = Pick<
+  Graph,
+  | 'multiplicities'
+  | 'validationAlert'
+  | 'isEdgeValid'
+  | 'getEdgeValidationError'
+  | 'validateEdge'
+  | 'validateGraph'
+  | 'getCellValidationError'
+  | 'validateCell'
+>;
+type PartialType = PartialGraph & PartialValidation;
 
-class GraphValidation extends autoImplement<PartialClass>() {
+// @ts-expect-error The properties of PartialGraph are defined elsewhere.
+const GraphValidationMixin: PartialType = {
   /**
    * An array of {@link Multiplicity} describing the allowed
    * connections in a graph.
    */
-  multiplicities: Multiplicity[] = [];
+  multiplicities: [],
 
   /*****************************************************************************
    * Group: Validation
@@ -40,9 +66,9 @@ class GraphValidation extends autoImplement<PartialClass>() {
    * Displays the given validation error in a dialog. This implementation uses
    * mxUtils.alert.
    */
-  validationAlert(message: string) {
+  validationAlert(message) {
     alert(message);
-  }
+  },
 
   /**
    * Checks if the return value of {@link getEdgeValidationError} for the given
@@ -52,9 +78,9 @@ class GraphValidation extends autoImplement<PartialClass>() {
    * @param source {@link mxCell} that represents the source terminal.
    * @param target {@link mxCell} that represents the target terminal.
    */
-  isEdgeValid(edge: Cell | null, source: Cell, target: Cell) {
+  isEdgeValid(edge, source, target) {
     return !this.getEdgeValidationError(edge, source, target);
-  }
+  },
 
   /**
    * Returns the validation error message to be displayed when inserting or
@@ -93,11 +119,7 @@ class GraphValidation extends autoImplement<PartialClass>() {
    * @param source {@link mxCell} that represents the source terminal.
    * @param target {@link mxCell} that represents the target terminal.
    */
-  getEdgeValidationError(
-    edge: Cell | null = null,
-    source: Cell | null = null,
-    target: Cell | null = null
-  ) {
+  getEdgeValidationError(edge = null, source = null, target = null) {
     if (edge && !this.isAllowDanglingEdges() && (!source || !target)) {
       return '';
     }
@@ -164,7 +186,7 @@ class GraphValidation extends autoImplement<PartialClass>() {
     }
 
     return this.isAllowDanglingEdges() ? null : '';
-  }
+  },
 
   /**
    * Hook method for subclassers to return an error message for the given
@@ -174,10 +196,9 @@ class GraphValidation extends autoImplement<PartialClass>() {
    * @param source {@link mxCell} that represents the source terminal.
    * @param target {@link mxCell} that represents the target terminal.
    */
-  // validateEdge(edge: mxCell, source: mxCell, target: mxCell): string | null;
-  validateEdge(edge: Cell, source: Cell, target: Cell): void | null {
+  validateEdge(edge, source, target) {
     return null;
-  }
+  },
 
   /**
    * Validates the graph by validating each descendant of the given cell or
@@ -193,7 +214,7 @@ class GraphValidation extends autoImplement<PartialClass>() {
    * the graph root.
    * @param context Object that represents the global validation state.
    */
-  validateGraph(cell: Cell | null, context: any): string | null {
+  validateGraph(cell, context) {
     cell = cell ?? this.getModel().getRoot();
 
     if (!cell) {
@@ -261,7 +282,7 @@ class GraphValidation extends autoImplement<PartialClass>() {
       this.getView().validate();
     }
     return warning.length > 0 || !isValid ? warning : null;
-  }
+  },
 
   /**
    * Checks all {@link multiplicities} that cannot be enforced while the graph is
@@ -270,7 +291,7 @@ class GraphValidation extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} for which the multiplicities should be checked.
    */
-  getCellValidationError(cell: Cell) {
+  getCellValidationError(cell) {
     const outCount = cell.getDirectedEdgeCount(true);
     const inCount = cell.getDirectedEdgeCount(false);
     const value = cell.getValue();
@@ -295,7 +316,7 @@ class GraphValidation extends autoImplement<PartialClass>() {
     }
 
     return error.length > 0 ? error : null;
-  }
+  },
 
   /**
    * Hook method for subclassers to return an error message for the given
@@ -305,9 +326,9 @@ class GraphValidation extends autoImplement<PartialClass>() {
    * @param cell {@link mxCell} that represents the cell to validate.
    * @param context Object that represents the global validation state.
    */
-  validateCell(cell: Cell, context: CellState): string | null {
+  validateCell(cell, context) {
     return null;
-  }
-}
+  },
+};
 
-export default GraphValidation;
+mixInto(Graph)(GraphValidationMixin);

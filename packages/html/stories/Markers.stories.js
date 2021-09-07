@@ -1,4 +1,13 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  EdgeHandler,
+  GraphHandler,
+  CellRenderer,
+  Marker,
+  CylinderShape,
+  Arrow,
+  Point,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -10,17 +19,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    Graph,
-    EdgeHandler,
-    GraphHandler,
-    CellRenderer,
-    Marker,
-    CylinderShape,
-    Arrow,
-    Point,
-  } = maxgraph;
-
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';

@@ -1,4 +1,13 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  mxWindow,
+  mxKeyHandler,
+  Rubberband,
+  InternalEvent,
+  mxLog,
+  mxDomUtils,
+  mxClient,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -18,17 +27,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    Graph,
-    mxWindow,
-    mxKeyHandler,
-    Rubberband,
-    InternalEvent,
-    mxLog,
-    mxDomUtils,
-    mxClient,
-  } = maxgraph;
-
   mxClient.setImageBasePath('/images');
 
   const container = document.createElement('div');

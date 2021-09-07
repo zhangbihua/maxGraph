@@ -230,5 +230,5 @@ class mxEditorCodec extends mxObjectCodec {
   }
 }
 
-mxCodecRegistry.register(new mxEditorCodec());
+// mxCodecRegistry.register(new mxEditorCodec());
 export default mxEditorCodec;

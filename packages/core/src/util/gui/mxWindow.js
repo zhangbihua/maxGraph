@@ -8,7 +8,7 @@
 import Rectangle from '../../view/geometry/Rectangle';
 import EventObject from '../../view/event/EventObject';
 import EventSource from '../../view/event/EventSource';
-import utils, { fit, getCurrentStyle } from '../Utils';
+import { fit, getCurrentStyle } from '../Utils';
 import InternalEvent from '../../view/event/InternalEvent';
 import mxClient from '../../mxClient';
 import { NODETYPE_TEXT } from '../Constants';

@@ -47,7 +47,7 @@ import {
   SHAPE_SWIMLANE,
   SHAPE_TRIANGLE,
 } from '../../util/Constants';
-import utils, {
+import {
   convertPoint,
   equalEntries,
   equalPoints,
@@ -67,12 +67,12 @@ import Point from '../geometry/Point';
 import Shape from '../geometry/shape/Shape';
 import CellState from './datatypes/CellState';
 import Cell from './datatypes/Cell';
-import Model from '../model/Model';
 import CellOverlay from './CellOverlay';
 import { getClientX, getClientY, getSource } from '../../util/EventUtils';
 import { isNode } from '../../util/DomUtils';
 import { CellStateStyles } from '../../types';
 import CellArray from './datatypes/CellArray';
+import SelectionCellsHandler from '../selection/SelectionCellsHandler';
 
 /**
  * Class: mxCellRenderer
@@ -982,7 +982,7 @@ class CellRenderer {
         !state.text.bounds.equals(bounds)
       ) {
         state.text.dialect = dialect;
-        state.text.value = value;
+        state.text.value = value as string;
         state.text.bounds = bounds;
         state.text.scale = nextScale;
         state.text.wrap = wrapping;
@@ -1135,8 +1135,8 @@ class CellRenderer {
 
     // Shape can modify its label bounds
     if (state.shape != null) {
-      const hpos = getValue(state.style, 'labelPosition', ALIGN_CENTER);
-      const vpos = getValue(state.style, 'verticalLabelPosition', ALIGN_MIDDLE);
+      const hpos = state.style.labelPosition ?? ALIGN_CENTER;
+      const vpos = state.style.verticalLabelPosition ?? ALIGN_MIDDLE;
 
       if (hpos === ALIGN_CENTER && vpos === ALIGN_MIDDLE) {
         bounds = state.shape.getLabelBounds(bounds);
@@ -1144,10 +1144,10 @@ class CellRenderer {
     }
 
     // Label width style overrides actual label width
-    const lw = getValue(state.style, 'labelWidth', null);
+    const lw = state.style.labelWidth ?? null;
 
     if (lw != null) {
-      bounds.width = parseFloat(lw) * scale;
+      bounds.width = lw * scale;
     }
     if (!isEdge) {
       this.rotateLabelBounds(state, bounds);
@@ -1304,16 +1304,14 @@ class CellRenderer {
       const bounds = this.getControlBounds(state, image.width, image.height);
 
       const r = this.legacyControlPosition
-        ? getValue(state.style, 'rotation', 0)
-        : // @ts-ignore
-          state.shape.getTextRotation();
+        ? state.style.rotation ?? 0
+        : state.shape!.getTextRotation();
       const s = state.view.scale;
 
       if (
         forced ||
         state.control.scale !== s ||
-        // @ts-ignore
-        !state.control.bounds.equals(bounds) ||
+        !state.control.bounds!.equals(bounds) ||
         state.control.rotation !== r
       ) {
         state.control.rotation = r;
@@ -1556,8 +1554,10 @@ class CellRenderer {
         this.installListeners(state);
 
         // Forces a refresh of the handler if one exists
-        // @ts-ignore
-        state.view.graph.selectionCellsHandler.updateHandler(state);
+        const selectionCellsHandler = state.view.graph.getPlugin(
+          'SelectionCellsHandler'
+        ) as SelectionCellsHandler;
+        selectionCellsHandler.updateHandler(state);
       }
     } else if (
       !force &&
@@ -1568,8 +1568,10 @@ class CellRenderer {
       state.shape.resetStyles();
       this.configureShape(state);
       // LATER: Ignore update for realtime to fix reset of current gesture
-      // @ts-ignore
-      state.view.graph.selectionCellsHandler.updateHandler(state);
+      const selectionCellsHandler = state.view.graph.getPlugin(
+        'SelectionCellsHandler'
+      ) as SelectionCellsHandler;
+      selectionCellsHandler.updateHandler(state);
       force = true;
     }
 

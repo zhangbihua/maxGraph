@@ -1,4 +1,17 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  mxDomUtils,
+  Rubberband,
+  DragSource,
+  utils,
+  GestureUtils,
+  EdgeHandler,
+  GraphHandler,
+  Guide,
+  EventUtils,
+  Cell,
+  Geometry,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -14,21 +27,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    Graph,
-    mxDomUtils,
-    Rubberband,
-    DragSource,
-    utils,
-    GestureUtils,
-    EdgeHandler,
-    GraphHandler,
-    Guide,
-    EventUtils,
-    Cell,
-    Geometry,
-  } = maxgraph;
-
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';

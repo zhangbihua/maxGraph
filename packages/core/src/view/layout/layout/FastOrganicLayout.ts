@@ -6,7 +6,7 @@
  */
 import ObjectIdentity from '../../../util/ObjectIdentity';
 import GraphLayout from './GraphLayout';
-import Graph from '../../Graph';
+import { Graph } from '../../Graph';
 import Cell from '../../cell/datatypes/Cell';
 
 /**

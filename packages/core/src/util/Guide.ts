@@ -11,7 +11,7 @@ import Polyline from '../view/geometry/shape/edge/Polyline';
 import CellState from '../view/cell/datatypes/CellState';
 import Shape from '../view/geometry/shape/Shape';
 import Rectangle from '../view/geometry/Rectangle';
-import { MaxGraph } from '../view/Graph';
+import { Graph } from '../view/Graph';
 import EventObject from '../view/event/EventObject';
 import GraphView from '../view/view/GraphView';
 import { ColorValue } from '../types';
@@ -26,7 +26,7 @@ import { ColorValue } from '../types';
  * Constructs a new guide object.
  */
 class Guide {
-  constructor(graph: MaxGraph, states: CellState[]) {
+  constructor(graph: Graph, states: CellState[]) {
     this.graph = graph;
     this.setStates(states);
   }
@@ -36,7 +36,7 @@ class Guide {
    *
    * Reference to the enclosing <mxGraph> instance.
    */
-  graph: MaxGraph;
+  graph: Graph;
 
   /**
    * Variable: states

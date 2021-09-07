@@ -1,4 +1,17 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  Rubberband,
+  ConnectionHandler,
+  ImageBox,
+  mxToolbar,
+  Model,
+  mxKeyHandler,
+  Cell,
+  Geometry,
+  InternalEvent,
+  utils,
+  GestureUtils,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -14,21 +27,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    Graph,
-    Rubberband,
-    ConnectionHandler,
-    ImageBox,
-    mxToolbar,
-    GraphModel,
-    mxKeyHandler,
-    Cell,
-    Geometry,
-    InternalEvent,
-    utils,
-    GestureUtils,
-  } = maxgraph;
-
   const div = document.createElement('div');
 
   const container = document.createElement('div');
@@ -66,7 +64,7 @@ const Template = ({ label, ...args }) => {
 
   // Creates the model and the graph inside the container
   // using the fastest rendering available on the browser
-  const model = new GraphModel();
+  const model = new Model();
   const graph = new Graph(container, model);
 
   // Enables new connections in the graph

@@ -48,7 +48,7 @@ import {
 } from '../../util/EventUtils';
 import EventSource from '../event/EventSource';
 
-import type { MaxGraph } from '../Graph';
+import type { Graph } from '../Graph';
 import type { GraphPlugin } from '../../types';
 import CellArray from '../cell/datatypes/CellArray';
 import TooltipHandler from '../tooltip/TooltipHandler';
@@ -162,7 +162,7 @@ import TooltipHandler from '../tooltip/TooltipHandler';
 class CellEditor implements GraphPlugin {
   static pluginId = 'CellEditor';
 
-  constructor(graph: MaxGraph) {
+  constructor(graph: Graph) {
     this.graph = graph;
 
     // Stops editing after zoom changes
@@ -202,7 +202,7 @@ class CellEditor implements GraphPlugin {
    *
    * Reference to the enclosing <mxGraph>.
    */
-  graph: MaxGraph;
+  graph: Graph;
 
   /**
    * Variable: textarea

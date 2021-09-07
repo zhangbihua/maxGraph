@@ -6,7 +6,7 @@
  */
 
 import Stylesheet from '../../view/style/Stylesheet';
-import utils, { isNumeric } from '../Utils';
+import { isNumeric } from '../Utils';
 import mxCodecRegistry from './mxCodecRegistry';
 import { NODETYPE_ELEMENT } from '../Constants';
 import mxLog from '../gui/mxLog';
@@ -168,11 +168,7 @@ class mxStylesheetCodec extends mxObjectCodec {
                 const text = getTextContent(entry);
                 let value = null;
 
-                if (
-                  text != null &&
-                  text.length > 0 &&
-                  mxStylesheetCodec.allowEval
-                ) {
+                if (text != null && text.length > 0 && mxStylesheetCodec.allowEval) {
                   value = eval(text);
                 } else {
                   value = entry.getAttribute('value');
@@ -204,5 +200,5 @@ class mxStylesheetCodec extends mxObjectCodec {
   }
 }
 
-mxCodecRegistry.register(new mxStylesheetCodec());
+// mxCodecRegistry.register(new mxStylesheetCodec());
 export default mxStylesheetCodec;

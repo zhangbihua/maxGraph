@@ -25,7 +25,7 @@ import ImageBox from '../../image/ImageBox';
 import CellState from '../datatypes/CellState';
 import CellArray from '../datatypes/CellArray';
 
-import type { MaxGraph } from '../../Graph';
+import type { Graph } from '../../Graph';
 import type { CellHandle, CellStateStyles } from '../../../types';
 
 /**
@@ -50,7 +50,7 @@ class VertexHandle implements CellHandle {
     this.init();
   }
 
-  graph: MaxGraph;
+  graph: Graph;
   state: CellState;
   shape: Shape | ImageShape | null;
 

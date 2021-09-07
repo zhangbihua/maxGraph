@@ -198,7 +198,7 @@ class CellHighlight {
           this.state.width + 2 * this.spacing,
           this.state.height + 2 * this.spacing
         );
-        this.shape.rotation = Number(this.state.style.rotation || '0');
+        this.shape.rotation = this.state.style.rotation ?? 0;
         this.shape.strokeWidth = <number>this.getStrokeWidth() / this.state.view.scale;
         this.shape.outline = true;
       }

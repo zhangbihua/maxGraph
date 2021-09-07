@@ -1,5 +1,18 @@
-import maxgraph from '@maxgraph/core';
-import { popup } from '@maxgraph/core/util/gui/mxWindow';
+import {
+  Graph,
+  Rectangle,
+  mxDomHelpers,
+  mxKeyHandler,
+  InternalEvent,
+  mxXmlUtils,
+  mxCodec,
+  Constants,
+  utils,
+  EdgeStyle,
+  mxDomUtils,
+  mxForm,
+  CellAttributeChange,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -11,22 +24,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    Graph,
-    Rectangle,
-    mxDomHelpers,
-    mxKeyHandler,
-    InternalEvent,
-    mxXmlUtils,
-    mxCodec,
-    Constants,
-    utils,
-    EdgeStyle,
-    mxDomUtils,
-    mxForm,
-    CellAttributeChange,
-  } = maxgraph;
-
   const div = document.createElement('div');
 
   const container = document.createElement('div');

@@ -6,7 +6,7 @@
  */
 import CellMarker from '../cell/CellMarker';
 import InternalMouseEvent from './InternalMouseEvent';
-import Graph, { MaxGraph } from '../Graph';
+import { Graph } from '../Graph';
 import Cell from '../cell/datatypes/Cell';
 import EventSource from './EventSource';
 
@@ -67,7 +67,7 @@ import EventSource from './EventSource';
  */
 class CellTracker extends CellMarker {
   constructor(
-    graph: MaxGraph,
+    graph: Graph,
     color: string,
     funct: ((me: InternalMouseEvent) => Cell) | null = null
   ) {

@@ -1,4 +1,15 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  InternalEvent,
+  Rubberband,
+  mxClipboard,
+  utils,
+  EventUtils,
+  mxClient,
+  mxCodec,
+  Model,
+  mxStringUtils,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -18,19 +29,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    Graph,
-    InternalEvent,
-    Rubberband,
-    mxClipboard,
-    utils,
-    EventUtils,
-    mxClient,
-    mxCodec,
-    GraphModel,
-    mxStringUtils,
-  } = maxgraph;
-
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';
@@ -48,7 +46,7 @@ const Template = ({ label, ...args }) => {
   // Public helper method for shared clipboard.
   mxClipboard.cellsToString = function (cells) {
     const codec = new mxCodec();
-    const model = new GraphModel();
+    const model = new Model();
     const parent = model.getRoot().getChildAt(0);
 
     for (let i = 0; i < cells.length; i++) {
@@ -183,7 +181,7 @@ const Template = ({ label, ...args }) => {
       const node = doc.documentElement;
 
       if (node != null) {
-        const model = new GraphModel();
+        const model = new Model();
         const codec = new mxCodec(node.ownerDocument);
         codec.decode(node, model);
 

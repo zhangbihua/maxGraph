@@ -21,15 +21,7 @@ import GraphView from './view/GraphView';
 import CellRenderer from './cell/CellRenderer';
 import CellEditor from './editing/CellEditor';
 import Point from './geometry/Point';
-import {
-  applyMixins,
-  autoImplement,
-  copyMethodsToPrototype,
-  copyPropertiesToPrototype,
-  getCurrentStyle,
-  hasScrollbars,
-  parseCssNumber,
-} from '../util/Utils';
+import { getCurrentStyle, hasScrollbars, parseCssNumber } from '../util/Utils';
 import Cell from './cell/datatypes/Cell';
 import Model from './model/Model';
 import Stylesheet from './style/Stylesheet';
@@ -43,7 +35,6 @@ import TerminalChange from './cell/edge/TerminalChange';
 import ValueChange from './cell/ValueChange';
 import CellState from './cell/datatypes/CellState';
 import { isNode } from '../util/DomUtils';
-import CellArray from './cell/datatypes/CellArray';
 import EdgeStyle from './style/EdgeStyle';
 import EdgeHandler from './cell/edge/EdgeHandler';
 import VertexHandler from './cell/vertex/VertexHandler';
@@ -52,185 +43,6 @@ import ElbowEdgeHandler from './cell/edge/ElbowEdgeHandler';
 import Dictionary from '../util/Dictionary';
 
 import type { GraphPlugin, GraphPluginConstructor } from '../types';
-import GraphPorts from './ports/GraphPorts';
-import GraphPanning from './panning/GraphPanning';
-import GraphZoom from './zoom/GraphZoom';
-import GraphEvents from './event/GraphEvents';
-import GraphImage from './image/GraphImage';
-import GraphCells from './cell/GraphCells';
-import GraphSelection from './selection/GraphSelection';
-import GraphConnections from './connection/GraphConnections';
-import GraphEdge from './cell/edge/GraphEdge';
-import GraphVertex from './cell/vertex/GraphVertex';
-import GraphOverlays from './layout/GraphOverlays';
-import GraphEditing from './editing/GraphEditing';
-import GraphFolding from './folding/GraphFolding';
-import GraphLabel from './label/GraphLabel';
-import GraphValidation from './validation/GraphValidation';
-import GraphSnap from './snap/GraphSnap';
-import GraphTooltip from './tooltip/GraphTooltip';
-import GraphTerminal from './terminal/GraphTerminal';
-import GraphDragDrop from './drag_drop/GraphDragDrop';
-import GraphSwimlane from './swimlane/GraphSwimlane';
-import GraphPageBreaks from './page_breaks/GraphPageBreaks';
-
-type PartialEvents = Pick<
-  GraphEvents,
-  | 'sizeDidChange'
-  | 'isNativeDblClickEnabled'
-  | 'dblClick'
-  | 'fireMouseEvent'
-  | 'isMouseDown'
-  | 'fireGestureEvent'
-  | 'addMouseListener'
-  | 'removeMouseListener'
-  | 'isGridEnabledEvent'
-  | 'isIgnoreTerminalEvent'
-  | 'isCloneEvent'
-  | 'isToggleEvent'
-  | 'getEventTolerance'
-  | 'isInvokesStopCellEditing'
-  | 'getPointForEvent'
-  | 'isConstrainedEvent'
-  | 'isMouseTrigger'
-  | 'isEnterStopsCellEditing'
-  | 'getCursorForMouseEvent'
->;
-type PartialSelection = Pick<
-  GraphSelection,
-  | 'clearSelection'
-  | 'isCellSelected'
-  | 'getSelectionCount'
-  | 'selectCellForEvent'
-  | 'setSelectionCell'
-  | 'getSelectionCells'
-  | 'updateSelection'
-  | 'selectRegion'
-  | 'cellAdded'
-  | 'cellRemoved'
-  | 'getUpdatingSelectionResource'
-  | 'getDoneResource'
-  | 'isSiblingSelected'
-  | 'setSelectionCells'
->;
-type PartialCells = Pick<
-  GraphCells,
-  | 'removeStateForCell'
-  | 'getCellStyle'
-  | 'getCellAt'
-  | 'isCellBendable'
-  | 'isCellsCloneable'
-  | 'cloneCell'
-  | 'setCellStyles'
-  | 'isCellMovable'
-  | 'isCellResizable'
-  | 'getChildCells'
-  | 'isCellRotatable'
-  | 'getCellContainmentArea'
-  | 'getCurrentCellStyle'
-  | 'resizeCell'
-  | 'removeStateForCell'
-  | 'getMovableCells'
-  | 'getCloneableCells'
-  | 'isCellLocked'
-  | 'moveCells'
-  | 'removeCells'
-  | 'isCellDeletable'
-  | 'addCell'
-  | 'getExportableCells'
-  | 'cloneCells'
-  | 'importCells'
-  | 'getImportableCells'
->;
-type PartialConnections = Pick<
-  GraphConnections,
-  | 'getConnectionConstraint'
-  | 'setConnectionConstraint'
-  | 'getConnectionPoint'
-  | 'isCellDisconnectable'
-  | 'getOutlineConstraint'
-  | 'connectCell'
-  | 'getConnections'
-  | 'isConstrainChild'
-  | 'isValidSource'
-  | 'getAllConnectionConstraints'
->;
-type PartialEditing = Pick<
-  GraphEditing,
-  'isEditing' | 'stopEditing' | 'labelChanged' | 'getEditingValue'
->;
-type PartialTooltip = Pick<GraphTooltip, 'getTooltip'>;
-type PartialValidation = Pick<
-  GraphValidation,
-  'getEdgeValidationError' | 'validationAlert' | 'isEdgeValid'
->;
-type PartialLabel = Pick<
-  GraphLabel,
-  'isLabelMovable' | 'isHtmlLabel' | 'isWrapping' | 'isLabelClipped' | 'getLabel'
->;
-type PartialTerminal = Pick<GraphTerminal, 'isTerminalPointMovable' | 'getOpposites'>;
-type PartialSnap = Pick<
-  GraphSnap,
-  'snap' | 'getGridSize' | 'isGridEnabled' | 'getSnapTolerance' | 'snapDelta'
->;
-type PartialEdge = Pick<
-  GraphEdge,
-  | 'isAllowDanglingEdges'
-  | 'isResetEdgesOnConnect'
-  | 'getEdges'
-  | 'insertEdge'
-  | 'addEdge'
-  | 'splitEdge'
-  | 'flipEdge'
->;
-type PartialOverlays = Pick<GraphOverlays, 'getCellOverlays'>;
-type PartialFolding = Pick<
-  GraphFolding,
-  'getFoldingImage' | 'isFoldingEnabled' | 'foldCells'
->;
-type PartialPanning = Pick<
-  GraphPanning,
-  | 'panGraph'
-  | 'isUseScrollbarsForPanning'
-  | 'getPanDx'
-  | 'setPanDx'
-  | 'getPanDy'
-  | 'setPanDy'
-  | 'isTimerAutoScroll'
-  | 'isAllowAutoPanning'
-  | 'scrollCellToVisible'
->;
-type PartialZoom = Pick<GraphZoom, 'zoomTo'>;
-type PartialDragDrop = Pick<
-  GraphDragDrop,
-  'isDropEnabled' | 'isAutoScroll' | 'isAutoExtend' | 'isSplitEnabled' | 'isSplitTarget'
->;
-type PartialSwimlane = Pick<GraphSwimlane, 'getDropTarget'>;
-type PartialPorts = Pick<
-  GraphPorts,
-  'isPort' | 'getTerminalForPort' | 'isPortsEnabled' | 'setPortsEnabled'
->;
-type PartialClass = PartialEvents &
-  PartialSelection &
-  PartialCells &
-  PartialConnections &
-  PartialEditing &
-  PartialTooltip &
-  PartialValidation &
-  PartialLabel &
-  PartialTerminal &
-  PartialSnap &
-  PartialEdge &
-  PartialOverlays &
-  PartialFolding &
-  PartialPanning &
-  PartialZoom &
-  PartialDragDrop &
-  PartialSwimlane &
-  PartialPorts &
-  EventSource;
-
-export type MaxGraph = Graph & PartialClass;
 
 const defaultPlugins: GraphPluginConstructor[] = [
   CellEditor,
@@ -259,8 +71,7 @@ const defaultPlugins: GraphPluginConstructor[] = [
  * @class graph
  * @extends {EventSource}
  */
-// @ts-ignore recursive reference error
-class Graph extends autoImplement<PartialClass>() {
+class Graph extends EventSource {
   constructor(
     container: HTMLElement,
     model?: Model,
@@ -291,7 +102,7 @@ class Graph extends autoImplement<PartialClass>() {
 
     // Initiailzes plugins
     this.plugins.forEach((p: GraphPluginConstructor) => {
-      this.pluginsMap.put(p.pluginId, new p(this));
+      this.pluginsMap[p.pluginId] = new p(this);
     });
 
     this.view.revalidate();
@@ -303,7 +114,7 @@ class Graph extends autoImplement<PartialClass>() {
 
   destroyed: boolean = false;
 
-  getPlugin = (id: string) => this.pluginsMap.get(id) as unknown;
+  getPlugin = (id: string) => this.pluginsMap[id] as unknown;
 
   graphModelChangeListener: Function | null = null;
   paintBackground: Function | null = null;
@@ -318,7 +129,7 @@ class Graph extends autoImplement<PartialClass>() {
   model: Model;
 
   plugins: GraphPluginConstructor[];
-  pluginsMap: Dictionary<string, GraphPlugin> = new Dictionary();
+  pluginsMap: Record<string, GraphPlugin> = {};
 
   /**
    * Holds the {@link GraphView} that caches the {@link CellState}s for the cells.
@@ -658,7 +469,6 @@ class Graph extends autoImplement<PartialClass>() {
 
   // TODO: Document me!!
   batchUpdate(fn: Function) {
-    console.log(this.getModel, this.getModel());
     this.getModel().beginUpdate();
     try {
       fn();
@@ -1658,31 +1468,4 @@ class Graph extends autoImplement<PartialClass>() {
   }
 }
 
-applyMixins(Graph, [
-  GraphCells,
-  GraphConnections,
-  GraphDragDrop,
-  GraphEdge,
-  GraphEditing,
-  GraphEvents,
-  GraphFolding,
-  GraphImage,
-  GraphLabel,
-  GraphOverlays,
-  GraphPageBreaks,
-  GraphPanning,
-  GraphPorts,
-  GraphSelection,
-  GraphSnap,
-  GraphSwimlane,
-  GraphTerminal,
-  GraphTooltip,
-  GraphValidation,
-  GraphVertex,
-  GraphZoom,
-]);
-
-copyPropertiesToPrototype(EventSource.prototype, new EventSource(), Graph.prototype);
-copyMethodsToPrototype(EventSource.prototype, Graph.prototype);
-
-export default Graph;
+export { Graph };

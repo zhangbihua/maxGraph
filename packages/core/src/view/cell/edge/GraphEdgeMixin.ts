@@ -1,88 +1,198 @@
 import Cell from '../datatypes/Cell';
 import CellArray from '../datatypes/CellArray';
-import { autoImplement, findNearestSegment, removeDuplicates } from '../../../util/Utils';
+import { findNearestSegment, mixInto, removeDuplicates } from '../../../util/Utils';
 import Geometry from '../../geometry/Geometry';
 import EventObject from '../../event/EventObject';
 import InternalEvent from '../../event/InternalEvent';
 import Dictionary from '../../../util/Dictionary';
+import { Graph } from '../../Graph';
 
-import type Graph from '../../Graph';
-import type GraphCells from '../GraphCells';
-import type GraphConnections from '../../connection/GraphConnections';
+declare module '../../Graph' {
+  interface Graph {
+    resetEdgesOnResize: boolean;
+    resetEdgesOnMove: false;
+    resetEdgesOnConnect: boolean;
+    connectableEdges: boolean;
+    allowDanglingEdges: boolean;
+    cloneInvalidEdges: boolean;
+    alternateEdgeStyle: string | null;
+    edgeLabelsMovable: boolean;
 
-type PartialGraph = Pick<Graph, 'batchUpdate' | 'fireEvent' | 'getModel' | 'getView'>;
-type PartialCells = Pick<
-  GraphCells,
-  | 'cloneCell'
-  | 'cellsMoved'
-  | 'cellsAdded'
-  | 'addCell'
-  | 'isValidAncestor'
+    isResetEdgesOnMove: () => boolean;
+    isResetEdgesOnConnect: () => boolean;
+    isResetEdgesOnResize: () => boolean;
+    isEdgeLabelsMovable: () => boolean;
+    setEdgeLabelsMovable: (value: boolean) => void;
+    setAllowDanglingEdges: (value: boolean) => void;
+    isAllowDanglingEdges: () => boolean;
+    setConnectableEdges: (value: boolean) => void;
+    isConnectableEdges: () => boolean;
+    setCloneInvalidEdges: (value: boolean) => void;
+    isCloneInvalidEdges: () => boolean;
+    flipEdge: (edge: Cell) => Cell;
+    splitEdge: (
+      edge: Cell,
+      cells: CellArray,
+      newEdge: Cell | null,
+      dx?: number,
+      dy?: number,
+      x?: number,
+      y?: number,
+      parent?: Cell | null
+    ) => Cell;
+    insertEdge: (...args: any[]) => Cell;
+    createEdge: (
+      parent: Cell | null,
+      id: string,
+      value: any,
+      source: Cell | null,
+      target: Cell | null,
+      style: any
+    ) => Cell;
+    addEdge: (
+      edge: Cell,
+      parent: Cell | null,
+      source: Cell | null,
+      target: Cell | null,
+      index?: number | null
+    ) => Cell;
+    addAllEdges: (cells: CellArray) => CellArray;
+    getAllEdges: (cells: CellArray | null) => CellArray;
+    getIncomingEdges: (cell: Cell, parent: Cell | null) => CellArray;
+    getOutgoingEdges: (cell: Cell, parent: Cell | null) => CellArray;
+    getEdges: (
+      cell: Cell,
+      parent?: Cell | null,
+      incoming?: boolean,
+      outgoing?: boolean,
+      includeLoops?: boolean,
+      recurse?: boolean
+    ) => CellArray;
+    getChildEdges: (parent: Cell) => CellArray;
+    getEdgesBetween: (source: Cell, target: Cell, directed?: boolean) => CellArray;
+    resetEdges: (cells: CellArray) => void;
+    resetEdge: (edge: Cell) => Cell;
+  }
+}
+
+type PartialGraph = Pick<
+  Graph,
+  | 'batchUpdate'
+  | 'fireEvent'
+  | 'getModel'
+  | 'getView'
   | 'getChildCells'
+  | 'isValidAncestor'
+  | 'cellsAdded'
+  | 'cellsMoved'
+  | 'cloneCell'
+  | 'addCell'
+  | 'cellConnected'
 >;
-type PartialConnections = Pick<GraphConnections, 'cellConnected'>;
-type PartialClass = PartialGraph & PartialCells & PartialConnections;
+type PartialEdge = Pick<
+  Graph,
+  | 'resetEdgesOnResize'
+  | 'resetEdgesOnMove'
+  | 'resetEdgesOnConnect'
+  | 'connectableEdges'
+  | 'allowDanglingEdges'
+  | 'cloneInvalidEdges'
+  | 'alternateEdgeStyle'
+  | 'edgeLabelsMovable'
+  | 'isResetEdgesOnMove'
+  | 'isResetEdgesOnConnect'
+  | 'isResetEdgesOnResize'
+  | 'isEdgeLabelsMovable'
+  | 'setEdgeLabelsMovable'
+  | 'setAllowDanglingEdges'
+  | 'isAllowDanglingEdges'
+  | 'setConnectableEdges'
+  | 'isConnectableEdges'
+  | 'setCloneInvalidEdges'
+  | 'isCloneInvalidEdges'
+  | 'flipEdge'
+  | 'splitEdge'
+  | 'insertEdge'
+  | 'createEdge'
+  | 'addEdge'
+  | 'addAllEdges'
+  | 'getAllEdges'
+  | 'getIncomingEdges'
+  | 'getOutgoingEdges'
+  | 'getEdges'
+  | 'getChildEdges'
+  | 'getEdgesBetween'
+  | 'resetEdges'
+  | 'resetEdge'
+>;
+type PartialType = PartialGraph & PartialEdge;
 
-// @ts-ignore recursive reference error
-class GraphEdge extends autoImplement<PartialClass>() {
+// @ts-expect-error The properties of PartialGraph are defined elsewhere.
+const GraphEdgeMixin: PartialType = {
   /**
    * Specifies if edge control points should be reset after the resize of a
    * connected cell.
    * @default false
    */
-  resetEdgesOnResize = false;
+  resetEdgesOnResize: false,
 
-  isResetEdgesOnResize = () => this.resetEdgesOnResize;
+  isResetEdgesOnResize() {
+    return this.resetEdgesOnResize;
+  },
 
   /**
    * Specifies if edge control points should be reset after the move of a
    * connected cell.
    * @default false
    */
-  resetEdgesOnMove = false;
+  resetEdgesOnMove: false,
 
-  isResetEdgesOnMove = () => this.resetEdgesOnMove;
+  isResetEdgesOnMove() {
+    return this.resetEdgesOnMove;
+  },
 
   /**
    * Specifies if edge control points should be reset after the the edge has been
    * reconnected.
    * @default true
    */
-  resetEdgesOnConnect = true;
+  resetEdgesOnConnect: true,
 
-  isResetEdgesOnConnect = () => this.resetEdgesOnConnect;
+  isResetEdgesOnConnect() {
+    return this.resetEdgesOnConnect;
+  },
 
   /**
    * Specifies if edges are connectable. This overrides the connectable field in edges.
    * @default false
    */
-  connectableEdges = false;
+  connectableEdges: false,
 
   /**
    * Specifies if edges with disconnected terminals are allowed in the graph.
    * @default true
    */
-  allowDanglingEdges = true;
+  allowDanglingEdges: true,
 
   /**
    * Specifies if edges that are cloned should be validated and only inserted
    * if they are valid.
    * @default true
    */
-  cloneInvalidEdges = false;
+  cloneInvalidEdges: false,
 
   /**
    * Specifies the alternate edge style to be used if the main control point
    * on an edge is being double clicked.
    * @default null
    */
-  alternateEdgeStyle: string | null = null;
+  alternateEdgeStyle: null,
 
   /**
    * Specifies the return value for edges in {@link isLabelMovable}.
    * @default true
    */
-  edgeLabelsMovable = true;
+  edgeLabelsMovable: true,
 
   /*****************************************************************************
    * Group: Graph Behaviour
@@ -93,14 +203,14 @@ class GraphEdge extends autoImplement<PartialClass>() {
    */
   isEdgeLabelsMovable() {
     return this.edgeLabelsMovable;
-  }
+  },
 
   /**
    * Sets {@link edgeLabelsMovable}.
    */
-  setEdgeLabelsMovable(value: boolean) {
+  setEdgeLabelsMovable(value) {
     this.edgeLabelsMovable = value;
-  }
+  },
 
   /**
    * Specifies if dangling edges are allowed, that is, if edges are allowed
@@ -108,32 +218,32 @@ class GraphEdge extends autoImplement<PartialClass>() {
    *
    * @param value Boolean indicating if dangling edges are allowed.
    */
-  setAllowDanglingEdges(value: boolean) {
+  setAllowDanglingEdges(value) {
     this.allowDanglingEdges = value;
-  }
+  },
 
   /**
    * Returns {@link allowDanglingEdges} as a boolean.
    */
   isAllowDanglingEdges() {
     return this.allowDanglingEdges;
-  }
+  },
 
   /**
    * Specifies if edges should be connectable.
    *
    * @param value Boolean indicating if edges should be connectable.
    */
-  setConnectableEdges(value: boolean) {
+  setConnectableEdges(value) {
     this.connectableEdges = value;
-  }
+  },
 
   /**
    * Returns {@link connectableEdges} as a boolean.
    */
   isConnectableEdges() {
     return this.connectableEdges;
-  }
+  },
 
   /**
    * Specifies if edges should be inserted when cloned but not valid wrt.
@@ -142,16 +252,16 @@ class GraphEdge extends autoImplement<PartialClass>() {
    * @param value Boolean indicating if cloned invalid edges should be
    * inserted into the graph or ignored.
    */
-  setCloneInvalidEdges(value: boolean) {
+  setCloneInvalidEdges(value) {
     this.cloneInvalidEdges = value;
-  }
+  },
 
   /**
    * Returns {@link cloneInvalidEdges} as a boolean.
    */
   isCloneInvalidEdges() {
     return this.cloneInvalidEdges;
-  }
+  },
 
   /*****************************************************************************
    * Group: Cell alignment and orientation
@@ -182,8 +292,7 @@ class GraphEdge extends autoImplement<PartialClass>() {
    *
    * @param edge {@link mxCell} whose style should be changed.
    */
-  // flipEdge(edge: mxCell): mxCell;
-  flipEdge(edge: Cell) {
+  flipEdge(edge) {
     if (this.alternateEdgeStyle) {
       this.batchUpdate(() => {
         const style = edge.getStyle();
@@ -200,7 +309,7 @@ class GraphEdge extends autoImplement<PartialClass>() {
       });
     }
     return edge;
-  }
+  },
 
   /**
    * Function: splitEdge
@@ -222,16 +331,7 @@ class GraphEdge extends autoImplement<PartialClass>() {
    * parent - Optional parent to insert the cell. If null the parent of
    * the edge is used.
    */
-  splitEdge(
-    edge: Cell,
-    cells: CellArray,
-    newEdge: Cell | null,
-    dx = 0,
-    dy = 0,
-    x: number,
-    y: number,
-    parent: Cell | null = null
-  ) {
+  splitEdge(edge, cells, newEdge, dx = 0, dy = 0, x, y, parent = null) {
     parent = parent ?? edge.getParent();
     const source = edge.getTerminal(true);
 
@@ -282,8 +382,8 @@ class GraphEdge extends autoImplement<PartialClass>() {
       );
     });
 
-    return newEdge;
-  }
+    return newEdge as Cell;
+  },
 
   /**
    * Adds a new edge into the given parent {@link Cell} using value as the user
@@ -298,7 +398,7 @@ class GraphEdge extends autoImplement<PartialClass>() {
    * @param target {@link mxCell} that defines the target of the edge.
    * @param style Optional string that defines the cell style.
    */
-  insertEdge(...args: any[]) {
+  insertEdge(...args) {
     let parent: Cell;
     let id: string = '';
     let value: any; // note me - can be a string or a class instance!!!
@@ -323,7 +423,7 @@ class GraphEdge extends autoImplement<PartialClass>() {
 
     const edge = this.createEdge(parent, id, value, source, target, style);
     return this.addEdge(edge, parent, source, target);
-  }
+  },
 
   /**
    * Hook method that creates the new edge for {@link insertEdge}. This
@@ -331,21 +431,14 @@ class GraphEdge extends autoImplement<PartialClass>() {
    * are set when the edge is added to the model.
    *
    */
-  createEdge(
-    parent: Cell | null = null,
-    id: string,
-    value: any,
-    source: Cell | null = null,
-    target: Cell | null = null,
-    style: any
-  ) {
+  createEdge(parent = null, id, value, source = null, target = null, style) {
     // Creates the edge
     const edge = new Cell(value, new Geometry(), style);
     edge.setId(id);
     edge.setEdge(true);
     (<Geometry>edge.geometry).relative = true;
     return edge;
-  }
+  },
 
   /**
    * Adds the edge to the parent and connects it to the given source and
@@ -359,15 +452,9 @@ class GraphEdge extends autoImplement<PartialClass>() {
    * @param target Optional {@link Cell} that represents the target terminal.
    * @param index Optional index to insert the cells at. Default is 'to append'.
    */
-  addEdge(
-    edge: Cell,
-    parent: Cell | null = null,
-    source: Cell | null = null,
-    target: Cell | null = null,
-    index: number | null = null
-  ) {
+  addEdge(edge, parent = null, source = null, target = null, index = null) {
     return this.addCell(edge, parent, index, source, target);
-  }
+  },
 
   /*****************************************************************************
    * Group: Folding
@@ -377,15 +464,15 @@ class GraphEdge extends autoImplement<PartialClass>() {
    * Returns an array with the given cells and all edges that are connected
    * to a cell or one of its descendants.
    */
-  addAllEdges(cells: CellArray) {
+  addAllEdges(cells) {
     const allCells = cells.slice();
     return new CellArray(...removeDuplicates(allCells.concat(this.getAllEdges(cells))));
-  }
+  },
 
   /**
    * Returns all edges connected to the given cells or its descendants.
    */
-  getAllEdges(cells: CellArray | null) {
+  getAllEdges(cells) {
     let edges: CellArray = new CellArray();
 
     if (cells) {
@@ -402,7 +489,7 @@ class GraphEdge extends autoImplement<PartialClass>() {
       }
     }
     return edges;
-  }
+  },
 
   /**
    * Returns the visible incoming edges for the given cell. If the optional
@@ -413,9 +500,9 @@ class GraphEdge extends autoImplement<PartialClass>() {
    * @param parent Optional parent of the opposite end for an edge to be
    * returned.
    */
-  getIncomingEdges(cell: Cell, parent: Cell | null = null) {
+  getIncomingEdges(cell, parent = null) {
     return this.getEdges(cell, parent, true, false, false);
-  }
+  },
 
   /**
    * Returns the visible outgoing edges for the given cell. If the optional
@@ -426,9 +513,9 @@ class GraphEdge extends autoImplement<PartialClass>() {
    * @param parent Optional parent of the opposite end for an edge to be
    * returned.
    */
-  getOutgoingEdges(cell: Cell, parent: Cell | null = null) {
+  getOutgoingEdges(cell, parent = null) {
     return this.getEdges(cell, parent, false, true, false);
-  }
+  },
 
   /**
    * Function: getEdges
@@ -455,8 +542,8 @@ class GraphEdge extends autoImplement<PartialClass>() {
    * Default is false
    */
   getEdges(
-    cell: Cell,
-    parent: Cell | null = null,
+    cell,
+    parent = null,
     incoming = true,
     outgoing = true,
     includeLoops = true,
@@ -501,7 +588,7 @@ class GraphEdge extends autoImplement<PartialClass>() {
       }
     }
     return result;
-  }
+  },
 
   /*****************************************************************************
    * Group: Cell retrieval
@@ -512,9 +599,9 @@ class GraphEdge extends autoImplement<PartialClass>() {
    *
    * @param parent {@link mxCell} whose child vertices should be returned.
    */
-  getChildEdges(parent: Cell) {
+  getChildEdges(parent) {
     return this.getChildCells(parent, false, true);
-  }
+  },
 
   /**
    * Returns the edges between the given source and target. This takes into
@@ -525,7 +612,7 @@ class GraphEdge extends autoImplement<PartialClass>() {
    * target -
    * directed -
    */
-  getEdgesBetween(source: Cell, target: Cell, directed = false) {
+  getEdgesBetween(source, target, directed = false) {
     const edges = this.getEdges(source);
     const result = new CellArray();
 
@@ -549,7 +636,7 @@ class GraphEdge extends autoImplement<PartialClass>() {
       }
     }
     return result;
-  }
+  },
 
   /*****************************************************************************
    * Group: Cell moving
@@ -562,7 +649,7 @@ class GraphEdge extends autoImplement<PartialClass>() {
    * @param cells Array of {@link Cell} for which the connected edges should be
    * reset.
    */
-  resetEdges(cells: CellArray) {
+  resetEdges(cells) {
     // Prepares faster cells lookup
     const dict = new Dictionary();
 
@@ -596,14 +683,14 @@ class GraphEdge extends autoImplement<PartialClass>() {
     } finally {
       this.getModel().endUpdate();
     }
-  }
+  },
 
   /**
    * Resets the control points of the given edge.
    *
    * @param edge {@link mxCell} whose points should be reset.
    */
-  resetEdge(edge: Cell) {
+  resetEdge(edge) {
     let geo = edge.getGeometry();
 
     // Resets the control points
@@ -614,7 +701,7 @@ class GraphEdge extends autoImplement<PartialClass>() {
     }
 
     return edge;
-  }
-}
+  },
+};
 
-export default GraphEdge;
+mixInto(Graph)(GraphEdgeMixin);

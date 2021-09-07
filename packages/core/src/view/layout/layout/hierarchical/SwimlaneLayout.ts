@@ -15,7 +15,7 @@ import ObjectIdentity from '../../../../util/ObjectIdentity';
 import mxSwimlaneOrdering from './stage/mxSwimlaneOrdering';
 import MedianHybridCrossingReduction from './stage/MedianHybridCrossingReduction';
 import CoordinateAssignment from './stage/CoordinateAssignment';
-import Graph from '../../../Graph';
+import { Graph } from '../../../Graph';
 import Cell from '../../../cell/datatypes/Cell';
 import CellArray from '../../../cell/datatypes/CellArray';
 

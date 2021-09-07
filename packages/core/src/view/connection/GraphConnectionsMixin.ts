@@ -4,59 +4,143 @@ import InternalMouseEvent from '../event/InternalMouseEvent';
 import ConnectionConstraint from './ConnectionConstraint';
 import Rectangle from '../geometry/Rectangle';
 import { DIRECTION_NORTH, DIRECTION_SOUTH, DIRECTION_WEST } from '../../util/Constants';
-import utils, {
-  autoImplement,
-  getRotatedPoint,
-  getValue,
-  toRadians,
-} from '../../util/Utils';
+import { getRotatedPoint, mixInto, toRadians } from '../../util/Utils';
 import Cell from '../cell/datatypes/Cell';
 import CellArray from '../cell/datatypes/CellArray';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
 import Dictionary from '../../util/Dictionary';
-import Geometry from '../geometry/Geometry';
-import Graph from '../Graph';
+import { Graph } from '../Graph';
 import ConnectionHandler from './ConnectionHandler';
-import GraphCells from '../cell/GraphCells';
-import GraphPorts from '../ports/GraphPorts';
-import GraphEdge from '../cell/edge/GraphEdge';
 
-type PartialGraph = Pick<Graph, 'getView' | 'getModel' | 'fireEvent'>;
-type PartialCells = Pick<GraphCells, 'setCellStyles' | 'isCellLocked'>;
-type PartialPorts = Pick<GraphPorts, 'isPortsEnabled' | 'isPort' | 'getTerminalForPort'>;
-type PartialEdge = Pick<
-  GraphEdge,
+declare module '../Graph' {
+  interface Graph {
+    connectionHandler: ConnectionHandler | null;
+    constrainChildren: boolean;
+    constrainRelativeChildren: boolean;
+    disconnectOnMove: boolean;
+    cellsDisconnectable: boolean;
+
+    getConnectionHandler: () => ConnectionHandler | null;
+    setConnectionHandler: (connectionHandler: ConnectionHandler) => void;
+    getOutlineConstraint: (
+      point: Point,
+      terminalState: CellState,
+      me: InternalMouseEvent
+    ) => ConnectionConstraint | null;
+    getAllConnectionConstraints: (
+      terminal: CellState | null,
+      source: boolean
+    ) => ConnectionConstraint[] | null;
+    getConnectionConstraint: (
+      edge: CellState,
+      terminal: CellState | null,
+      source: boolean
+    ) => ConnectionConstraint;
+    setConnectionConstraint: (
+      edge: Cell,
+      terminal: Cell | null,
+      source: boolean,
+      constraint: ConnectionConstraint | null
+    ) => void;
+    getConnectionPoint: (
+      vertex: CellState,
+      constraint: ConnectionConstraint,
+      round?: boolean
+    ) => Point | null;
+    connectCell: (
+      edge: Cell,
+      terminal: Cell | null,
+      source: boolean,
+      constraint?: ConnectionConstraint | null
+    ) => Cell;
+    cellConnected: (
+      edge: Cell,
+      terminal: Cell | null,
+      source: boolean,
+      constraint?: ConnectionConstraint | null
+    ) => void;
+    disconnectGraph: (cells: CellArray) => void;
+    getConnections: (cell: Cell, parent: Cell | null) => CellArray;
+    isConstrainChild: (cell: Cell) => boolean;
+    isConstrainChildren: () => boolean;
+    setConstrainChildren: (value: boolean) => void;
+    isConstrainRelativeChildren: () => boolean;
+    setConstrainRelativeChildren: (value: boolean) => void;
+    isDisconnectOnMove: () => boolean;
+    setDisconnectOnMove: (value: boolean) => void;
+    isCellDisconnectable: (cell: Cell, terminal: Cell | null, source: boolean) => boolean;
+    isCellsDisconnectable: () => boolean;
+    setCellsDisconnectable: (value: boolean) => void;
+    isValidSource: (cell: Cell | null) => boolean;
+    isValidTarget: (cell: Cell | null) => boolean;
+    isValidConnection: (source: Cell | null, target: Cell | null) => boolean;
+    setConnectable: (connectable: boolean) => void;
+    isConnectable: () => boolean;
+  }
+}
+
+type PartialGraph = Pick<Graph, 'getView' | 'getModel' | 'isPortsEnabled'>;
+type PartialConnections = Pick<
+  Graph,
+  | 'connectionHandler'
+  | 'constrainChildren'
+  | 'constrainRelativeChildren'
+  | 'disconnectOnMove'
+  | 'cellsDisconnectable'
+  | 'getConnectionHandler'
+  | 'setConnectionHandler'
+  | 'getOutlineConstraint'
+  | 'getAllConnectionConstraints'
+  | 'getConnectionConstraint'
+  | 'setConnectionConstraint'
+  | 'getConnectionPoint'
+  | 'connectCell'
+  | 'cellConnected'
+  | 'disconnectGraph'
+  | 'getConnections'
+  | 'isConstrainChild'
+  | 'isConstrainChildren'
+  | 'setConstrainChildren'
+  | 'isConstrainRelativeChildren'
+  | 'setConstrainRelativeChildren'
+  | 'isDisconnectOnMove'
+  | 'setDisconnectOnMove'
+  | 'isCellDisconnectable'
+  | 'isCellsDisconnectable'
+  | 'setCellsDisconnectable'
+  | 'isValidSource'
+  | 'isValidTarget'
+  | 'isValidConnection'
+  | 'setConnectable'
+  | 'isConnectable'
+  | 'setCellStyles'
+  | 'fireEvent'
+  | 'isPort'
+  | 'getTerminalForPort'
   | 'isResetEdgesOnConnect'
   | 'resetEdge'
   | 'getEdges'
+  | 'isCellLocked'
   | 'isAllowDanglingEdges'
   | 'isConnectableEdges'
 >;
-type PartialClass = PartialGraph & PartialCells & PartialPorts & PartialEdge;
+type PartialType = PartialGraph & PartialConnections;
 
-// @ts-ignore recursive reference error
-class GraphConnections extends autoImplement<PartialClass>() {
+// @ts-expect-error The properties of PartialGraph are defined elsewhere.
+const GraphConnectionsMixin: PartialType = {
   /*****************************************************************************
    * Group: Cell connecting and connection constraints
    *****************************************************************************/
 
-  connectionHandler: ConnectionHandler | null = null;
-
-  getConnectionHandler() {
-    return this.connectionHandler;
-  }
-
-  setConnectionHandler(connectionHandler: ConnectionHandler) {
-    this.connectionHandler = connectionHandler;
-  }
+  connectionHandler: null,
 
   /**
    * Specifies if a child should be constrained inside the parent bounds after a
    * move or resize of the child.
    * @default true
    */
-  constrainChildren = true;
+  constrainChildren: true,
 
   /**
    * Specifies if child cells with relative geometries should be constrained
@@ -64,21 +148,29 @@ class GraphConnections extends autoImplement<PartialClass>() {
    * {@link maximumGraphBounds}.
    * @default false
    */
-  constrainRelativeChildren = false;
+  constrainRelativeChildren: false,
 
   /**
    * Specifies if edges should be disconnected from their terminals when they
    * are moved.
    * @default true
    */
-  disconnectOnMove = true;
+  disconnectOnMove: true,
 
-  cellsDisconnectable = true;
+  cellsDisconnectable: true,
+
+  getConnectionHandler() {
+    return this.connectionHandler;
+  },
+
+  setConnectionHandler(connectionHandler) {
+    this.connectionHandler = connectionHandler;
+  },
 
   /**
    * Returns the constraint used to connect to the outline of the given state.
    */
-  getOutlineConstraint(point: Point, terminalState: CellState, me: InternalMouseEvent) {
+  getOutlineConstraint(point, terminalState, me) {
     if (terminalState.shape) {
       const bounds = <Rectangle>this.getView().getPerimeterBounds(terminalState);
       const direction = terminalState.style.direction;
@@ -145,7 +237,7 @@ class GraphConnections extends autoImplement<PartialClass>() {
       return new ConnectionConstraint(new Point(x, y), false);
     }
     return null;
-  }
+  },
 
   /**
    * Returns an array of all {@link mxConnectionConstraints} for the given terminal. If
@@ -155,12 +247,12 @@ class GraphConnections extends autoImplement<PartialClass>() {
    * @param terminal {@link mxCellState} that represents the terminal.
    * @param source Boolean that specifies if the terminal is the source or target.
    */
-  getAllConnectionConstraints(terminal: CellState | null, source: boolean) {
+  getAllConnectionConstraints(terminal, source) {
     if (terminal && terminal.shape && terminal.shape.stencil) {
       return terminal.shape.stencil.constraints;
     }
     return null;
-  }
+  },
 
   /**
    * Returns an {@link ConnectionConstraint} that describes the given connection
@@ -170,11 +262,7 @@ class GraphConnections extends autoImplement<PartialClass>() {
    * @param terminal {@link mxCellState} that represents the terminal.
    * @param source Boolean indicating if the terminal is the source or target.
    */
-  getConnectionConstraint(
-    edge: CellState,
-    terminal: CellState | null,
-    source: boolean = false
-  ) {
+  getConnectionConstraint(edge, terminal, source = false) {
     let point: Point | null = null;
 
     const x = edge.style[source ? 'exitX' : 'entryX'];
@@ -203,7 +291,7 @@ class GraphConnections extends autoImplement<PartialClass>() {
     }
 
     return new ConnectionConstraint(point, perimeter, null, dx, dy);
-  }
+  },
 
   /**
    * Sets the {@link ConnectionConstraint} that describes the given connection point.
@@ -216,12 +304,7 @@ class GraphConnections extends autoImplement<PartialClass>() {
    * @param constraint Optional {@link ConnectionConstraint} to be used for this
    * connection.
    */
-  setConnectionConstraint(
-    edge: Cell,
-    terminal: Cell | null,
-    source: boolean = false,
-    constraint: ConnectionConstraint | null = null
-  ) {
+  setConnectionConstraint(edge, terminal, source = false, constraint = null) {
     if (constraint) {
       this.getModel().beginUpdate();
 
@@ -277,7 +360,7 @@ class GraphConnections extends autoImplement<PartialClass>() {
         this.getModel().endUpdate();
       }
     }
-  }
+  },
 
   /**
    * Returns the nearest point in the list of absolute points or the center
@@ -287,11 +370,7 @@ class GraphConnections extends autoImplement<PartialClass>() {
    * @param constraint {@link mxConnectionConstraint} that represents the connection point
    * constraint as returned by {@link getConnectionConstraint}.
    */
-  getConnectionPoint(
-    vertex: CellState,
-    constraint: ConnectionConstraint,
-    round: boolean = true
-  ) {
+  getConnectionPoint(vertex, constraint, round = true) {
     let point: Point | null = null;
 
     if (constraint.point) {
@@ -381,7 +460,7 @@ class GraphConnections extends autoImplement<PartialClass>() {
       point.y = Math.round(point.y);
     }
     return point;
-  }
+  },
 
   /**
    * Connects the specified end of the given edge to the given terminal
@@ -394,12 +473,7 @@ class GraphConnections extends autoImplement<PartialClass>() {
    * @param constraint Optional {@link ConnectionConstraint} to be used for this
    * connection.
    */
-  connectCell(
-    edge: Cell,
-    terminal: Cell | null = null,
-    source: boolean = false,
-    constraint: ConnectionConstraint | null = null
-  ) {
+  connectCell(edge, terminal = null, source = false, constraint = null) {
     this.getModel().beginUpdate();
     try {
       const previous = edge.getTerminal(source);
@@ -421,7 +495,7 @@ class GraphConnections extends autoImplement<PartialClass>() {
       this.getModel().endUpdate();
     }
     return edge;
-  }
+  },
 
   /**
    * Sets the new terminal for the given edge and resets the edge points if
@@ -433,12 +507,7 @@ class GraphConnections extends autoImplement<PartialClass>() {
    * @param source Boolean indicating if the new terminal is the source or target.
    * @param constraint {@link mxConnectionConstraint} to be used for this connection.
    */
-  cellConnected(
-    edge: Cell,
-    terminal: Cell | null,
-    source: boolean = false,
-    constraint: ConnectionConstraint | null = null
-  ) {
+  cellConnected(edge, terminal, source = false, constraint = null) {
     this.getModel().beginUpdate();
     try {
       const previous = edge.getTerminal(source);
@@ -483,7 +552,7 @@ class GraphConnections extends autoImplement<PartialClass>() {
     } finally {
       this.getModel().endUpdate();
     }
-  }
+  },
 
   /**
    * Disconnects the given edges from the terminals which are not in the
@@ -491,7 +560,7 @@ class GraphConnections extends autoImplement<PartialClass>() {
    *
    * @param cells Array of {@link Cell} to be disconnected.
    */
-  disconnectGraph(cells: CellArray) {
+  disconnectGraph(cells) {
     this.getModel().beginUpdate();
     try {
       const { scale, translate: tr } = this.getView();
@@ -564,7 +633,7 @@ class GraphConnections extends autoImplement<PartialClass>() {
     } finally {
       this.getModel().endUpdate();
     }
-  }
+  },
 
   /**
    * Returns all visible edges connected to the given cell without loops.
@@ -573,9 +642,9 @@ class GraphConnections extends autoImplement<PartialClass>() {
    * @param parent Optional parent of the opposite end for a connection to be
    * returned.
    */
-  getConnections(cell: Cell, parent: Cell | null = null) {
+  getConnections(cell, parent = null) {
     return this.getEdges(cell, parent, true, true, false);
-  }
+  },
 
   /**
    * Returns true if the given cell should be kept inside the bounds of its
@@ -585,41 +654,41 @@ class GraphConnections extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} that should be constrained.
    */
-  isConstrainChild(cell: Cell) {
+  isConstrainChild(cell) {
     return (
       this.isConstrainChildren() &&
       !!cell.getParent() &&
       !(<Cell>cell.getParent()).isEdge()
     );
-  }
+  },
 
   /**
    * Returns {@link constrainChildren}.
    */
   isConstrainChildren() {
     return this.constrainChildren;
-  }
+  },
 
   /**
    * Sets {@link constrainChildren}.
    */
-  setConstrainChildren(value: boolean) {
+  setConstrainChildren(value) {
     this.constrainChildren = value;
-  }
+  },
 
   /**
    * Returns {@link constrainRelativeChildren}.
    */
   isConstrainRelativeChildren() {
     return this.constrainRelativeChildren;
-  }
+  },
 
   /**
    * Sets {@link constrainRelativeChildren}.
    */
-  setConstrainRelativeChildren(value: boolean) {
+  setConstrainRelativeChildren(value) {
     this.constrainRelativeChildren = value;
-  }
+  },
 
   /*****************************************************************************
    * Group: Graph behaviour
@@ -630,7 +699,7 @@ class GraphConnections extends autoImplement<PartialClass>() {
    */
   isDisconnectOnMove() {
     return this.disconnectOnMove;
-  }
+  },
 
   /**
    * Specifies if edges should be disconnected when moved. (Note: Cloned
@@ -639,9 +708,9 @@ class GraphConnections extends autoImplement<PartialClass>() {
    * @param value Boolean indicating if edges should be disconnected
    * when moved.
    */
-  setDisconnectOnMove(value: boolean) {
+  setDisconnectOnMove(value) {
     this.disconnectOnMove = value;
-  }
+  },
 
   /**
    * Returns true if the given cell is disconnectable from the source or
@@ -653,27 +722,23 @@ class GraphConnections extends autoImplement<PartialClass>() {
    * @param source Boolean indicating if the source or target terminal is to be
    * disconnected.
    */
-  isCellDisconnectable(
-    cell: Cell,
-    terminal: Cell | null = null,
-    source: boolean = false
-  ) {
+  isCellDisconnectable(cell, terminal = null, source = false) {
     return this.isCellsDisconnectable() && !this.isCellLocked(cell);
-  }
+  },
 
   /**
    * Returns {@link cellsDisconnectable}.
    */
   isCellsDisconnectable() {
     return this.cellsDisconnectable;
-  }
+  },
 
   /**
    * Sets {@link cellsDisconnectable}.
    */
-  setCellsDisconnectable(value: boolean) {
+  setCellsDisconnectable(value) {
     this.cellsDisconnectable = value;
-  }
+  },
 
   /**
    * Returns true if the given cell is a valid source for new connections.
@@ -682,14 +747,14 @@ class GraphConnections extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} that represents a possible source or null.
    */
-  isValidSource(cell: Cell | null) {
+  isValidSource(cell) {
     return (
       (cell == null && this.isAllowDanglingEdges()) ||
       (cell != null &&
         (!cell.isEdge() || this.isConnectableEdges()) &&
         cell.isConnectable())
     );
-  }
+  },
 
   /**
    * Returns {@link isValidSource} for the given cell. This is called by
@@ -697,9 +762,9 @@ class GraphConnections extends autoImplement<PartialClass>() {
    *
    * @param cell {@link mxCell} that represents a possible target or null.
    */
-  isValidTarget(cell: Cell | null): boolean {
+  isValidTarget(cell) {
     return this.isValidSource(cell);
-  }
+  },
 
   /**
    * Returns true if the given target cell is a valid target for source.
@@ -711,9 +776,9 @@ class GraphConnections extends autoImplement<PartialClass>() {
    * @param source {@link mxCell} that represents the source cell.
    * @param target {@link mxCell} that represents the target cell.
    */
-  isValidConnection(source: Cell | null, target: Cell | null): boolean {
+  isValidConnection(source, target) {
     return this.isValidSource(source) && this.isValidTarget(target);
-  }
+  },
 
   /**
    * Specifies if the graph should allow new connections. This implementation
@@ -721,16 +786,16 @@ class GraphConnections extends autoImplement<PartialClass>() {
    *
    * @param connectable Boolean indicating if new connections should be allowed.
    */
-  setConnectable(connectable: boolean) {
+  setConnectable(connectable) {
     (<ConnectionHandler>this.connectionHandler).setEnabled(connectable);
-  }
+  },
 
   /**
    * Returns true if the {@link connectionHandler} is enabled.
    */
   isConnectable() {
     return (<ConnectionHandler>this.connectionHandler).isEnabled();
-  }
-}
+  },
+};
 
-export default GraphConnections;
+mixInto(Graph)(GraphConnectionsMixin);

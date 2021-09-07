@@ -1,4 +1,4 @@
-import maxgraph from '@maxgraph/core';
+import { Graph, Perimeter, Constants, EdgeStyle } from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -10,8 +10,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const { Graph, Perimeter, Constants, EdgeStyle } = maxgraph;
-
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';

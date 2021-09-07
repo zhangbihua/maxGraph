@@ -7,7 +7,7 @@
 
 import Rectangle from '../../geometry/Rectangle';
 import GraphLayout from './GraphLayout';
-import Graph from '../../Graph';
+import { Graph } from '../../Graph';
 import Cell from '../../cell/datatypes/Cell';
 
 /**
@@ -28,7 +28,12 @@ import Cell from '../../cell/datatypes/Cell';
  * @class
  */
 class PartitionLayout extends GraphLayout {
-  constructor(graph: Graph, horizontal: boolean=true, spacing: number=0, border: number=0) {
+  constructor(
+    graph: Graph,
+    horizontal: boolean = true,
+    spacing: number = 0,
+    border: number = 0
+  ) {
     super(graph);
     this.horizontal = horizontal != null ? horizontal : true;
     this.spacing = spacing || 0;

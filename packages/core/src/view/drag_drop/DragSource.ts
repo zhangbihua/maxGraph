@@ -6,7 +6,7 @@
  */
 import Rectangle from '../geometry/Rectangle';
 import CellHighlight from '../selection/CellHighlight';
-import utils, {
+import {
   getDocumentScrollOrigin,
   getOffset,
   getScrollOrigin,
@@ -28,15 +28,13 @@ import {
 } from '../../util/EventUtils';
 import EventSource from '../event/EventSource';
 import EventObject from '../event/EventObject';
-import { MaxGraph } from '../Graph';
-import InternalMouseEvent from '../event/InternalMouseEvent';
+import { Graph } from '../Graph';
 import Guide from '../../util/Guide';
 import Cell from '../cell/datatypes/Cell';
-import { GraphPlugin } from '../../types';
 import GraphHandler from '../GraphHandler';
 
 type DropHandler = (
-  graph: MaxGraph,
+  graph: Graph,
   evt: MouseEvent,
   cell: Cell | null,
   x?: number,
@@ -123,7 +121,7 @@ class DragSource {
   /**
    * Reference to the {@link mxGraph} that is the current drop target.
    */
-  currentGraph: MaxGraph | null = null;
+  currentGraph: Graph | null = null;
 
   /**
    * Holds the current drop target under the mouse.
@@ -241,7 +239,7 @@ class DragSource {
    * Returns the drop target for the given graph and coordinates. This
    * implementation uses {@link mxGraph.getCellAt}.
    */
-  getDropTarget(graph: MaxGraph, x: number, y: number, evt: MouseEvent) {
+  getDropTarget(graph: Graph, x: number, y: number, evt: MouseEvent) {
     return graph.getCellAt(x, y);
   }
 
@@ -257,7 +255,7 @@ class DragSource {
    * Creates and returns an element which can be used as a preview in the given
    * graph.
    */
-  createPreviewElement(graph: MaxGraph): HTMLElement | null {
+  createPreviewElement(graph: Graph): HTMLElement | null {
     return null;
   }
 
@@ -378,7 +376,7 @@ class DragSource {
   /**
    * Returns true if the given graph contains the given event.
    */
-  graphContainsEvent(graph: MaxGraph, evt: MouseEvent) {
+  graphContainsEvent(graph: Graph, evt: MouseEvent) {
     const x = getClientX(evt);
     const y = getClientY(evt);
     const offset = getOffset(graph.container);
@@ -516,7 +514,7 @@ class DragSource {
   /**
    * Actives the given graph as a drop target.
    */
-  dragEnter(graph: MaxGraph, evt: MouseEvent) {
+  dragEnter(graph: Graph, evt: MouseEvent) {
     graph.isMouseDown = true;
     graph.isMouseTrigger = isMouseEvent(evt);
     this.previewElement = this.createPreviewElement(graph);
@@ -542,7 +540,7 @@ class DragSource {
   /**
    * Deactivates the given graph as a drop target.
    */
-  dragExit(graph: MaxGraph, evt?: MouseEvent) {
+  dragExit(graph: Graph, evt?: MouseEvent) {
     this.currentDropTarget = null;
     this.currentPoint = null;
     graph.isMouseDown = false;
@@ -573,7 +571,7 @@ class DragSource {
    * Implements autoscroll, updates the {@link currentPoint}, highlights any drop
    * targets and updates the preview.
    */
-  dragOver(graph: MaxGraph, evt: MouseEvent) {
+  dragOver(graph: Graph, evt: MouseEvent) {
     const offset = getOffset(graph.container);
     const origin = getScrollOrigin(graph.container);
     let x = getClientX(evt) - offset.x + origin.x - graph.getPanDx();
@@ -646,7 +644,7 @@ class DragSource {
    * implementation uses {@link mxGraph.getCellAt}.
    */
   drop(
-    graph: MaxGraph,
+    graph: Graph,
     evt: MouseEvent,
     dropTarget: Cell | null = null,
     x: number,

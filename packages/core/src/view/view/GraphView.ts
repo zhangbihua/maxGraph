@@ -49,7 +49,7 @@ import { getClientX, getClientY, getSource, isConsumed } from '../../util/EventU
 import { clone } from '../../util/CloneUtils';
 import CellArray from '../cell/datatypes/CellArray';
 
-import type { MaxGraph } from '../Graph';
+import type { Graph } from '../Graph';
 import StyleRegistry from '../style/StyleRegistry';
 import TooltipHandler from '../tooltip/TooltipHandler';
 import { MouseEventListener } from '../../types';
@@ -98,7 +98,7 @@ import { MouseEventListener } from '../../types';
  * respectively.
  */
 class GraphView extends EventSource {
-  constructor(graph: MaxGraph) {
+  constructor(graph: Graph) {
     super();
 
     this.graph = graph;
@@ -159,7 +159,7 @@ class GraphView extends EventSource {
   /**
    * Reference to the enclosing {@link graph}.
    */
-  graph: MaxGraph;
+  graph: Graph;
 
   /**
    * {@link Cell} that acts as the root of the displayed cell hierarchy.

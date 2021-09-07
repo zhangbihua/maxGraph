@@ -4,7 +4,6 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import utils from '../../../../../util/Utils';
 import GraphHierarchyNode from './GraphHierarchyNode';
 import GraphHierarchyEdge from './GraphHierarchyEdge';
 import CellPath from '../../../../cell/datatypes/CellPath';
@@ -487,13 +486,7 @@ class SwimlaneModel {
           // Only navigate in source->target direction within the same
           // swimlane, or from a lower index swimlane to a higher one
           if (root.swimlaneIndex < targetNode.swimlaneIndex) {
-            this.maxChainDfs(
-              root,
-              targetNode,
-              internalEdge,
-              clone(seen, null, true),
-              0
-            );
+            this.maxChainDfs(root, targetNode, internalEdge, clone(seen, null, true), 0);
           } else if (root.swimlaneIndex === targetNode.swimlaneIndex) {
             this.maxChainDfs(
               root,

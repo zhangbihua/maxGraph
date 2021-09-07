@@ -17,7 +17,7 @@ import mxClient from '../../mxClient';
 import Rectangle from '../geometry/Rectangle';
 import { isAltDown, isMultiTouchEvent } from '../../util/EventUtils';
 import { clearSelection } from '../../util/DomUtils';
-import { MaxGraph } from '../Graph';
+import { Graph } from '../Graph';
 import { GraphPlugin } from '../../types';
 import EventObject from '../event/EventObject';
 import EventSource from '../event/EventSource';
@@ -30,7 +30,7 @@ import EventSource from '../event/EventSource';
 class RubberBand implements GraphPlugin {
   static pluginId = 'RubberBand';
 
-  constructor(graph: MaxGraph) {
+  constructor(graph: Graph) {
     this.graph = graph;
     this.graph.addMouseListener(this);
 
@@ -71,7 +71,7 @@ class RubberBand implements GraphPlugin {
   forceRubberbandHandler: Function;
   panHandler: Function;
   gestureHandler: Function;
-  graph: MaxGraph;
+  graph: Graph;
   first: Point | null = null;
   destroyed: boolean = false;
   dragHandler: ((evt: MouseEvent) => void) | null = null;

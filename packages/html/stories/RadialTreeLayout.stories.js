@@ -1,4 +1,10 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  Rubberband,
+  Constants,
+  mxRadialTreeLayout,
+  Perimeter,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -14,8 +20,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const { Graph, Rubberband, Constants, mxRadialTreeLayout, Perimeter } = maxgraph;
-
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';

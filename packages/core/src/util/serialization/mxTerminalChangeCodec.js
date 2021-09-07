@@ -43,5 +43,5 @@ class mxTerminalChangeCodec extends mxObjectCodec {
   }
 }
 
-mxCodecRegistry.register(new mxTerminalChangeCodec());
+// mxCodecRegistry.register(new mxTerminalChangeCodec());
 export default mxTerminalChangeCodec;

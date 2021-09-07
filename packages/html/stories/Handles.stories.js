@@ -1,4 +1,16 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  CylinderShape,
+  mxDomHelpers,
+  CellRenderer,
+  Point,
+  Rectangle,
+  VertexHandler,
+  InternalEvent,
+  Rubberband,
+  utils,
+  VertexHandle,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -18,20 +30,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    Graph,
-    CylinderShape,
-    mxDomHelpers,
-    CellRenderer,
-    Point,
-    Rectangle,
-    VertexHandler,
-    InternalEvent,
-    Rubberband,
-    utils,
-    VertexHandle,
-  } = maxgraph;
-
   const div = document.createElement('div');
 
   const container = document.createElement('div');

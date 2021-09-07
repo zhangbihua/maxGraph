@@ -4,7 +4,7 @@ import InternalEvent from '../event/InternalEvent';
 import CellArray from '../cell/datatypes/CellArray';
 
 import type { UndoableChange } from '../../types';
-import type { MaxGraph } from '../Graph';
+import type { Graph } from '../Graph';
 
 /**
  * @class SelectionChange
@@ -12,7 +12,7 @@ import type { MaxGraph } from '../Graph';
  */
 class SelectionChange implements UndoableChange {
   constructor(
-    graph: MaxGraph,
+    graph: Graph,
     added: CellArray = new CellArray(),
     removed: CellArray = new CellArray()
   ) {
@@ -21,7 +21,7 @@ class SelectionChange implements UndoableChange {
     this.removed = removed.slice();
   }
 
-  graph: MaxGraph;
+  graph: Graph;
 
   added: CellArray;
 

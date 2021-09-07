@@ -3,24 +3,22 @@
     "baseUrl": ".",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "declarationDir": "./dist",
+    "declarationMap": false,
+    "emitDeclarationOnly": true,
     "esModuleInterop": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "module": "umd",
+    "module": "ES2020",
     "lib": ["dom"],
     "moduleResolution": "node",
-    "noEmit": true,
+    "outDir": "./dist",
     "strict": true,
-    "target": "es5",
-    "resolveJsonModule": true, // Required for JSON files
+    "target": "ES2020",
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "exclude": [
-    "node_modules",
-    "e2e",
-    "**/*.json", // Don't try and check JSON files
-    "**/*.spec.ts"
-  ],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+  "exclude": ["node_modules", "e2e", "**/*.json", "**/*.spec.ts"],
+  "include": ["**/*.ts", "**/*.tsx"]
 }

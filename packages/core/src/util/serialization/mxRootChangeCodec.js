@@ -46,10 +46,7 @@ class mxRootChangeCodec extends mxObjectCodec {
    * using the respective decoder.
    */
   beforeDecode(dec, node, obj) {
-    if (
-      node.firstChild != null &&
-      node.firstChild.nodeType === NODETYPE_ELEMENT
-    ) {
+    if (node.firstChild != null && node.firstChild.nodeType === NODETYPE_ELEMENT) {
       // Makes sure the original node isn't modified
       node = node.cloneNode(true);
 
@@ -83,5 +80,5 @@ class mxRootChangeCodec extends mxObjectCodec {
   }
 }
 
-mxCodecRegistry.register(new mxRootChangeCodec());
+// mxCodecRegistry.register(new mxRootChangeCodec());
 export default mxRootChangeCodec;

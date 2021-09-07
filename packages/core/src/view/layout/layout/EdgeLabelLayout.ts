@@ -7,9 +7,9 @@
 
 import Point from '../../geometry/Point';
 import GraphLayout from './GraphLayout';
-import utils, { intersects } from '../../../util/Utils';
+import { intersects } from '../../../util/Utils';
 import Cell from '../../cell/datatypes/Cell';
-import Graph from '../../Graph';
+import { Graph } from '../../Graph';
 import CellArray from '../../cell/datatypes/CellArray';
 import CellState from '../../cell/datatypes/CellState';
 
@@ -75,11 +75,7 @@ class EdgeLabelLayout extends GraphLayout {
       for (let i = 0; i < e.length; i += 1) {
         const edge = e[i];
 
-        if (
-          edge != null &&
-          edge.text != null &&
-          edge.text.boundingBox != null
-        ) {
+        if (edge != null && edge.text != null && edge.text.boundingBox != null) {
           for (let j = 0; j < v.length; j += 1) {
             const vertex = v[j];
 

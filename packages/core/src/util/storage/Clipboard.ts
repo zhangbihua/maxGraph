@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import { MaxGraph } from '../../view/Graph';
+import { Graph } from '../../view/Graph';
 import CellArray from '../../view/cell/datatypes/CellArray';
 
 /**
@@ -126,7 +126,7 @@ class Clipboard {
    * @param graph - {@link graph} that contains the cells to be cut.
    * @param cells - Optional array of {@link mxCell} to be cut.
    */
-  static cut(graph: MaxGraph, cells?: CellArray) {
+  static cut(graph: Graph, cells?: CellArray) {
     cells = Clipboard.copy(graph, cells);
     Clipboard.insertCount = 0;
     Clipboard.removeCells(graph, cells);
@@ -141,7 +141,7 @@ class Clipboard {
    * @param graph - {@link graph} that contains the cells to be cut.
    * @param cells - Array of {@link mxCell} to be cut.
    */
-  static removeCells(graph: MaxGraph, cells: CellArray) {
+  static removeCells(graph: Graph, cells: CellArray) {
     graph.removeCells(cells);
   }
 
@@ -153,7 +153,7 @@ class Clipboard {
    * @param graph - {@link graph} that contains the cells to be copied.
    * @param cells - Optional array of {@link mxCell} to be copied.
    */
-  static copy(graph: MaxGraph, cells?: CellArray) {
+  static copy(graph: Graph, cells?: CellArray) {
     cells = cells || graph.getSelectionCells();
     const result = graph.getExportableCells(cells).getTopmostCells();
     Clipboard.insertCount = 1;
@@ -173,7 +173,7 @@ class Clipboard {
    *
    * @param graph - {@link graph} to paste the {@link cells} into.
    */
-  static paste(graph: MaxGraph) {
+  static paste(graph: Graph) {
     let cells = null;
 
     if (!Clipboard.isEmpty() && Clipboard.getCells()) {

@@ -1,19 +1,49 @@
-import { autoImplement } from '../../util/Utils';
+import { mixInto } from '../../util/Utils';
 import Cell from '../cell/datatypes/Cell';
 import CellArray from '../cell/datatypes/CellArray';
-import InternalMouseEvent from '../event/InternalMouseEvent';
+import { Graph } from '../Graph';
 
-import type GraphValidation from '../validation/GraphValidation';
+declare module '../Graph' {
+  interface Graph {
+    dropEnabled: boolean;
+    splitEnabled: boolean;
+    autoScroll: boolean;
+    autoExtend: boolean;
 
-type PartialValidation = Pick<GraphValidation, 'getEdgeValidationError'>;
-type PartialClass = PartialValidation;
+    isAutoScroll: () => boolean;
+    isAutoExtend: () => boolean;
+    isDropEnabled: () => boolean;
+    setDropEnabled: (value: boolean) => void;
+    isSplitEnabled: () => boolean;
+    setSplitEnabled: (value: boolean) => void;
+    isSplitTarget: (target: Cell, cells: CellArray, evt: MouseEvent) => boolean;
+  }
+}
 
-class GraphDragDrop extends autoImplement<PartialClass>() {
+type PartialGraph = Pick<Graph, 'getEdgeValidationError'>;
+type PartialDragDrop = Pick<
+  Graph,
+  | 'dropEnabled'
+  | 'splitEnabled'
+  | 'autoScroll'
+  | 'autoExtend'
+  | 'isAutoScroll'
+  | 'isAutoExtend'
+  | 'isDropEnabled'
+  | 'setDropEnabled'
+  | 'isSplitEnabled'
+  | 'setSplitEnabled'
+  | 'isSplitTarget'
+>;
+type PartialType = PartialGraph & PartialDragDrop;
+
+// @ts-expect-error The properties of PartialGraph are defined elsewhere.
+const GraphDragDropMixin: PartialType = {
   /**
    * Specifies the return value for {@link isDropEnabled}.
    * @default false
    */
-  dropEnabled = false;
+  dropEnabled: false,
 
   /**
    * Specifies if dropping onto edges should be enabled. This is ignored if
@@ -21,7 +51,7 @@ class GraphDragDrop extends autoImplement<PartialClass>() {
    * out the drop operation.
    * @default true
    */
-  splitEnabled = true;
+  splitEnabled: true,
 
   /**
    * Specifies if the graph should automatically scroll if the mouse goes near
@@ -33,9 +63,11 @@ class GraphDragDrop extends autoImplement<PartialClass>() {
    * no scrollbars, the use of {@link allowAutoPanning} is recommended.
    * @default true
    */
-  autoScroll = true;
+  autoScroll: true,
 
-  isAutoScroll = () => this.autoScroll;
+  isAutoScroll() {
+    return this.autoScroll;
+  },
 
   /**
    * Specifies if the size of the graph should be automatically extended if the
@@ -43,9 +75,11 @@ class GraphDragDrop extends autoImplement<PartialClass>() {
    * account if the container has scrollbars. See {@link autoScroll}.
    * @default true
    */
-  autoExtend = true;
+  autoExtend: true,
 
-  isAutoExtend = () => this.autoExtend;
+  isAutoExtend() {
+    return this.autoExtend;
+  },
 
   /*****************************************************************************
    * Group: Graph behaviour
@@ -56,7 +90,7 @@ class GraphDragDrop extends autoImplement<PartialClass>() {
    */
   isDropEnabled() {
     return this.dropEnabled;
-  }
+  },
 
   /**
    * Specifies if the graph should allow dropping of cells onto or into other
@@ -65,9 +99,9 @@ class GraphDragDrop extends autoImplement<PartialClass>() {
    * @param dropEnabled Boolean indicating if the graph should allow dropping
    * of cells into other cells.
    */
-  setDropEnabled(value: boolean) {
+  setDropEnabled(value) {
     this.dropEnabled = value;
-  }
+  },
 
   /*****************************************************************************
    * Group: Split behaviour
@@ -78,7 +112,7 @@ class GraphDragDrop extends autoImplement<PartialClass>() {
    */
   isSplitEnabled() {
     return this.splitEnabled;
-  }
+  },
 
   /**
    * Specifies if the graph should allow dropping of cells onto or into other
@@ -87,9 +121,9 @@ class GraphDragDrop extends autoImplement<PartialClass>() {
    * @param dropEnabled Boolean indicating if the graph should allow dropping
    * of cells into other cells.
    */
-  setSplitEnabled(value: boolean) {
+  setSplitEnabled(value) {
     this.splitEnabled = value;
-  }
+  },
 
   /**
    * Returns true if the given edge may be splitted into two edges with the
@@ -99,7 +133,7 @@ class GraphDragDrop extends autoImplement<PartialClass>() {
    * @param cells {@link mxCell} that should split the edge.
    * @param evt Mouseevent that triggered the invocation.
    */
-  isSplitTarget(target: Cell, cells: CellArray, evt: MouseEvent) {
+  isSplitTarget(target, cells, evt) {
     if (
       target.isEdge() &&
       cells.length === 1 &&
@@ -112,7 +146,7 @@ class GraphDragDrop extends autoImplement<PartialClass>() {
       return !cells[0].isAncestor(src) && !cells[0].isAncestor(trg);
     }
     return false;
-  }
-}
+  },
+};
 
-export default GraphDragDrop;
+mixInto(Graph)(GraphDragDropMixin);

@@ -8,7 +8,7 @@ import PopupMenu from '../../util/gui/PopupMenu';
 import InternalEvent from '../event/InternalEvent';
 import { getScrollOrigin } from '../../util/Utils';
 import { getMainEvent, isMultiTouchEvent } from '../../util/EventUtils';
-import { MaxGraph } from '../Graph';
+import { Graph } from '../Graph';
 import InternalMouseEvent from '../event/InternalMouseEvent';
 import { GraphPlugin, PopupMenuItem } from '../../types';
 import TooltipHandler from '../tooltip/TooltipHandler';
@@ -27,7 +27,7 @@ import EventObject from '../event/EventObject';
 class PopupMenuHandler extends PopupMenu implements GraphPlugin {
   static pluginId = 'PopupMenuHandler';
 
-  constructor(graph: MaxGraph) {
+  constructor(graph: Graph) {
     super();
 
     this.graph = graph;
@@ -53,7 +53,7 @@ class PopupMenuHandler extends PopupMenu implements GraphPlugin {
    *
    * Reference to the enclosing <mxGraph>.
    */
-  graph: MaxGraph;
+  graph: Graph;
 
   /**
    * Variable: selectOnPopup

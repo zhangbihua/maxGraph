@@ -7,7 +7,7 @@
 
 import EventSource from '../event/EventSource';
 import InternalEvent from '../event/InternalEvent';
-import utils, { convertPoint, sortCells } from '../../util/Utils';
+import { convertPoint, sortCells } from '../../util/Utils';
 import RootChange from '../model/RootChange';
 import ChildChange from '../model/ChildChange';
 import TerminalChange from '../cell/edge/TerminalChange';
@@ -16,12 +16,11 @@ import VisibleChange from '../style/VisibleChange';
 import StyleChange from '../style/StyleChange';
 import EventObject from '../event/EventObject';
 import Cell from '../cell/datatypes/Cell';
-import graph from '../Graph';
 import Rectangle from '../geometry/Rectangle';
 import InternalMouseEvent from '../event/InternalMouseEvent';
 import { getClientX, getClientY } from '../../util/EventUtils';
 import CellArray from '../cell/datatypes/CellArray';
-import Graph from '../Graph';
+import { Graph } from '../Graph';
 
 /**
  * @class LayoutManager
@@ -49,7 +48,7 @@ import Graph from '../Graph';
  * been passed to {@link layoutCells}.
  */
 class LayoutManager extends EventSource {
-  constructor(graph: graph) {
+  constructor(graph: Graph) {
     super();
 
     // Executes the layout before the changes are dispatched
@@ -83,7 +82,7 @@ class LayoutManager extends EventSource {
   /**
    * Reference to the enclosing {@link graph}.
    */
-  graph: graph | null = null;
+  graph: Graph | null = null;
 
   /**
    * Specifies if the layout should bubble along
@@ -150,7 +149,7 @@ class LayoutManager extends EventSource {
   /**
    * Returns the graph that this layout operates on.
    */
-  getGraph(): graph | null {
+  getGraph(): Graph | null {
     return this.graph;
   }
 
@@ -222,11 +221,11 @@ class LayoutManager extends EventSource {
   cellsMoved(cells: CellArray, evt: InternalMouseEvent): void {
     if (cells != null && evt != null) {
       const point = convertPoint(
-        (<graph>this.getGraph()).container,
+        (<Graph>this.getGraph()).container,
         getClientX(evt),
         getClientY(evt)
       );
-      const model = (<graph>this.getGraph()).getModel();
+      const model = (<Graph>this.getGraph()).getModel();
 
       for (let i = 0; i < cells.length; i += 1) {
         const layout = this.getLayout(cells[i].getParent(), InternalEvent.MOVE_CELLS);
@@ -250,7 +249,7 @@ class LayoutManager extends EventSource {
     prev: CellArray | null = null
   ): void {
     if (cells != null && bounds != null) {
-      const model = (<graph>this.getGraph()).getModel();
+      const model = (<Graph>this.getGraph()).getModel();
 
       for (let i = 0; i < cells.length; i += 1) {
         const layout = this.getLayout(cells[i].getParent(), InternalEvent.RESIZE_CELLS);
@@ -318,7 +317,7 @@ class LayoutManager extends EventSource {
       }
 
       if (this.isBubbling()) {
-        const model = (<graph>this.getGraph()).getModel();
+        const model = (<Graph>this.getGraph()).getModel();
         this.addAncestorsWithLayout(<Cell>cell.getParent(), result);
       }
     }
@@ -330,7 +329,7 @@ class LayoutManager extends EventSource {
    */
   addDescendantsWithLayout(cell: Cell, result: CellArray = new CellArray()): CellArray {
     if (cell != null && this.hasLayout(cell)) {
-      const model = (<graph>this.getGraph()).getModel();
+      const model = (<Graph>this.getGraph()).getModel();
 
       for (let i = 0; i < cell.getChildCount(); i += 1) {
         const child = <Cell>cell.getChildAt(i);
@@ -359,7 +358,7 @@ class LayoutManager extends EventSource {
   layoutCells(cells: CellArray, bubble: boolean = false): void {
     if (cells.length > 0) {
       // Invokes the layouts while removing duplicates
-      const model = (<graph>this.getGraph()).getModel();
+      const model = (<Graph>this.getGraph()).getModel();
 
       model.beginUpdate();
       try {

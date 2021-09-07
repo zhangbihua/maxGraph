@@ -1,12 +1,31 @@
+import { mixInto } from '../../util/Utils';
 import Cell from '../cell/datatypes/Cell';
+import { Graph } from '../Graph';
 
-class GraphPorts {
+declare module '../Graph' {
+  interface Graph {
+    portsEnabled: boolean;
+
+    isPort: (cell: Cell | null) => boolean;
+    getTerminalForPort: (cell: Cell, source: boolean) => Cell | null;
+    isPortsEnabled: () => boolean;
+    setPortsEnabled: (value: boolean) => void;
+  }
+}
+
+type PartialPorts = Pick<
+  Graph,
+  'portsEnabled' | 'isPort' | 'getTerminalForPort' | 'isPortsEnabled' | 'setPortsEnabled'
+>;
+type PartialType = PartialPorts;
+
+const GraphPortsMixin: PartialType = {
   /**
    * Specifies if ports are enabled. This is used in {@link cellConnected} to update
    * the respective style.
    * @default true
    */
-  portsEnabled: boolean = true;
+  portsEnabled: true,
 
   /*****************************************************************************
    * Group: Drilldown
@@ -33,9 +52,9 @@ class GraphPorts {
    *
    * @param cell {@link mxCell} that represents the port.
    */
-  isPort(cell: Cell | null) {
+  isPort(cell) {
     return false;
-  }
+  },
 
   /**
    * Returns the terminal to be used for a given port. This implementation
@@ -44,9 +63,9 @@ class GraphPorts {
    * @param cell {@link mxCell} that represents the port.
    * @param source If the cell is the source or target port.
    */
-  getTerminalForPort(cell: Cell, source: boolean = false): Cell | null {
+  getTerminalForPort(cell, source = false) {
     return cell.getParent();
-  }
+  },
 
   /*****************************************************************************
    * Group: Graph behaviour
@@ -55,18 +74,18 @@ class GraphPorts {
   /**
    * Returns {@link portsEnabled} as a boolean.
    */
-  isPortsEnabled(): boolean {
+  isPortsEnabled() {
     return this.portsEnabled;
-  }
+  },
 
   /**
    * Specifies if the ports should be enabled.
    *
    * @param value Boolean indicating if the ports should be enabled.
    */
-  setPortsEnabled(value: boolean): void {
+  setPortsEnabled(value) {
     this.portsEnabled = value;
-  }
-}
+  },
+};
 
-export default GraphPorts;
+mixInto(Graph)(GraphPortsMixin);

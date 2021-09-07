@@ -20,13 +20,7 @@ import {
   TOOLTIP_VERTICAL_OFFSET,
   VALID_COLOR,
 } from '../../util/Constants';
-import utils, {
-  convertPoint,
-  getOffset,
-  getRotatedPoint,
-  getValue,
-  toRadians,
-} from '../../util/Utils';
+import { convertPoint, getOffset, getRotatedPoint, getValue } from '../../util/Utils';
 import InternalMouseEvent from '../event/InternalMouseEvent';
 import ImageShape from '../geometry/shape/node/ImageShape';
 import CellMarker from '../cell/CellMarker';
@@ -42,10 +36,9 @@ import {
   isConsumed,
   isShiftDown,
 } from '../../util/EventUtils';
-import graph, { MaxGraph } from '../Graph';
 import Image from '../image/ImageBox';
 import CellState from '../cell/datatypes/CellState';
-import Graph from '../Graph';
+import { Graph } from '../Graph';
 import ConnectionConstraint from './ConnectionConstraint';
 import Shape from '../geometry/shape/Shape';
 import { GraphPlugin, Listenable } from '../../types';
@@ -212,7 +205,7 @@ type FactoryMethod = (source: Cell | null, target: Cell | null, style?: string) 
 class ConnectionHandler extends EventSource implements GraphPlugin {
   static pluginId = 'ConnectionHandler';
 
-  constructor(graph: MaxGraph, factoryMethod: FactoryMethod | null = null) {
+  constructor(graph: Graph, factoryMethod: FactoryMethod | null = null) {
     super();
 
     this.graph = graph;
@@ -279,7 +272,7 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
    *
    * Reference to the enclosing <mxGraph>.
    */
-  graph: MaxGraph;
+  graph: Graph;
 
   /**
    * Variable: factoryMethod

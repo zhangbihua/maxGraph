@@ -8,10 +8,10 @@ import Rectangle from '../geometry/Rectangle';
 import TemporaryCellStates from '../cell/TemporaryCellStates';
 import InternalEvent from '../event/InternalEvent';
 import mxClient from '../../mxClient';
-import utils, { intersects } from '../../util/Utils';
+import { intersects } from '../../util/Utils';
 import { DIALECT_SVG } from '../../util/Constants';
 import { write } from '../../util/DomUtils';
-import Graph from '../Graph';
+import { Graph } from '../Graph';
 
 /**
  * @class PrintPreview

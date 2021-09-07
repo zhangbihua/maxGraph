@@ -1,8 +1,8 @@
 {
-  "name": "@mxgraph/react",
+  "name": "@maxgraph/react",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/mxgraph-react.js",
+  "main": "dist/maxgraph-react.js",
   "scripts": {
     "dev": "start-storybook -p 8902"
   },

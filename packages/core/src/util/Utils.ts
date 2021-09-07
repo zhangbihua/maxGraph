@@ -40,9 +40,9 @@ import CellState from '../view/cell/datatypes/CellState';
 import Cell from '../view/cell/datatypes/Cell';
 import Model from '../view/model/Model';
 import CellArray from '../view/cell/datatypes/CellArray';
+import { Graph } from 'src/view/Graph';
 
 import type { CellStateStyles, Properties, StyleValue } from '../types';
-import type { MaxGraph } from '../view/Graph';
 
 /**
  * Class: mxUtils
@@ -736,7 +736,7 @@ export const getPortConstraints = (
   let rotation = 0;
 
   if (constraintRotationEnabled == 1) {
-    rotation = getValue(terminal.style, 'rotation', 0);
+    rotation = terminal.style.rotation ?? 0;
   }
 
   let quad = 0;
@@ -2072,7 +2072,7 @@ export const getSizeForString = (
  */
 export const getScaleForPageCount = (
   pageCount: number,
-  graph: MaxGraph,
+  graph: Graph,
   pageFormat?: Rectangle,
   border = 0
 ) => {
@@ -2209,7 +2209,7 @@ export const getScaleForPageCount = (
  * h - Optional height of the graph view.
  */
 export const show = (
-  graph: MaxGraph,
+  graph: Graph,
   doc: Document,
   x0 = 0,
   y0 = 0,
@@ -2325,7 +2325,7 @@ export const show = (
  *
  * graph - <mxGraph> to be printed.
  */
-export const printScreen = (graph: MaxGraph) => {
+export const printScreen = (graph: Graph) => {
   const wnd = window.open();
 
   if (!wnd) return;
@@ -2353,52 +2353,17 @@ export const isNullish = (v: string | object | null | undefined | number) =>
 export const isNotNullish = (v: string | object | null | undefined | number) =>
   !isNullish(v);
 
-export const copyPropertiesToPrototype = (source: any, sourceObj: any, target: any) => {
-  Object.getOwnPropertyNames(sourceObj).forEach((name) => {
-    try {
-      Object.defineProperty(target, name, {
-        ...(Object.getOwnPropertyDescriptor(source, name) || Object.create(null)),
-        value: sourceObj[name],
+// Merge a mixin into the destination
+export const mixInto = (dest: any) => (mixin: any) => {
+  const keys = Reflect.ownKeys(mixin);
+  try {
+    for (const key of keys) {
+      Object.defineProperty(dest.prototype, key, {
+        value: mixin[key],
+        writable: true,
       });
-    } catch (e) {
-      console.error(e);
     }
-  });
+  } catch (e) {
+    console.log('Error while mixing', e);
+  }
 };
-
-export const copyMethodsToPrototype = (source: any, target: any) => {
-  Object.getOwnPropertyNames(source).forEach((name) => {
-    try {
-      if (name !== 'constructor') {
-        Object.defineProperty(
-          target,
-          name,
-          Object.getOwnPropertyDescriptor(source, name) || Object.create(null)
-        );
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  });
-};
-
-// Mixins support
-export const applyMixins = (derivedCtor: any, constructors: any[]) => {
-  constructors.forEach((baseCtor) => {
-    // Copy variables
-    copyPropertiesToPrototype(baseCtor.prototype, new baseCtor(), derivedCtor.prototype);
-
-    // Copy methods
-    copyMethodsToPrototype(baseCtor.prototype, derivedCtor.prototype);
-  });
-
-  // Attach the derived prototype to each prototype.
-  constructors.forEach((baseCtor) => {
-    Object.setPrototypeOf(baseCtor.prototype, derivedCtor.prototype);
-  });
-};
-
-// Creates a class using a type
-export const autoImplement = <T>(): new () => T => class {} as any;
-
-export default utils;

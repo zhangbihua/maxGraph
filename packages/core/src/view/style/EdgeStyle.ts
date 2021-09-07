@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import utils, {
+import {
   contains,
   getBoundingBox,
   getNumber,
@@ -129,8 +129,7 @@ class EdgeStyle {
   static EntityRelation(state, source, target, points, result) {
     const { view } = state;
     const { graph } = view;
-    const segment =
-      getValue(state.style, 'segment', ENTITY_SEGMENT) * view.scale;
+    const segment = getValue(state.style, 'segment', ENTITY_SEGMENT) * view.scale;
 
     const pts = state.absolutePoints;
     const p0 = pts[0];
@@ -145,8 +144,7 @@ class EdgeStyle {
         isSourceLeft = sourceGeometry.x <= 0.5;
       } else if (target != null) {
         isSourceLeft =
-          (pe != null ? pe.x : target.x + target.width) <
-          (p0 != null ? p0.x : source.x);
+          (pe != null ? pe.x : target.x + target.width) < (p0 != null ? p0.x : source.x);
       }
     }
 
@@ -155,12 +153,7 @@ class EdgeStyle {
       source.x = p0.x;
       source.y = p0.y;
     } else if (source != null) {
-      const constraint = getPortConstraints(
-        source,
-        state,
-        true,
-        DIRECTION_MASK_NONE
-      );
+      const constraint = getPortConstraints(source, state, true, DIRECTION_MASK_NONE);
 
       if (
         constraint !== DIRECTION_MASK_NONE &&
@@ -181,8 +174,7 @@ class EdgeStyle {
         isTargetLeft = targetGeometry.x <= 0.5;
       } else if (source != null) {
         isTargetLeft =
-          (p0 != null ? p0.x : source.x + source.width) <
-          (pe != null ? pe.x : target.x);
+          (p0 != null ? p0.x : source.x + source.width) < (pe != null ? pe.x : target.x);
       }
     }
 
@@ -191,12 +183,7 @@ class EdgeStyle {
       target.x = pe.x;
       target.y = pe.y;
     } else if (target != null) {
-      const constraint = getPortConstraints(
-        target,
-        state,
-        false,
-        DIRECTION_MASK_NONE
-      );
+      const constraint = getPortConstraints(target, state, false, DIRECTION_MASK_NONE);
 
       if (
         constraint !== DIRECTION_MASK_NONE &&
@@ -223,9 +210,7 @@ class EdgeStyle {
 
       // Adds intermediate points if both go out on same side
       if (isSourceLeft === isTargetLeft) {
-        const x = isSourceLeft
-          ? Math.min(x0, xe) - segment
-          : Math.max(x0, xe) + segment;
+        const x = isSourceLeft ? Math.min(x0, xe) - segment : Math.max(x0, xe) + segment;
 
         result.push(new Point(x, y0));
         result.push(new Point(x, ye));
@@ -284,14 +269,8 @@ class EdgeStyle {
       let y = 0;
       let dy = 0;
 
-      const seg =
-        getValue(state.style, 'segment', graph.gridSize) *
-        view.scale;
-      const dir = getValue(
-        state.style,
-        'direction',
-        DIRECTION_WEST
-      );
+      const seg = getValue(state.style, 'segment', graph.gridSize) * view.scale;
+      const dir = getValue(state.style, 'direction', DIRECTION_WEST);
 
       if (dir === DIRECTION_NORTH || dir === DIRECTION_SOUTH) {
         x = view.getRoutingCenterX(source);
@@ -343,16 +322,10 @@ class EdgeStyle {
     if (source != null && target != null) {
       if (pt != null) {
         const left = Math.min(source.x, target.x);
-        const right = Math.max(
-          source.x + source.width,
-          target.x + target.width
-        );
+        const right = Math.max(source.x + source.width, target.x + target.width);
 
         const top = Math.min(source.y, target.y);
-        const bottom = Math.max(
-          source.y + source.height,
-          target.y + target.height
-        );
+        const bottom = Math.max(source.y + source.height, target.y + target.height);
 
         pt = state.view.transformControlPoint(state, pt);
 
@@ -360,29 +333,20 @@ class EdgeStyle {
         horizontal = pt.x < left || pt.x > right;
       } else {
         const left = Math.max(source.x, target.x);
-        const right = Math.min(
-          source.x + source.width,
-          target.x + target.width
-        );
+        const right = Math.min(source.x + source.width, target.x + target.width);
 
         vertical = left === right;
 
         if (!vertical) {
           const top = Math.max(source.y, target.y);
-          const bottom = Math.min(
-            source.y + source.height,
-            target.y + target.height
-          );
+          const bottom = Math.min(source.y + source.height, target.y + target.height);
 
           horizontal = top === bottom;
         }
       }
     }
 
-    if (
-      !horizontal &&
-      (vertical || state.style.elbow === ELBOW_VERTICAL)
-    ) {
+    if (!horizontal && (vertical || state.style.elbow === ELBOW_VERTICAL)) {
       EdgeStyle.TopToBottom(state, source, target, points, result);
     } else {
       EdgeStyle.SideToSide(state, source, target, points, result);
@@ -437,34 +401,22 @@ class EdgeStyle {
         }
       }
 
-      if (
-        !contains(target, x, y1) &&
-        !contains(source, x, y1)
-      ) {
+      if (!contains(target, x, y1) && !contains(source, x, y1)) {
         result.push(new Point(x, y1));
       }
 
-      if (
-        !contains(target, x, y2) &&
-        !contains(source, x, y2)
-      ) {
+      if (!contains(target, x, y2) && !contains(source, x, y2)) {
         result.push(new Point(x, y2));
       }
 
       if (result.length === 1) {
         if (pt != null) {
-          if (
-            !contains(target, x, pt.y) &&
-            !contains(source, x, pt.y)
-          ) {
+          if (!contains(target, x, pt.y) && !contains(source, x, pt.y)) {
             result.push(new Point(x, pt.y));
           }
         } else {
           const t = Math.max(source.y, target.y);
-          const b = Math.min(
-            source.y + source.height,
-            target.y + target.height
-          );
+          const b = Math.min(source.y + source.height, target.y + target.height);
 
           result.push(new Point(x, t + (b - t) / 2));
         }
@@ -529,10 +481,7 @@ class EdgeStyle {
 
       if (result.length === 1) {
         if (pt != null && result.length === 1) {
-          if (
-            !contains(target, pt.x, y) &&
-            !contains(source, pt.x, y)
-          ) {
+          if (!contains(target, pt.x, y) && !contains(source, pt.x, y)) {
             result.push(new Point(pt.x, y));
           }
         } else {
@@ -559,18 +508,9 @@ class EdgeStyle {
    * edge.
    *
    */
-  static SegmentConnector(
-    state,
-    sourceScaled,
-    targetScaled,
-    controlHints,
-    result
-  ) {
+  static SegmentConnector(state, sourceScaled, targetScaled, controlHints, result) {
     // Creates array of all way- and terminalpoints
-    const pts = EdgeStyle.scalePointArray(
-      state.absolutePoints,
-      state.view.scale
-    );
+    const pts = EdgeStyle.scalePointArray(state.absolutePoints, state.view.scale);
     const source = EdgeStyle.scaleCellState(sourceScaled, state.view.scale);
     const target = EdgeStyle.scaleCellState(targetScaled, state.view.scale);
     const tol = 1;
@@ -618,11 +558,7 @@ class EdgeStyle {
       let hints = [];
 
       for (let i = 0; i < controlHints.length; i += 1) {
-        const tmp = state.view.transformControlPoint(
-          state,
-          controlHints[i],
-          true
-        );
+        const tmp = state.view.transformControlPoint(state, controlHints[i], true);
 
         if (tmp != null) {
           hints.push(tmp);
@@ -671,10 +607,8 @@ class EdgeStyle {
       // Check for alignment with fixed points and with channels
       // at source and target segments only
       for (let i = 0; i < 2; i += 1) {
-        const fixedVertAlign =
-          currentPt != null && currentPt.x === currentHint.x;
-        const fixedHozAlign =
-          currentPt != null && currentPt.y === currentHint.y;
+        const fixedVertAlign = currentPt != null && currentPt.x === currentHint.x;
+        const fixedHozAlign = currentPt != null && currentPt.y === currentHint.y;
 
         const inHozChan =
           currentTerm != null &&
@@ -692,10 +626,7 @@ class EdgeStyle {
         // of a floating port, or if the hint is exactly co-incident with a
         // fixed point, ignore the source and try to work out the orientation
         // from the target end
-        if (
-          i == 0 &&
-          ((hozChan && vertChan) || (fixedVertAlign && fixedHozAlign))
-        ) {
+        if (i == 0 && ((hozChan && vertChan) || (fixedVertAlign && fixedHozAlign))) {
         } else {
           if (
             currentPt != null &&
@@ -826,11 +757,7 @@ class EdgeStyle {
       while (
         result.length > 1 &&
         result[result.length - 1] != null &&
-        contains(
-          target,
-          result[result.length - 1].x,
-          result[result.length - 1].y
-        )
+        contains(target, result[result.length - 1].x, result[result.length - 1].y)
       ) {
         result.splice(result.length - 1, 1);
       }
@@ -967,11 +894,7 @@ class EdgeStyle {
 
     if (value === 'auto') {
       // Computes the automatic jetty size
-      const type = getValue(
-        state.style,
-        isSource ? 'startArrow' : 'endArrow',
-        NONE
-      );
+      const type = getValue(state.style, isSource ? 'startArrow' : 'endArrow', NONE);
 
       if (type !== NONE) {
         const size = getNumber(
@@ -980,10 +903,8 @@ class EdgeStyle {
           DEFAULT_MARKERSIZE
         );
         value =
-          Math.max(
-            2,
-            Math.ceil((size + EdgeStyle.orthBuffer) / EdgeStyle.orthBuffer)
-          ) * EdgeStyle.orthBuffer;
+          Math.max(2, Math.ceil((size + EdgeStyle.orthBuffer) / EdgeStyle.orthBuffer)) *
+          EdgeStyle.orthBuffer;
       } else {
         value = 2 * EdgeStyle.orthBuffer;
       }
@@ -1070,21 +991,12 @@ class EdgeStyle {
    * edge.
    *
    */
-  static OrthConnector(
-    state,
-    sourceScaled,
-    targetScaled,
-    controlHints,
-    result
-  ) {
+  static OrthConnector(state, sourceScaled, targetScaled, controlHints, result) {
     const { graph } = state.view;
     const sourceEdge = source == null ? false : source.cell.isEdge();
     const targetEdge = target == null ? false : target.cell.isEdge();
 
-    const pts = EdgeStyle.scalePointArray(
-      state.absolutePoints,
-      state.view.scale
-    );
+    const pts = EdgeStyle.scalePointArray(state.absolutePoints, state.view.scale);
     let source = EdgeStyle.scaleCellState(sourceScaled, state.view.scale);
     let target = EdgeStyle.scaleCellState(targetScaled, state.view.scale);
 
@@ -1126,19 +1038,11 @@ class EdgeStyle {
 
     if (
       tooShort ||
-      (EdgeStyle.orthPointsFallback &&
-        controlHints != null &&
-        controlHints.length > 0) ||
+      (EdgeStyle.orthPointsFallback && controlHints != null && controlHints.length > 0) ||
       sourceEdge ||
       targetEdge
     ) {
-      EdgeStyle.SegmentConnector(
-        state,
-        sourceScaled,
-        targetScaled,
-        controlHints,
-        result
-      );
+      EdgeStyle.SegmentConnector(state, sourceScaled, targetScaled, controlHints, result);
 
       return;
     }
@@ -1150,13 +1054,8 @@ class EdgeStyle {
     let rotation = 0;
 
     if (source != null) {
-      portConstraint[0] = getPortConstraints(
-        source,
-        state,
-        true,
-        DIRECTION_MASK_ALL
-      );
-      rotation = getValue(source.style, 'rotation', 0);
+      portConstraint[0] = getPortConstraints(source, state, true, DIRECTION_MASK_ALL);
+      rotation = source.style.rotation ?? 0;
 
       // console.log('source rotation', rotation);
 
@@ -1173,13 +1072,8 @@ class EdgeStyle {
     }
 
     if (target != null) {
-      portConstraint[1] = getPortConstraints(
-        target,
-        state,
-        false,
-        DIRECTION_MASK_ALL
-      );
-      rotation = getValue(target.style, 'rotation', 0);
+      portConstraint[1] = getPortConstraints(target, state, false, DIRECTION_MASK_ALL);
+      rotation = target.style.rotation ?? 0;
 
       // console.log('target rotation', rotation);
 
@@ -1292,19 +1186,10 @@ class EdgeStyle {
     const sourceBottomDist = geo[1][1] - (geo[0][1] + geo[0][3]);
     const sourceRightDist = geo[1][0] - (geo[0][0] + geo[0][2]);
 
-    EdgeStyle.vertexSeperations[1] = Math.max(
-      sourceLeftDist - totalBuffer,
-      0
-    );
+    EdgeStyle.vertexSeperations[1] = Math.max(sourceLeftDist - totalBuffer, 0);
     EdgeStyle.vertexSeperations[2] = Math.max(sourceTopDist - totalBuffer, 0);
-    EdgeStyle.vertexSeperations[4] = Math.max(
-      sourceBottomDist - totalBuffer,
-      0
-    );
-    EdgeStyle.vertexSeperations[3] = Math.max(
-      sourceRightDist - totalBuffer,
-      0
-    );
+    EdgeStyle.vertexSeperations[4] = Math.max(sourceBottomDist - totalBuffer, 0);
+    EdgeStyle.vertexSeperations[3] = Math.max(sourceRightDist - totalBuffer, 0);
 
     //= =============================================================
     // Start of source and target direction determination
@@ -1317,13 +1202,9 @@ class EdgeStyle {
     const vertPref = [];
 
     horPref[0] =
-      sourceLeftDist >= sourceRightDist
-        ? DIRECTION_MASK_WEST
-        : DIRECTION_MASK_EAST;
+      sourceLeftDist >= sourceRightDist ? DIRECTION_MASK_WEST : DIRECTION_MASK_EAST;
     vertPref[0] =
-      sourceTopDist >= sourceBottomDist
-        ? DIRECTION_MASK_NORTH
-        : DIRECTION_MASK_SOUTH;
+      sourceTopDist >= sourceBottomDist ? DIRECTION_MASK_NORTH : DIRECTION_MASK_SOUTH;
 
     horPref[1] = reversePortConstraints(horPref[0]);
     vertPref[1] = reversePortConstraints(vertPref[0]);
@@ -1359,10 +1240,7 @@ class EdgeStyle {
 
     if (preferredVertDist > 0 && preferredHorizDist > 0) {
       // Possibility of two segment edge connection
-      if (
-        (horPref[0] & portConstraint[0]) > 0 &&
-        (vertPref[1] & portConstraint[1]) > 0
-      ) {
+      if ((horPref[0] & portConstraint[0]) > 0 && (vertPref[1] & portConstraint[1]) > 0) {
         prefOrdering[0][0] = horPref[0];
         prefOrdering[0][1] = vertPref[0];
         prefOrdering[1][0] = vertPref[1];
@@ -1455,8 +1333,7 @@ class EdgeStyle {
       targetIndex += 4;
     }
 
-    const routePattern =
-      EdgeStyle.routePatterns[sourceIndex - 1][targetIndex - 1];
+    const routePattern = EdgeStyle.routePatterns[sourceIndex - 1][targetIndex - 1];
 
     // console.log('routePattern', routePattern);
 
@@ -1495,8 +1372,7 @@ class EdgeStyle {
 
       // Rotate the index of this direction by the quad
       // to get the real direction
-      let directionIndex =
-        nextDirection === DIRECTION_MASK_EAST ? 3 : nextDirection;
+      let directionIndex = nextDirection === DIRECTION_MASK_EAST ? 3 : nextDirection;
 
       directionIndex += quad;
 
@@ -1517,10 +1393,8 @@ class EdgeStyle {
         // We can't base the new position on index - 1
         // because sometime elbows turn out not to exist,
         // then we'd have to rewind.
-        EdgeStyle.wayPoints1[currentIndex][0] =
-          EdgeStyle.wayPoints1[currentIndex - 1][0];
-        EdgeStyle.wayPoints1[currentIndex][1] =
-          EdgeStyle.wayPoints1[currentIndex - 1][1];
+        EdgeStyle.wayPoints1[currentIndex][0] = EdgeStyle.wayPoints1[currentIndex - 1][0];
+        EdgeStyle.wayPoints1[currentIndex][1] = EdgeStyle.wayPoints1[currentIndex - 1][1];
       }
 
       const tar = (routePattern[i] & EdgeStyle.TARGET_MASK) > 0;
@@ -1564,11 +1438,9 @@ class EdgeStyle {
       } else if (center) {
         // Which center we're travelling to depend on the current direction
         EdgeStyle.wayPoints1[currentIndex][0] +=
-          direction[0] *
-          Math.abs(EdgeStyle.vertexSeperations[directionIndex] / 2);
+          direction[0] * Math.abs(EdgeStyle.vertexSeperations[directionIndex] / 2);
         EdgeStyle.wayPoints1[currentIndex][1] +=
-          direction[1] *
-          Math.abs(EdgeStyle.vertexSeperations[directionIndex] / 2);
+          direction[1] * Math.abs(EdgeStyle.vertexSeperations[directionIndex] / 2);
       }
 
       if (

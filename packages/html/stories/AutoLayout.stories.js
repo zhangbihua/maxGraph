@@ -1,4 +1,18 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  Rubberband,
+  InternalEvent,
+  CellRenderer,
+  EdgeHandler,
+  mxHierarchicalLayout,
+  Constants,
+  CellOverlay,
+  ImageBox,
+  mxClient,
+  mxMorphing,
+  EventObject,
+  EventUtils,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -18,23 +32,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    Graph,
-    Rubberband,
-    InternalEvent,
-    utils,
-    CellRenderer,
-    EdgeHandler,
-    mxHierarchicalLayout,
-    Constants,
-    CellOverlay,
-    ImageBox,
-    mxClient,
-    mxMorphing,
-    EventObject,
-    EventUtils,
-  } = maxgraph;
-
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';

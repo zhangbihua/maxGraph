@@ -1,25 +1,59 @@
-import Rectangle from "../geometry/Rectangle";
-import {hasScrollbars} from "../../util/Utils";
+import Rectangle from '../geometry/Rectangle';
+import { hasScrollbars, mixInto } from '../../util/Utils';
+import { Graph } from '../Graph';
 
-class GraphZoom {
+declare module '../Graph' {
+  interface Graph {
+    zoomFactor: number;
+    keepSelectionVisibleOnZoom: boolean;
+    centerZoom: boolean;
+    zoomIn: () => void;
+    zoomOut: () => void;
+    zoomActual: () => void;
+    zoomTo: (scale: number, center: boolean) => void;
+    zoom: (factor: number, center?: boolean) => void;
+    zoomToRect: (rect: Rectangle) => void;
+  }
+}
+
+type PartialGraph = Pick<
+  Graph,
+  'getView' | 'getSelectionCell' | 'getContainer' | 'scrollRectToVisible'
+>;
+type PartialZoom = Pick<
+  Graph,
+  | 'zoomFactor'
+  | 'keepSelectionVisibleOnZoom'
+  | 'centerZoom'
+  | 'zoomIn'
+  | 'zoomOut'
+  | 'zoomActual'
+  | 'zoomTo'
+  | 'zoom'
+  | 'zoomToRect'
+>;
+type PartialType = PartialGraph & PartialZoom;
+
+// @ts-expect-error The properties of PartialGraph are defined elsewhere.
+const GraphZoomMixin: PartialType = {
   /**
    * Specifies the factor used for {@link zoomIn} and {@link zoomOut}.
    * @default 1.2 (120%)
    */
-  zoomFactor: number = 1.2;
+  zoomFactor: 1.2,
 
   /**
    * Specifies if the viewport should automatically contain the selection cells after a zoom operation.
    * @default false
    */
-  keepSelectionVisibleOnZoom: boolean = false;
+  keepSelectionVisibleOnZoom: false,
 
   /**
    * Specifies if the zoom operations should go into the center of the actual
    * diagram rather than going from top, left.
    * @default true
    */
-  centerZoom: boolean = true;
+  centerZoom: true,
 
   /*****************************************************************************
    * Group: Graph display
@@ -28,49 +62,51 @@ class GraphZoom {
   /**
    * Zooms into the graph by {@link zoomFactor}.
    */
-  zoomIn(): void {
+  zoomIn() {
     this.zoom(this.zoomFactor);
-  }
+  },
 
   /**
    * Zooms out of the graph by {@link zoomFactor}.
    */
-  zoomOut(): void {
+  zoomOut() {
     this.zoom(1 / this.zoomFactor);
-  }
+  },
 
   /**
    * Resets the zoom and panning in the view.
    */
-  zoomActual(): void {
-    if (this.view.scale === 1) {
-      this.view.setTranslate(0, 0);
+  zoomActual() {
+    if (this.getView().scale === 1) {
+      this.getView().setTranslate(0, 0);
     } else {
-      this.view.translate.x = 0;
-      this.view.translate.y = 0;
+      this.getView().translate.x = 0;
+      this.getView().translate.y = 0;
 
-      this.view.setScale(1);
+      this.getView().setScale(1);
     }
-  }
+  },
 
   /**
    * Zooms the graph to the given scale with an optional boolean center
    * argument, which is passd to {@link zoom}.
    */
-  zoomTo(scale: number, center: boolean = false): void {
-    this.zoom(scale / this.view.scale, center);
-  }
+  zoomTo(scale, center = false) {
+    this.zoom(scale / this.getView().scale, center);
+  },
 
   /**
    * Zooms the graph using the given factor. Center is an optional boolean
    * argument that keeps the graph scrolled to the center. If the center argument
    * is omitted, then {@link centerZoom} will be used as its value.
    */
-  zoom(factor: number, center: boolean = this.centerZoom): void {
-    const scale = Math.round(this.view.scale * factor * 100) / 100;
-    const state = this.view.getState(this.getSelectionCell());
-    const container = <HTMLElement>this.container;
-    factor = scale / this.view.scale;
+  zoom(factor, center) {
+    center = center ?? this.centerZoom;
+
+    const scale = Math.round(this.getView().scale * factor * 100) / 100;
+    const state = this.getView().getState(this.getSelectionCell());
+    const container = this.getContainer();
+    factor = scale / this.getView().scale;
 
     if (this.keepSelectionVisibleOnZoom && state != null) {
       const rect = new Rectangle(
@@ -81,16 +117,16 @@ class GraphZoom {
       );
 
       // Refreshes the display only once if a scroll is carried out
-      this.view.scale = scale;
+      this.getView().scale = scale;
 
       if (!this.scrollRectToVisible(rect)) {
-        this.view.revalidate();
+        this.getView().revalidate();
 
         // Forces an event to be fired but does not revalidate again
-        this.view.setScale(scale);
+        this.getView().setScale(scale);
       }
     } else {
-      const _hasScrollbars = hasScrollbars(this.container);
+      const _hasScrollbars = hasScrollbars(this.getContainer());
 
       if (center && !_hasScrollbars) {
         let dx = container.offsetWidth;
@@ -101,24 +137,24 @@ class GraphZoom {
           dx *= -f;
           dy *= -f;
         } else {
-          const f = (1 / factor - 1) / (this.view.scale * 2);
+          const f = (1 / factor - 1) / (this.getView().scale * 2);
           dx *= f;
           dy *= f;
         }
 
-        this.view.scaleAndTranslate(
+        this.getView().scaleAndTranslate(
           scale,
-          this.view.translate.x + dx,
-          this.view.translate.y + dy
+          this.getView().translate.x + dx,
+          this.getView().translate.y + dy
         );
       } else {
         // Allows for changes of translate and scrollbars during setscale
-        const tx = this.view.translate.x;
-        const ty = this.view.translate.y;
+        const tx = this.getView().translate.x;
+        const ty = this.getView().translate.y;
         const sl = container.scrollLeft;
         const st = container.scrollTop;
 
-        this.view.setScale(scale);
+        this.getView().setScale(scale);
 
         if (_hasScrollbars) {
           let dx = 0;
@@ -130,15 +166,15 @@ class GraphZoom {
           }
 
           container.scrollLeft =
-            (this.view.translate.x - tx) * this.view.scale +
+            (this.getView().translate.x - tx) * this.getView().scale +
             Math.round(sl * factor + dx);
           container.scrollTop =
-            (this.view.translate.y - ty) * this.view.scale +
+            (this.getView().translate.y - ty) * this.getView().scale +
             Math.round(st * factor + dy);
         }
       }
     }
-  }
+  },
 
   /**
    * Zooms the graph to the specified rectangle. If the rectangle does not have same aspect
@@ -150,8 +186,8 @@ class GraphZoom {
    * @param rect The un-scaled and un-translated rectangluar region that should be just visible
    * after the operation
    */
-  zoomToRect(rect: Rectangle): void {
-    const container = <HTMLElement>this.container;
+  zoomToRect(rect) {
+    const container = this.getContainer();
     const scaleX = container.clientWidth / rect.width;
     const scaleY = container.clientHeight / rect.height;
     const aspectFactor = scaleX / scaleY;
@@ -198,20 +234,20 @@ class GraphZoom {
     }
 
     const scale = container.clientWidth / rect.width;
-    const newScale = this.view.scale * scale;
+    const newScale = this.getView().scale * scale;
 
-    if (!hasScrollbars(this.container)) {
-      this.view.scaleAndTranslate(
+    if (!hasScrollbars(this.getContainer())) {
+      this.getView().scaleAndTranslate(
         newScale,
-        this.view.translate.x - rect.x / this.view.scale,
-        this.view.translate.y - rect.y / this.view.scale
+        this.getView().translate.x - rect.x / this.getView().scale,
+        this.getView().translate.y - rect.y / this.getView().scale
       );
     } else {
-      this.view.setScale(newScale);
+      this.getView().setScale(newScale);
       container.scrollLeft = Math.round(rect.x * scale);
       container.scrollTop = Math.round(rect.y * scale);
     }
-  }
-}
+  },
+};
 
-export default GraphZoom;
+mixInto(Graph)(GraphZoomMixin);

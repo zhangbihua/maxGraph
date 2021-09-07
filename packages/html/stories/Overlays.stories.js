@@ -1,4 +1,11 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  CellOverlay,
+  InternalEvent,
+  CellTracker,
+  utils,
+  ImageBox,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -10,8 +17,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const { Graph, CellOverlay, InternalEvent, CellTracker, utils, ImageBox } = maxgraph;
-
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';

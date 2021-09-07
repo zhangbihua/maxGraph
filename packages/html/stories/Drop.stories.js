@@ -1,4 +1,11 @@
-import maxgraph from '@maxgraph/core';
+import {
+  Graph,
+  Rubberband,
+  utils,
+  EventUtils,
+  InternalEvent,
+  mxClient,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 import { getXml, parseXml } from '@maxgraph/core/util/XmlUtils';
@@ -19,8 +26,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const { Graph, Rubberband, utils, EventUtils, InternalEvent, mxClient } = maxgraph;
-
   const div = document.createElement('div');
   div.innerHTML = 'Drag & drop your images below:<br>';
 

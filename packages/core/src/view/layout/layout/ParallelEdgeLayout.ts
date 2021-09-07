@@ -8,7 +8,7 @@
 import Point from '../../geometry/Point';
 import GraphLayout from './GraphLayout';
 import ObjectIdentity from '../../../util/ObjectIdentity';
-import Graph from '../../Graph';
+import { Graph } from '../../Graph';
 import CellArray from '../../cell/datatypes/CellArray';
 import Cell from '../../cell/datatypes/Cell';
 

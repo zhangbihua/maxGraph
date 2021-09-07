@@ -1,5 +1,20 @@
-import maxgraph from '@maxgraph/core';
-import { load } from '@mxgraph/core/src/util/network/mxXmlRequest';
+import {
+  Graph,
+  ConnectionHandler,
+  mxDomHelpers,
+  EdgeHandler,
+  InternalEvent,
+  Point,
+  CellHighlight,
+  Constants,
+  VertexHandler,
+  Rubberband,
+  Shape,
+  StencilShape,
+  StencilRegistry,
+  CellRenderer,
+  utils,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -19,24 +34,6 @@ export default {
 };
 
 const Template = ({ label, ...args }) => {
-  const {
-    Graph,
-    ConnectionHandler,
-    mxDomHelpers,
-    EdgeHandler,
-    InternalEvent,
-    Point,
-    CellHighlight,
-    Constants,
-    VertexHandler,
-    Rubberband,
-    Shape,
-    StencilShape,
-    StencilRegistry,
-    CellRenderer,
-    utils,
-  } = maxgraph;
-
   const div = document.createElement('div');
 
   const container = document.createElement('div');

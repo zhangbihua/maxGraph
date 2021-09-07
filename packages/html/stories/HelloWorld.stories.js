@@ -1,6 +1,4 @@
-import Graph from '@maxgraph/core/view/Graph';
-import InternalEvent from '@maxgraph/core/view/event/InternalEvent';
-
+import { Graph, InternalEvent, RubberBand } from '@maxgraph/core';
 import { globalTypes } from '../.storybook/preview';
 
 export default {
@@ -28,7 +26,7 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
 
   if (!args.contextMenu) InternalEvent.disableContextMenu(container);
-  console.log(Graph, Graph.prototype);
+
   const graph = new Graph(container);
 
   // if (args.rubberBand) new Rubberband(graph);

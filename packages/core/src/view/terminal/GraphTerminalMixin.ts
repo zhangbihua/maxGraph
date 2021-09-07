@@ -1,14 +1,27 @@
 import CellArray from '../cell/datatypes/CellArray';
 import Cell from '../cell/datatypes/Cell';
 import Dictionary from '../../util/Dictionary';
-import { autoImplement } from '../../util/Utils';
+import { Graph } from '../Graph';
+import { mixInto } from '../../util/Utils';
 
-import type Graph from '../Graph';
+declare module '../Graph' {
+  interface Graph {
+    isTerminalPointMovable: (cell: Cell, source: boolean) => boolean;
+    getOpposites: (
+      edges: CellArray,
+      terminal: Cell | null,
+      sources?: boolean,
+      targets?: boolean
+    ) => CellArray;
+  }
+}
 
 type PartialGraph = Pick<Graph, 'getView'>;
-type PartialClass = PartialGraph;
+type PartialTerminal = Pick<Graph, 'isTerminalPointMovable' | 'getOpposites'>;
+type PartialType = PartialGraph & PartialTerminal;
 
-class GraphTerminal extends autoImplement<PartialClass>() {
+// @ts-expect-error The properties of PartialGraph are defined elsewhere.
+const GraphTerminalMixin: PartialType = {
   /*****************************************************************************
    * Group: Graph behaviour
    *****************************************************************************/
@@ -23,9 +36,9 @@ class GraphTerminal extends autoImplement<PartialClass>() {
    * @param cell {@link mxCell} whose terminal point should be moved.
    * @param source Boolean indicating if the source or target terminal should be moved.
    */
-  isTerminalPointMovable(cell: Cell, source: boolean) {
+  isTerminalPointMovable(cell, source) {
     return true;
-  }
+  },
 
   /*****************************************************************************
    * Group: Cell retrieval
@@ -44,12 +57,7 @@ class GraphTerminal extends autoImplement<PartialClass>() {
    * @param targets Optional boolean that specifies if targer terminals should be
    * included in the result. Default is `true`.
    */
-  getOpposites(
-    edges: CellArray,
-    terminal: Cell | null = null,
-    sources = true,
-    targets = true
-  ): CellArray {
+  getOpposites(edges, terminal = null, sources = true, targets = true) {
     const terminals = new CellArray();
 
     // Fast lookup to avoid duplicates in terminals array
@@ -84,7 +92,7 @@ class GraphTerminal extends autoImplement<PartialClass>() {
       }
     }
     return terminals;
-  }
-}
+  },
+};
 
-export default GraphTerminal;
+mixInto(Graph)(GraphTerminalMixin);

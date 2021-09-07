@@ -16,8 +16,8 @@ import {
 import CellHighlight from '../selection/CellHighlight';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
-import utils, { intersectsHotspot, isNumeric } from '../../util/Utils';
-import { MaxGraph } from '../Graph';
+import { intersectsHotspot, isNumeric } from '../../util/Utils';
+import { Graph } from '../Graph';
 import { ColorValue } from '../../types';
 import CellState from './datatypes/CellState';
 import InternalMouseEvent from '../event/InternalMouseEvent';
@@ -65,7 +65,7 @@ import Cell from './datatypes/Cell';
  */
 class CellMarker extends EventSource {
   constructor(
-    graph: MaxGraph,
+    graph: Graph,
     validColor: ColorValue = DEFAULT_VALID_COLOR,
     invalidColor: ColorValue = DEFAULT_INVALID_COLOR,
     hotspot: number = DEFAULT_HOTSPOT
@@ -84,7 +84,7 @@ class CellMarker extends EventSource {
    *
    * Reference to the enclosing <mxGraph>.
    */
-  graph: MaxGraph;
+  graph: Graph;
 
   /**
    * Variable: enabled
