@@ -679,7 +679,7 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
       }
     }
 
-    return new MyCellMarker(this.graph);
+    return new MyCellMarker(this.graph) as CellMarker;
   }
 
   /**

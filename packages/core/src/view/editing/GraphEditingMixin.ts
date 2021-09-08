@@ -5,6 +5,7 @@ import InternalEvent from '../event/InternalEvent';
 import InternalMouseEvent from '../event/InternalMouseEvent';
 import { Graph } from '../Graph';
 import { mixInto } from '../../util/Utils';
+import CellEditor from './CellEditor';
 
 declare module '../Graph' {
   interface Graph {
@@ -25,7 +26,6 @@ declare module '../Graph' {
 
 type PartialGraph = Pick<
   Graph,
-  | 'getCellEditor'
   | 'convertValueToString'
   | 'batchUpdate'
   | 'getModel'
@@ -35,6 +35,7 @@ type PartialGraph = Pick<
   | 'cellSizeUpdated'
   | 'getCurrentCellStyle'
   | 'isCellLocked'
+  | 'getPlugin'
 >;
 type PartialEditing = Pick<
   Graph,
@@ -94,7 +95,10 @@ const GraphEditingMixin: PartialType = {
         this.fireEvent(
           new EventObject(InternalEvent.START_EDITING, 'cell', cell, 'event', evt)
         );
-        this.getCellEditor().startEditing(cell, evt);
+
+        const cellEditor = this.getPlugin('CellEditor') as CellEditor;
+        cellEditor.startEditing(cell, evt);
+
         this.fireEvent(
           new EventObject(InternalEvent.EDITING_STARTED, 'cell', cell, 'event', evt)
         );
@@ -122,7 +126,9 @@ const GraphEditingMixin: PartialType = {
    * should be stored.
    */
   stopEditing(cancel = false) {
-    this.getCellEditor().stopEditing(cancel);
+    const cellEditor = this.getPlugin('CellEditor') as CellEditor;
+    cellEditor.stopEditing(cancel);
+
     this.fireEvent(new EventObject(InternalEvent.EDITING_STOPPED, 'cancel', cancel));
   },
 
@@ -200,7 +206,8 @@ const GraphEditingMixin: PartialType = {
    * @param cell {@link mxCell} that should be checked.
    */
   isEditing(cell = null) {
-    const editingCell = this.getCellEditor().getEditingCell();
+    const cellEditor = this.getPlugin('CellEditor') as CellEditor;
+    const editingCell = cellEditor.getEditingCell();
     return !cell ? !!editingCell : cell === editingCell;
   },
 

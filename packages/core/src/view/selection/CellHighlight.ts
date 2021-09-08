@@ -13,7 +13,7 @@ import {
 import InternalEvent from '../event/InternalEvent';
 import Rectangle from '../geometry/Rectangle';
 import CellState from '../cell/datatypes/CellState';
-import graph from '../Graph';
+import { Graph } from '../Graph';
 import Shape from '../geometry/shape/Shape';
 import { ColorValue } from '../../types';
 
@@ -28,7 +28,7 @@ import { ColorValue } from '../../types';
  */
 class CellHighlight {
   constructor(
-    graph: graph,
+    graph: Graph,
     highlightColor: ColorValue = DEFAULT_VALID_COLOR,
     strokeWidth = HIGHLIGHT_STROKEWIDTH,
     dashed = false
@@ -94,7 +94,7 @@ class CellHighlight {
    * Reference to the enclosing {@link graph}.
    * @default true
    */
-  graph: graph;
+  graph: Graph;
 
   /**
    * Reference to the {@link CellState}.
@@ -163,7 +163,7 @@ class CellHighlight {
     shape.init(this.graph.getView().getOverlayPane());
     InternalEvent.redirectMouseEvents(shape.node, this.graph, this.state);
 
-    if ((<graph>this.graph).dialect !== DIALECT_SVG) {
+    if ((<Graph>this.graph).dialect !== DIALECT_SVG) {
       shape.pointerEvents = false;
     } else {
       shape.svgPointerEvents = 'stroke';

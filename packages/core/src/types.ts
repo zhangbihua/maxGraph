@@ -98,6 +98,7 @@ export type CellStateStyles = {
   noLabel: boolean;
   opacity: number;
   orthogonal: boolean | null;
+  orthogonalLoop: boolean;
   overflow: OverflowValue;
   perimeter: Function | string | null;
   perimeterSpacing: number;

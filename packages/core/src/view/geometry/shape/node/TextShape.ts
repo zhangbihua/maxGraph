@@ -89,26 +89,27 @@ class TextShape extends Shape {
 
     this.value = value;
     this.bounds = bounds;
-    this.color = color;
-    this.align = align;
-    this.valign = valign;
-    this.family = family;
-    this.size = size;
-    this.fontStyle = fontStyle;
-    this.spacing = spacing;
-    this.spacingTop = spacing + spacingTop;
-    this.spacingRight = spacing + spacingRight;
-    this.spacingBottom = spacing + spacingBottom;
-    this.spacingLeft = spacing + spacingLeft;
-    this.horizontal = horizontal;
+    this.color = color ?? 'black';
+    this.align = align ?? ALIGN_CENTER;
+    this.valign = valign ?? ALIGN_MIDDLE;
+    this.family = family ?? DEFAULT_FONTFAMILY;
+    this.size = size ?? DEFAULT_FONTSIZE;
+    this.fontStyle = fontStyle ?? DEFAULT_FONTSTYLE;
+    this.spacing = spacing ?? 2;
+    this.spacingTop = this.spacing + (spacingTop ?? 0);
+    this.spacingRight = this.spacing + (spacingRight ?? 0);
+    this.spacingBottom = this.spacing + (spacingBottom ?? 0);
+    this.spacingLeft = this.spacing + (spacingLeft ?? 0);
+    this.horizontal = horizontal ?? true;
     this.background = background;
     this.border = border;
-    this.wrap = wrap;
-    this.clipped = clipped;
-    this.overflow = overflow;
-    this.labelPadding = labelPadding;
+    this.wrap = wrap ?? false;
+    this.clipped = clipped ?? false;
+    this.overflow = overflow ?? 'visible';
+    this.labelPadding = labelPadding ?? 0;
     this.textDirection = textDirection;
     this.rotation = 0;
+
     this.updateMargin();
   }
 
@@ -403,22 +404,25 @@ class TextShape extends Shape {
     super.apply(state);
 
     if (this.style) {
-      this.fontStyle = this.style.fontStyle;
-      this.family = this.style.fontFamily;
-      this.size = this.style.fontSize;
-      this.color = this.style.fontColor;
-      this.align = this.style.align;
-      this.valign = this.style.verticalAlign;
-      this.spacing = this.style.spacing;
-      this.spacingTop = this.style.spacingTop;
-      this.spacingRight = this.style.spacingRight;
-      this.spacingBottom = this.style.spacingBottom;
-      this.spacingLeft = this.style.spacingLeft;
-      this.horizontal = this.style.horizontal;
-      this.background = this.style.backgroundColor;
-      this.border = this.style.labelBorderColor;
-      this.textDirection = this.style.textDirection;
-      this.opacity = this.style.textOpacity;
+      this.fontStyle = this.style.fontStyle ?? this.fontStyle;
+      this.family = this.style.fontFamily ?? this.family;
+      this.size = this.style.fontSize ?? this.size;
+      this.color = this.style.fontColor ?? this.color;
+      this.align = this.style.align ?? this.align;
+      this.valign = this.style.verticalAlign ?? this.valign;
+      this.spacing = this.style.spacing ?? this.spacing;
+      this.spacingTop = (this.style.spacingTop ?? this.spacingTop - old) + this.spacing;
+      this.spacingRight =
+        (this.style.spacingRight ?? this.spacingRight - old) + this.spacing;
+      this.spacingBottom =
+        (this.style.spacingBottom ?? this.spacingBottom - old) + this.spacing;
+      this.spacingLeft =
+        (this.style.spacingLeft ?? this.spacingLeft - old) + this.spacing;
+      this.horizontal = this.style.horizontal ?? this.horizontal;
+      this.background = this.style.backgroundColor ?? this.background;
+      this.border = this.style.labelBorderColor ?? this.border;
+      this.textDirection = this.style.textDirection ?? DEFAULT_TEXT_DIRECTION;
+      this.opacity = this.style.textOpacity ?? 100;
 
       this.updateMargin();
     }

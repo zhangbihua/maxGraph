@@ -52,7 +52,6 @@ import {
   equalEntries,
   equalPoints,
   getRotatedPoint,
-  getValue,
   mod,
   toRadians,
 } from '../../util/Utils';
@@ -1168,24 +1167,21 @@ class CellRenderer {
    * bounds - <mxRectangle> the rectangle to be rotated.
    */
   rotateLabelBounds(state: CellState, bounds: Rectangle): void {
-    // @ts-ignore
-    bounds.y -= state.text.margin.y * bounds.height;
-    // @ts-ignore
-    bounds.x -= state.text.margin.x * bounds.width;
+    bounds.y -= state.text!.margin!.y * bounds.height;
+    bounds.x -= state.text!.margin!.x * bounds.width;
 
     if (
       !this.legacySpacing ||
       (state.style.overflow !== 'fill' && state.style.overflow !== 'width')
     ) {
       const s = state.view.scale;
-      // @ts-ignore
-      const spacing = state.text.getSpacing();
+      const spacing = state.text!.getSpacing();
       bounds.x += spacing.x * s;
       bounds.y += spacing.y * s;
 
-      const hpos = getValue(state.style, 'labelPosition', ALIGN_CENTER);
-      const vpos = getValue(state.style, 'verticalLabelPosition', ALIGN_MIDDLE);
-      const lw = getValue(state.style, 'labelWidth', null);
+      const hpos = state.style.labelPosition ?? ALIGN_CENTER;
+      const vpos = state.style.verticalLabelPosition ?? ALIGN_MIDDLE;
+      const lw = state.style.labelWidth ?? null;
 
       bounds.width = Math.max(
         0,
@@ -1246,7 +1242,7 @@ class CellRenderer {
     this.createCellOverlays(state);
 
     if (state.overlays != null) {
-      const rot = mod(getValue(state.style, 'rotation', 0), 90);
+      const rot = mod(state.style.rotation ?? 0, 90);
       const rad = toRadians(rot);
       const cos = Math.cos(rad);
       const sin = Math.sin(rad);
@@ -1344,7 +1340,7 @@ class CellRenderer {
           let rot = state.shape.getShapeRotation();
 
           if (this.legacyControlPosition) {
-            rot = getValue(state.style, 'rotation', 0);
+            rot = state.style.rotation ?? 0;
           } else if (state.shape.isPaintBoundsInverted()) {
             const t = (state.width - state.height) / 2;
             cx += t;

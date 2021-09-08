@@ -808,7 +808,7 @@ class Shape {
   paintVertexShape(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
     this.paintBackground(c, x, y, w, h);
 
-    if (!this.outline || !this.style || this.style.backgroundOutline === 0) {
+    if (!this.outline || !this.style || (this.style.backgroundOutline ?? 0) === 0) {
       c.setShadow(false);
       this.paintForeground(c, x, y, w, h);
     }
@@ -1049,23 +1049,23 @@ class Shape {
     this.style = state.style;
 
     if (this.style) {
-      this.fill = this.style.fillColor;
-      this.gradient = this.style.gradientColor;
-      this.gradientDirection = this.style.gradientDirection;
-      this.opacity = this.style.opacity;
-      this.fillOpacity = this.style.fillOpacity;
-      this.strokeOpacity = this.style.strokeOpacity;
-      this.stroke = this.style.strokeColor;
-      this.strokeWidth = this.style.strokeWidth;
-      this.spacing = this.style.spacing;
-      this.startSize = this.style.startSize;
-      this.endSize = this.style.endSize;
-      this.startArrow = this.style.startArrow;
-      this.endArrow = this.style.endArrow;
-      this.rotation = this.style.rotation;
-      this.direction = this.style.direction;
-      this.flipH = this.style.flipH;
-      this.flipV = this.style.flipV;
+      this.fill = this.style.fillColor ?? this.fill;
+      this.gradient = this.style.gradientColor ?? this.gradient;
+      this.gradientDirection = this.style.gradientDirection ?? this.gradientDirection;
+      this.opacity = this.style.opacity ?? this.opacity;
+      this.fillOpacity = this.style.fillOpacity ?? this.fillOpacity;
+      this.strokeOpacity = this.style.strokeOpacity ?? this.strokeOpacity;
+      this.stroke = this.style.strokeColor ?? this.stroke;
+      this.strokeWidth = this.style.strokeWidth ?? this.strokeWidth;
+      this.spacing = this.style.spacing ?? this.spacing;
+      this.startSize = this.style.startSize ?? this.startSize;
+      this.endSize = this.style.endSize ?? this.endSize;
+      this.startArrow = this.style.startArrow ?? this.startArrow;
+      this.endArrow = this.style.endArrow ?? this.endArrow;
+      this.rotation = this.style.rotation ?? this.rotation;
+      this.direction = this.style.direction ?? this.direction;
+      this.flipH = !!this.style.flipH;
+      this.flipV = !!this.style.flipV;
 
       if (this.direction === DIRECTION_NORTH || this.direction === DIRECTION_SOUTH) {
         const tmp = this.flipH;
@@ -1073,10 +1073,10 @@ class Shape {
         this.flipV = tmp;
       }
 
-      this.isShadow = this.style.shadow;
-      this.isDashed = this.style.dashed;
-      this.isRounded = this.style.rounded;
-      this.glass = this.style.glass;
+      this.isShadow = this.style.shadow ?? this.isShadow;
+      this.isDashed = this.style.dashed ?? this.isDashed;
+      this.isRounded = this.style.rounded ?? this.isRounded;
+      this.glass = this.style.glass ?? this.glass;
     }
   }
 

@@ -207,5 +207,3 @@ export { default as CellStatePreview } from './view/cell/CellStatePreview';
 export { default as TemporaryCellStates } from './view/cell/TemporaryCellStates';
 export { default as ConnectionConstraint } from './view/connection/ConnectionConstraint';
 export { default as Multiplicity } from './view/validation/Multiplicity';
-
-import '../css/common.css';

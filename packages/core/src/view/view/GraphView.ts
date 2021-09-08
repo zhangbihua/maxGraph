@@ -26,7 +26,6 @@ import {
   getCurrentStyle,
   getOffset,
   getRotatedPoint,
-  getValue,
   ptSegDistSq,
   relativeCcw,
   toRadians,
@@ -952,7 +951,7 @@ class GraphView extends EventSource {
     const pState = parent ? this.getState(parent) : null;
 
     if (geo.relative && pState && !pState.cell.isEdge()) {
-      const alpha = toRadians(pState.style.rotation);
+      const alpha = toRadians(pState.style.rotation ?? 0);
 
       if (alpha !== 0) {
         const cos = Math.cos(alpha);
@@ -1013,10 +1012,10 @@ class GraphView extends EventSource {
    * @param state {@link mxCellState} whose absolute offset should be updated.
    */
   updateVertexLabelOffset(state: CellState): void {
-    const h = getValue(state.style, 'labelPosition', ALIGN_CENTER);
+    const h = state.style.labelPosition ?? ALIGN_CENTER;
 
     if (h === ALIGN_LEFT) {
-      let lw = getValue(state.style, 'labelWidth', null);
+      let lw = state.style.labelWidth ?? null;
 
       if (lw != null) {
         lw *= this.scale;
@@ -1030,11 +1029,11 @@ class GraphView extends EventSource {
       // @ts-ignore
       state.absoluteOffset.x += state.width;
     } else if (h === ALIGN_CENTER) {
-      const lw = getValue(state.style, 'labelWidth', null);
+      const lw = state.style.labelWidth ?? null;
 
       if (lw != null) {
         // Aligns text block with given width inside the vertex width
-        const align = getValue(state.style, 'align', ALIGN_CENTER);
+        const align = state.style.align ?? ALIGN_CENTER;
         let dx = 0;
 
         if (align === ALIGN_CENTER) {
@@ -1050,7 +1049,7 @@ class GraphView extends EventSource {
       }
     }
 
-    const v = getValue(state.style, 'verticalLabelPosition', ALIGN_MIDDLE);
+    const v = state.style.verticalLabelPosition ?? ALIGN_MIDDLE;
 
     if (v === ALIGN_TOP) {
       // @ts-ignore
@@ -1309,8 +1308,10 @@ class GraphView extends EventSource {
 
     if (
       (points == null || points.length < 2) &&
-      (!getValue(edge.style, 'orthogonalLoop', false) ||
-        ((sc == null || sc.point == null) && (tc == null || tc.point == null)))
+      !(
+        (edge.style.orthogonalLoop ?? false) ||
+        ((sc == null || sc.point == null) && (tc == null || tc.point == null))
+      )
     ) {
       return source != null && source === target;
     }
@@ -1414,18 +1415,19 @@ class GraphView extends EventSource {
     let next = this.getNextPoint(edge, end, source);
 
     const orth = this.graph.isOrthogonal(edge);
-    const alpha = toRadians(start.style.rotation);
+    const alpha = toRadians(start.style.rotation ?? 0);
     const center = new Point(start.getCenterX(), start.getCenterY());
 
     if (alpha !== 0) {
       const cos = Math.cos(-alpha);
       const sin = Math.sin(-alpha);
+
       next = getRotatedPoint(next, cos, sin, center);
     }
 
-    let border = edge.style.perimeterSpacing;
+    let border = edge.style.perimeterSpacing ?? 0;
     border +=
-      edge.style[source ? 'sourcePerimeterSpacing' : 'targetPerimeterSpacing'] || 0;
+      edge.style[source ? 'sourcePerimeterSpacing' : 'targetPerimeterSpacing'] ?? 0;
     let pt = this.getPerimeterPoint(start, <Point>next, alpha === 0 && orth, border);
 
     if (alpha !== 0) {
@@ -1497,14 +1499,8 @@ class GraphView extends EventSource {
           let flipV = false;
 
           if (terminal.cell.isVertex()) {
-            flipH = getValue(terminal.style, 'flipH', 0) == 1;
-            flipV = getValue(terminal.style, 'flipV', 0) == 1;
-
-            // Legacy support for stencilFlipH/V
-            if (terminal.shape != null && terminal.shape.stencil != null) {
-              flipH = getValue(terminal.style, 'stencilFlipH', 0) == 1 || flipH;
-              flipV = getValue(terminal.style, 'stencilFlipV', 0) == 1 || flipV;
-            }
+            flipH = !!terminal.style.flipH;
+            flipV = !!terminal.style.flipV;
 
             if (flipH) {
               point.x = 2 * bounds.getCenterX() - point.x;
@@ -1540,7 +1536,7 @@ class GraphView extends EventSource {
    * Returns the x-coordinate of the center point for automatic routing.
    */
   getRoutingCenterX(state: CellState): number {
-    const f = state.style ? state.style.routingCenterX : 0;
+    const f = state.style ? state.style.routingCenterX ?? 0 : 0;
     return state.getCenterX() + f * state.width;
   }
 
@@ -1548,7 +1544,7 @@ class GraphView extends EventSource {
    * Returns the y-coordinate of the center point for automatic routing.
    */
   getRoutingCenterY(state: CellState): number {
-    const f = state.style ? state.style.routingCenterY : 0;
+    const f = state.style ? state.style.routingCenterY ?? 0 : 0;
     return state.getCenterY() + f * state.height;
   }
 
@@ -1597,7 +1593,7 @@ class GraphView extends EventSource {
     border: number = 0
   ): Rectangle | null {
     if (terminal) {
-      border += terminal.style.perimeterSpacing;
+      border += terminal.style.perimeterSpacing ?? 0;
     }
     return (<CellState>terminal).getPerimeterBounds(border * this.scale);
   }

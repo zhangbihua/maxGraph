@@ -25,11 +25,11 @@ const Template = ({ label, ...args }) => {
   container.style.background = 'url(/images/grid.gif)';
   container.style.cursor = 'default';
 
-  // if (!args.contextMenu) InternalEvent.disableContextMenu(container);
+  if (!args.contextMenu) InternalEvent.disableContextMenu(container);
 
   const graph = new Graph(container);
 
-  // if (args.rubberBand) new RubberBand(graph);
+  if (args.rubberBand) new RubberBand(graph);
 
   const parent = graph.getDefaultParent();
 

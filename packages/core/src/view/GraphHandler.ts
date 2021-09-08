@@ -36,9 +36,10 @@ import EventSource from './event/EventSource';
 import CellArray from './cell/datatypes/CellArray';
 import CellState from './cell/datatypes/CellState';
 import EventObject from './event/EventObject';
+import ConnectionHandler from './connection/ConnectionHandler';
+import CellEditor from './editing/CellEditor';
 
 import type { ColorValue, GraphPlugin } from '../types';
-import ConnectionHandler from './connection/ConnectionHandler';
 
 /**
  * Class: mxGraphHandler
@@ -545,7 +546,8 @@ class GraphHandler implements GraphPlugin {
     if (!this.graph.isToggleEvent(me.getEvent()) || !isAltDown(me.getEvent())) {
       while (c) {
         if (selectionCellsHandler.isHandled(c)) {
-          return this.graph.cellEditor.getEditingCell() !== c;
+          const cellEditor = this.graph.getPlugin('CellEditor') as CellEditor;
+          return cellEditor.getEditingCell() !== c;
         }
 
         c = c.getParent();

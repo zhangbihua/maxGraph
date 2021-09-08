@@ -153,12 +153,6 @@ class Graph extends EventSource {
   stylesheet: Stylesheet;
 
   /**
-   * Holds the {@link CellEditor} that is used as the in-place editing.
-   */
-  // @ts-ignore
-  cellEditor: CellEditor;
-
-  /**
    * Holds the {@link CellRenderer} for rendering the cells in the graph.
    */
   cellRenderer: CellRenderer;
@@ -1443,10 +1437,6 @@ class Graph extends EventSource {
    */
   setDefaultParent(cell: Cell | null): void {
     this.defaultParent = cell;
-  }
-
-  getCellEditor() {
-    return this.cellEditor;
   }
 
   /**

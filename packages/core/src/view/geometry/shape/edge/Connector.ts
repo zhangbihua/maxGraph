@@ -96,7 +96,8 @@ class Connector extends Polyline {
       const unitX = dx / dist;
       const unitY = dy / dist;
 
-      const size = source ? this.style.startSize : this.style.endSize;
+      const size =
+        (source ? this.style.startSize : this.style.endSize) ?? DEFAULT_MARKERSIZE;
 
       // Allow for stroke width in the end point used and the
       // orthogonal vectors describing the direction of the marker
@@ -131,11 +132,11 @@ class Connector extends Polyline {
     let size = 0;
 
     if (this.style.startArrow !== NONE) {
-      size = getNumber(this.style, 'startSize', DEFAULT_MARKERSIZE) + 1;
+      size = (this.style.startSize ?? DEFAULT_MARKERSIZE) + 1;
     }
 
     if (this.style.endArrow !== NONE) {
-      size = Math.max(size, getNumber(this.style, 'endSize', DEFAULT_MARKERSIZE)) + 1;
+      size = Math.max(size, this.style.endSize ?? DEFAULT_MARKERSIZE) + 1;
     }
 
     bbox.grow(size * this.scale);
