@@ -15,7 +15,8 @@ import Rectangle from '../geometry/Rectangle';
 import CellState from '../cell/datatypes/CellState';
 import { Graph } from '../Graph';
 import Shape from '../geometry/shape/Shape';
-import { ColorValue } from '../../types';
+
+import type { ColorValue } from '../../types';
 
 /**
  * A helper class to highlight cells. Here is an example for a given cell.
@@ -29,24 +30,23 @@ import { ColorValue } from '../../types';
 class CellHighlight {
   constructor(
     graph: Graph,
-    highlightColor: ColorValue = DEFAULT_VALID_COLOR,
-    strokeWidth = HIGHLIGHT_STROKEWIDTH,
-    dashed = false
+    highlightColor: ColorValue,
+    strokeWidth: number,
+    dashed?: boolean
   ) {
     this.graph = graph;
-    this.highlightColor = highlightColor;
-    this.strokeWidth = strokeWidth;
-    this.dashed = dashed;
+    this.highlightColor = highlightColor ?? DEFAULT_VALID_COLOR;
+    this.strokeWidth = strokeWidth ?? HIGHLIGHT_STROKEWIDTH;
+    this.dashed = dashed ?? false;
     this.opacity = HIGHLIGHT_OPACITY;
 
     // Updates the marker if the graph changes
     this.repaintHandler = () => {
       // Updates reference to state
-      if (this.state != null) {
-        // @ts-ignore
+      if (this.state) {
         const tmp = this.graph.view.getState(this.state.cell);
 
-        if (tmp == null) {
+        if (!tmp) {
           this.hide();
         } else {
           this.state = tmp;
@@ -163,7 +163,7 @@ class CellHighlight {
     shape.init(this.graph.getView().getOverlayPane());
     InternalEvent.redirectMouseEvents(shape.node, this.graph, this.state);
 
-    if ((<Graph>this.graph).dialect !== DIALECT_SVG) {
+    if (this.graph.dialect !== DIALECT_SVG) {
       shape.pointerEvents = false;
     } else {
       shape.svgPointerEvents = 'stroke';
@@ -183,7 +183,7 @@ class CellHighlight {
    * Updates the highlight after a change of the model or view.
    */
   repaint(): void {
-    if (this.state != null && this.shape != null) {
+    if (this.state && this.shape) {
       this.shape.scale = this.state.view.scale;
 
       if (this.state.cell.isEdge()) {
@@ -198,12 +198,12 @@ class CellHighlight {
           this.state.height + 2 * this.spacing
         );
         this.shape.rotation = this.state.style.rotation ?? 0;
-        this.shape.strokeWidth = <number>this.getStrokeWidth() / this.state.view.scale;
+        this.shape.strokeWidth = this.getStrokeWidth() / this.state.view.scale;
         this.shape.outline = true;
       }
 
       // Uses cursor from shape in highlight
-      if (this.state.shape != null) {
+      if (this.state.shape) {
         this.shape.setCursor(this.state.shape.getCursor());
       }
 
@@ -223,13 +223,13 @@ class CellHighlight {
    */
   highlight(state: CellState | null = null): void {
     if (this.state !== state) {
-      if (this.shape != null) {
+      if (this.shape) {
         this.shape.destroy();
         this.shape = null;
       }
 
       this.state = state;
-      if (this.state != null) {
+      if (this.state) {
         this.drawHighlight();
       }
     }
@@ -240,10 +240,10 @@ class CellHighlight {
    */
   isHighlightAt(x: number, y: number): boolean {
     let hit = false;
-    if (this.shape != null && document.elementFromPoint != null) {
+    if (this.shape && document.elementFromPoint) {
       let elt: (Node & ParentNode) | null = document.elementFromPoint(x, y);
 
-      while (elt != null) {
+      while (elt) {
         if (elt === this.shape.node) {
           hit = true;
           break;

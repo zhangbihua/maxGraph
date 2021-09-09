@@ -401,11 +401,11 @@ class CellMarker extends EventSource {
     const x = me.getGraphX();
     const y = me.getGraphY();
 
-    if (this.hotspotEnabled && isNumeric(x) && isNumeric(y)) {
+    if (this.hotspotEnabled) {
       return intersectsHotspot(
         state,
-        x as number,
-        y as number,
+        x,
+        y,
         this.hotspot,
         MIN_HOTSPOT_SIZE,
         MAX_HOTSPOT_SIZE

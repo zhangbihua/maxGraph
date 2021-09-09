@@ -9,7 +9,7 @@ import Point from '../geometry/Point';
 import Dictionary from '../../util/Dictionary';
 import CellState from './datatypes/CellState';
 import Cell from './datatypes/Cell';
-import graph from '../Graph';
+import { Graph } from '../Graph';
 import GraphView from '../view/GraphView';
 
 /**
@@ -19,7 +19,7 @@ import GraphView from '../view/GraphView';
  * Implements a live preview for moving cells.
  */
 class CellStatePreview {
-  constructor(graph: graph) {
+  constructor(graph: Graph) {
     this.deltas = new Dictionary();
     this.graph = graph;
   }
@@ -27,12 +27,12 @@ class CellStatePreview {
   /**
    * Reference to the enclosing <mxGraph>.
    */
-  graph: graph;
+  graph: Graph;
 
   /**
    * Reference to the enclosing <mxGraph>.
    */
-  deltas: Dictionary<Cell, {point: Point, state: CellState }>;
+  deltas: Dictionary<Cell, { point: Point; state: CellState }>;
 
   /**
    * Contains the number of entries in the map.

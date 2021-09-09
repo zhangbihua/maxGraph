@@ -659,18 +659,30 @@ class GraphHandler implements GraphPlugin {
 
         if (this.isMoveEnabled()) {
           const geo = cell.getGeometry();
-
+          console.log(
+            'if',
+            this.graph.isCellMovable(cell),
+            !cell.isEdge(),
+            this.graph.getSelectionCount() > 1,
+            geo!.points.length > 0,
+            !cell.getTerminal(true),
+            !cell.getTerminal(false),
+            this.graph.isAllowDanglingEdges(),
+            this.graph.isCloneEvent(me.getEvent()),
+            this.graph.isCellsCloneable()
+          );
           if (
             geo &&
             this.graph.isCellMovable(cell) &&
             (!cell.isEdge() ||
               this.graph.getSelectionCount() > 1 ||
-              (geo.points != null && geo.points.length > 0) ||
-              cell.getTerminal(true) == null ||
-              cell.getTerminal(false) == null ||
+              geo.points.length > 0 ||
+              !cell.getTerminal(true) ||
+              !cell.getTerminal(false) ||
               this.graph.isAllowDanglingEdges() ||
               (this.graph.isCloneEvent(me.getEvent()) && this.graph.isCellsCloneable()))
           ) {
+            console.log('before start', cell, me.getX(), me.getY());
             this.start(cell, me.getX(), me.getY());
           } else if (this.delayedSelection) {
             this.cell = cell;

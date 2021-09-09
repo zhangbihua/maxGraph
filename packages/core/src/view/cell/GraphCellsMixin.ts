@@ -2741,7 +2741,7 @@ const GraphCellsMixin: PartialType = {
   isCellMovable(cell) {
     const style = this.getCurrentCellStyle(cell);
 
-    return this.isCellsMovable() && !this.isCellLocked(cell) && style.movable;
+    return this.isCellsMovable() && !this.isCellLocked(cell) && !style.movable;
   },
 
   /**

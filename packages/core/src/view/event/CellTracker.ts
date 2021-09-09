@@ -10,6 +10,8 @@ import { Graph } from '../Graph';
 import Cell from '../cell/datatypes/Cell';
 import EventSource from './EventSource';
 
+import type { ColorValue } from '../../types';
+
 /**
  * Event handler that highlights cells
  *
@@ -68,7 +70,7 @@ import EventSource from './EventSource';
 class CellTracker extends CellMarker {
   constructor(
     graph: Graph,
-    color: string,
+    color: ColorValue,
     funct: ((me: InternalMouseEvent) => Cell) | null = null
   ) {
     super(graph, color);
