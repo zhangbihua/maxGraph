@@ -6,6 +6,7 @@ module.exports = merge(base, {
   resolve: {
     alias: {
       '@maxgraph/core': path.resolve(__dirname, '../core/src'),
+      '@maxgraph/css': path.resolve(__dirname, '../core/css'),
     },
   },
 });

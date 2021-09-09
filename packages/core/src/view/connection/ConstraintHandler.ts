@@ -76,7 +76,7 @@ class ConstraintHandler {
 
   focusIcons: ImageShape[] = [];
 
-  constraints: ConnectionConstraint[] = [];
+  constraints: ConnectionConstraint[] | null = null;
 
   currentConstraint: ConnectionConstraint | null = null;
 
@@ -275,6 +275,7 @@ class ConstraintHandler {
         2 * tol,
         2 * tol
       );
+
       const state = this.graph.view.getState(this.getCellForEvent(me, point) as Cell);
 
       // Keeps focus icons visible while over vertex bounds and no other cell under mouse or shift is pressed
@@ -396,16 +397,16 @@ class ConstraintHandler {
    * the handler is not enabled then the outline is painted, but the constraints
    * are ignored.
    */
-  setFocus(me: InternalMouseEvent, state: CellState, source: boolean) {
+  setFocus(me: InternalMouseEvent, state: CellState | null, source: boolean) {
     this.constraints =
-      state != null && !this.isStateIgnored(state, source) && state.cell.isConnectable()
+      state && !this.isStateIgnored(state, source) && state.cell.isConnectable()
         ? this.isEnabled()
-          ? this.graph.getAllConnectionConstraints(state, source) || []
+          ? this.graph.getAllConnectionConstraints(state, source) ?? []
           : []
-        : [];
+        : null;
 
     // Only uses cells which have constraints
-    if (this.constraints != null) {
+    if (this.constraints && state) {
       this.currentFocus = state;
       this.currentFocusArea = new Rectangle(state.x, state.y, state.width, state.height);
 

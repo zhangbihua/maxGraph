@@ -1409,7 +1409,7 @@ const GraphCellsMixin: PartialType = {
           this.getModel().setStyle(cell, cellStyle);
         } else {*/
         const state = this.getView().createState(cell);
-        const align = state.style.align || ALIGN_CENTER;
+        const align = state.style.align ?? ALIGN_CENTER;
 
         if (align === ALIGN_RIGHT) {
           geo.x += geo.width - size.width;
@@ -2377,7 +2377,7 @@ const GraphCellsMixin: PartialType = {
           const state = this.getView().getState(cell);
 
           if (state && cell.isVisible() && (!ignoreFn || !ignoreFn(state))) {
-            const deg = state.style.rotation;
+            const deg = state.style.rotation ?? 0;
 
             let box: CellState | Rectangle = state; // TODO: CHECK ME!!!! ==========================================================
             if (deg !== 0) {
@@ -2486,7 +2486,7 @@ const GraphCellsMixin: PartialType = {
         pt = next;
       }
     } else {
-      const alpha = toRadians(state.style.rotation);
+      const alpha = toRadians(state.style.rotation ?? 0);
 
       if (alpha !== 0) {
         const cos = Math.cos(-alpha);

@@ -26,6 +26,7 @@ import {
   FONT_STRIKETHROUGH,
   FONT_UNDERLINE,
   LINE_HEIGHT,
+  NONE,
   NS_SVG,
   NS_XLINK,
   WORD_WRAP,
@@ -666,37 +667,37 @@ class SvgCanvas2D extends AbstractCanvas2D {
     const { node } = this;
     const s = this.state;
 
-    if (node != null) {
+    if (node) {
       if (node.nodeName === 'path') {
         // Checks if the path is not empty
-        if (this.path != null && this.path.length > 0) {
+        if (this.path && this.path.length > 0) {
           node.setAttribute('d', this.path.join(' '));
         } else {
           return;
         }
       }
 
-      if (filled && s.fillColor != null) {
+      if (filled && s.fillColor !== NONE) {
         this.updateFill();
       } else if (!this.styleEnabled) {
         // Workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=814952
         if (node.nodeName === 'ellipse' && mxClient.IS_FF) {
           node.setAttribute('fill', 'transparent');
         } else {
-          node.setAttribute('fill', 'none');
+          node.setAttribute('fill', NONE);
         }
 
         // Sets the actual filled state for stroke tolerance
         filled = false;
       }
 
-      if (stroked && s.strokeColor != null) {
+      if (stroked && s.strokeColor !== NONE) {
         this.updateStroke();
       } else if (!this.styleEnabled) {
-        node.setAttribute('stroke', 'none');
+        node.setAttribute('stroke', NONE);
       }
 
-      if (s.transform != null && s.transform.length > 0) {
+      if (s.transform && s.transform.length > 0) {
         node.setAttribute('transform', s.transform);
       }
 
@@ -714,8 +715,8 @@ class SvgCanvas2D extends AbstractCanvas2D {
         node.setAttribute('pointer-events', this.pointerEventsValue);
       }
       // Enables clicks for nodes inside a link element
-      else if (!this.pointerEvents && this.originalRoot == null) {
-        node.setAttribute('pointer-events', 'none');
+      else if (!this.pointerEvents && !this.originalRoot) {
+        node.setAttribute('pointer-events', NONE);
       }
 
       // Removes invisible nodes from output if they don't handle events
@@ -723,10 +724,10 @@ class SvgCanvas2D extends AbstractCanvas2D {
         (node.nodeName !== 'rect' &&
           node.nodeName !== 'path' &&
           node.nodeName !== 'ellipse') ||
-        (node.getAttribute('fill') !== 'none' &&
+        (node.getAttribute('fill') !== NONE &&
           node.getAttribute('fill') !== 'transparent') ||
-        node.getAttribute('stroke') !== 'none' ||
-        node.getAttribute('pointer-events') !== 'none'
+        node.getAttribute('stroke') !== NONE ||
+        node.getAttribute('pointer-events') !== NONE
       ) {
         // LATER: Update existing DOM for performance
         this.root.appendChild(node);
@@ -748,8 +749,8 @@ class SvgCanvas2D extends AbstractCanvas2D {
       this.node.setAttribute('fill-opacity', String(s.alpha * s.fillAlpha));
     }
 
-    if (s.fillColor) {
-      if (s.gradientColor) {
+    if (s.fillColor !== NONE) {
+      if (s.gradientColor !== NONE) {
         const id = this.getSvgGradient(
           s.fillColor,
           s.gradientColor,
@@ -790,7 +791,8 @@ class SvgCanvas2D extends AbstractCanvas2D {
 
     const s = this.state;
 
-    if (s.strokeColor) this.node.setAttribute('stroke', s.strokeColor.toLowerCase());
+    if (s.strokeColor !== NONE)
+      this.node.setAttribute('stroke', s.strokeColor.toLowerCase());
 
     if (s.alpha < 1 || s.strokeAlpha < 1) {
       this.node.setAttribute('stroke-opacity', String(s.alpha * s.strokeAlpha));
@@ -894,10 +896,10 @@ class SvgCanvas2D extends AbstractCanvas2D {
       shadow.getAttribute('fill') !== 'none' &&
       (!mxClient.IS_FF || shadow.getAttribute('fill') !== 'transparent')
     ) {
-      shadow.setAttribute('fill', String(s.shadowColor));
+      shadow.setAttribute('fill', s.shadowColor);
     }
 
-    if (shadow.getAttribute('stroke') !== 'none' && s.shadowColor) {
+    if (shadow.getAttribute('stroke') !== 'none' && s.shadowColor !== NONE) {
       shadow.setAttribute('stroke', s.shadowColor);
     }
 
@@ -1725,7 +1727,7 @@ class SvgCanvas2D extends AbstractCanvas2D {
   updateFont(node: SVGElement) {
     const s = this.state;
 
-    if (s.fontColor) node.setAttribute('fill', s.fontColor);
+    if (s.fontColor !== NONE) node.setAttribute('fill', s.fontColor);
 
     if (!this.styleEnabled || s.fontFamily !== DEFAULT_FONTFAMILY) {
       node.setAttribute('font-family', s.fontFamily);

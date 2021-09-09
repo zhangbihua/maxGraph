@@ -1046,7 +1046,7 @@ class VertexHandler {
    */
   resizeVertex(me: InternalMouseEvent) {
     const ct = new Point(this.state.getCenterX(), this.state.getCenterY());
-    const alpha = toRadians(this.state.style.rotation);
+    const alpha = toRadians(this.state.style.rotation ?? 0);
     const point = new Point(me.getGraphX(), me.getGraphY());
     const tr = this.graph.view.translate;
     const { scale } = this.graph.view;
@@ -1334,7 +1334,7 @@ class VertexHandler {
           }
         } else if (index === InternalEvent.ROTATION_HANDLE) {
           if (this.currentAlpha != null) {
-            const delta = this.currentAlpha - (this.state.style.rotation || 0);
+            const delta = this.currentAlpha - (this.state.style.rotation ?? 0);
 
             if (delta !== 0) {
               this.rotateCell(this.state.cell, delta);
@@ -1344,7 +1344,7 @@ class VertexHandler {
           }
         } else {
           const gridEnabled = this.graph.isGridEnabledEvent(me.getEvent());
-          const alpha = toRadians(this.state.style.rotation);
+          const alpha = toRadians(this.state.style.rotation ?? 0);
           const cos = Math.cos(-alpha);
           const sin = Math.sin(-alpha);
 
@@ -1523,7 +1523,7 @@ class VertexHandler {
 
     if (geo && this.labelShape && this.labelShape.bounds) {
       if (index === InternalEvent.LABEL_HANDLE) {
-        const alpha = -toRadians(this.state.style.rotation);
+        const alpha = -toRadians(this.state.style.rotation ?? 0);
         const cos = Math.cos(alpha);
         const sin = Math.sin(alpha);
         const { scale } = this.graph.view;
@@ -1923,7 +1923,7 @@ class VertexHandler {
             'w-resize',
           ];
 
-          const alpha = toRadians(this.state.style.rotation);
+          const alpha = toRadians(this.state.style.rotation ?? 0);
           const cos = Math.cos(alpha);
           const sin = Math.sin(alpha);
           const da = Math.round((alpha * 4) / Math.PI);

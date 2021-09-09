@@ -1,4 +1,5 @@
 import { Graph, InternalEvent, RubberBand } from '@maxgraph/core';
+
 import { globalTypes } from '../.storybook/preview';
 
 export default {

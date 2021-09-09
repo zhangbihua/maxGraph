@@ -44,17 +44,21 @@ class ObjectIdentity {
   /**
    * Returns the ID for the given object or function.
    */
-  static get(obj: IdentityObject | IdentityFunction) {
-    if (isNullish(obj[FIELD_NAME])) {
-      if (typeof obj === 'object') {
-        const ctor = getFunctionName(obj.constructor);
-        obj[FIELD_NAME] = `${ctor}#${ObjectIdentity.counter++}`;
-      } else if (typeof obj === 'function') {
-        obj[FIELD_NAME] = `Function#${ObjectIdentity.counter++}`;
+  static get(obj: IdentityObject | IdentityFunction | null) {
+    if (obj) {
+      if (isNullish(obj[FIELD_NAME])) {
+        if (typeof obj === 'object') {
+          const ctor = getFunctionName(obj.constructor);
+          obj[FIELD_NAME] = `${ctor}#${ObjectIdentity.counter++}`;
+        } else if (typeof obj === 'function') {
+          obj[FIELD_NAME] = `Function#${ObjectIdentity.counter++}`;
+        }
       }
+
+      return obj[FIELD_NAME] as string;
     }
 
-    return obj[FIELD_NAME] as string;
+    return null;
   }
 
   /**

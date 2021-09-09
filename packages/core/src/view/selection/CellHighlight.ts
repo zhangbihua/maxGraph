@@ -186,8 +186,7 @@ class CellHighlight {
     if (this.state != null && this.shape != null) {
       this.shape.scale = this.state.view.scale;
 
-      // @ts-ignore
-      if (this.graph.model.isEdge(this.state.cell)) {
+      if (this.state.cell.isEdge()) {
         this.shape.strokeWidth = this.getStrokeWidth();
         this.shape.points = this.state.absolutePoints;
         this.shape.outline = false;

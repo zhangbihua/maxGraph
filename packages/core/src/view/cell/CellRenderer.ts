@@ -359,7 +359,6 @@ class CellRenderer {
 
       if (value === 'inherit') {
         referenced = state.cell.getParent();
-        /* disable swimlane for now
       } else if (value === 'swimlane') {
         // @ts-ignore
         shape[field] =
@@ -371,9 +370,8 @@ class CellRenderer {
           referenced = state.cell;
         }
 
-        referenced = graph.swimlane.getSwimlane(<Cell>referenced);
-        key = graph.swimlane.swimlaneIndicatorColorAttribute;
-        */
+        referenced = graph.getSwimlane(<Cell>referenced);
+        key = graph.swimlaneIndicatorColorAttribute;
       } else if (value === 'indicated' && state.shape) {
         // @ts-ignore
         shape[field] = state.shape.indicatorColor;
@@ -437,7 +435,7 @@ class CellRenderer {
       state.text = new this.defaultTextShape(
         value,
         new Rectangle(),
-        state.style.align || ALIGN_CENTER,
+        state.style.align ?? ALIGN_CENTER,
         state.getVerticalAlign(),
         state.style.fontColor,
         state.style.fontFamily,
@@ -455,9 +453,9 @@ class CellRenderer {
         graph.isLabelClipped(state.cell),
         state.style.overflow,
         state.style.labelPadding,
-        state.style.textDirection || DEFAULT_TEXT_DIRECTION
+        state.style.textDirection ?? DEFAULT_TEXT_DIRECTION
       );
-      state.text.opacity = state.style.textOpacity;
+      state.text.opacity = state.style.textOpacity ?? 100;
       state.text.dialect = isForceHtml ? DIALECT_STRICTHTML : state.view.graph.dialect;
       state.text.style = state.style;
       state.text.state = state;
@@ -928,7 +926,7 @@ class CellRenderer {
     const isForceHtml =
       state.view.graph.isHtmlLabel(state.cell) || (value && isNode(value));
     const dialect = isForceHtml ? DIALECT_STRICTHTML : state.view.graph.dialect;
-    const overflow = state.style.overflow || 'visible';
+    const overflow = state.style.overflow ?? 'visible';
 
     if (
       state.text &&

@@ -287,7 +287,7 @@ class CellMarker extends EventSource {
     if (state !== this.markedState || color !== this.currentColor) {
       this.currentColor = color;
 
-      if (state && this.currentColor) {
+      if (state && this.currentColor !== NONE) {
         this.markedState = state;
         this.mark();
       } else if (this.markedState) {

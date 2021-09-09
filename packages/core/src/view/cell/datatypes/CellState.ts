@@ -12,7 +12,7 @@ import GraphView from '../../view/GraphView';
 import Shape from '../../geometry/shape/Shape';
 import TextShape from '../../geometry/shape/node/TextShape';
 import Dictionary from '../../../util/Dictionary';
-import { NONE } from '../../../util/Constants';
+import { ALIGN_MIDDLE, NONE } from '../../../util/Constants';
 import { CellStateStyles } from '../../../types';
 import RectangleShape from '../../geometry/shape/node/RectangleShape';
 import CellOverlay from '../CellOverlay';
@@ -466,7 +466,7 @@ class CellState extends Rectangle {
    * returned.
    */
   getVerticalAlign() {
-    return this.style.verticalAlign;
+    return this.style.verticalAlign ?? ALIGN_MIDDLE;
   }
 
   /**
@@ -477,8 +477,8 @@ class CellState extends Rectangle {
   isTransparentState() {
     let result = false;
 
-    const stroke = this.style.strokeColor;
-    const fill = this.style.fillColor;
+    const stroke = this.style.strokeColor ?? NONE;
+    const fill = this.style.fillColor ?? NONE;
 
     result = stroke === NONE && fill === NONE && !this.getImageSrc();
 
