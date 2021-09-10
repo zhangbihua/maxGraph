@@ -41,7 +41,8 @@ const Template = ({ label, ...args }) => {
 
   // Creates the graph inside the given container
   var graph = new Graph(container);
-  graph.graphHandler.scaleGrid = true;
+  const graphHandler = graph.getPlugin('GraphHandler');
+  graphHandler.scaleGrid = true;
   graph.setPanning(true);
 
   // Enables rubberband selection

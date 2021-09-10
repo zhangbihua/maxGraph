@@ -96,12 +96,14 @@ const Template = ({ label, ...args }) => {
     return ports2;
   };
 
+  const connectionHandler = graph.getPlugin('ConnectionHandler');
+
   // Disables floating connections (only connections via ports allowed)
-  graph.connectionHandler.isConnectableCell = function (cell) {
+  connectionHandler.isConnectableCell = function (cell) {
     return false;
   };
   EdgeHandler.prototype.isConnectableCell = function (cell) {
-    return graph.connectionHandler.isConnectableCell(cell);
+    return connectionHandler.isConnectableCell(cell);
   };
 
   // Disables existing port functionality

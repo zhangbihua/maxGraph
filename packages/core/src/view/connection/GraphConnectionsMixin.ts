@@ -15,14 +15,11 @@ import ConnectionHandler from './ConnectionHandler';
 
 declare module '../Graph' {
   interface Graph {
-    connectionHandler: ConnectionHandler | null;
     constrainChildren: boolean;
     constrainRelativeChildren: boolean;
     disconnectOnMove: boolean;
     cellsDisconnectable: boolean;
 
-    getConnectionHandler: () => ConnectionHandler | null;
-    setConnectionHandler: (connectionHandler: ConnectionHandler) => void;
     getOutlineConstraint: (
       point: Point,
       terminalState: CellState,
@@ -83,13 +80,10 @@ declare module '../Graph' {
 type PartialGraph = Pick<Graph, 'getView' | 'getModel' | 'isPortsEnabled'>;
 type PartialConnections = Pick<
   Graph,
-  | 'connectionHandler'
   | 'constrainChildren'
   | 'constrainRelativeChildren'
   | 'disconnectOnMove'
   | 'cellsDisconnectable'
-  | 'getConnectionHandler'
-  | 'setConnectionHandler'
   | 'getOutlineConstraint'
   | 'getAllConnectionConstraints'
   | 'getConnectionConstraint'
@@ -124,6 +118,7 @@ type PartialConnections = Pick<
   | 'isCellLocked'
   | 'isAllowDanglingEdges'
   | 'isConnectableEdges'
+  | 'getPlugin'
 >;
 type PartialType = PartialGraph & PartialConnections;
 
@@ -132,8 +127,6 @@ const GraphConnectionsMixin: PartialType = {
   /*****************************************************************************
    * Group: Cell connecting and connection constraints
    *****************************************************************************/
-
-  connectionHandler: null,
 
   /**
    * Specifies if a child should be constrained inside the parent bounds after a
@@ -158,14 +151,6 @@ const GraphConnectionsMixin: PartialType = {
   disconnectOnMove: true,
 
   cellsDisconnectable: true,
-
-  getConnectionHandler() {
-    return this.connectionHandler;
-  },
-
-  setConnectionHandler(connectionHandler) {
-    this.connectionHandler = connectionHandler;
-  },
 
   /**
    * Returns the constraint used to connect to the outline of the given state.
@@ -787,14 +772,18 @@ const GraphConnectionsMixin: PartialType = {
    * @param connectable Boolean indicating if new connections should be allowed.
    */
   setConnectable(connectable) {
-    (<ConnectionHandler>this.connectionHandler).setEnabled(connectable);
+    const connectionHandler = this.getPlugin('ConnectionHandler') as ConnectionHandler;
+
+    connectionHandler.setEnabled(connectable);
   },
 
   /**
    * Returns true if the {@link connectionHandler} is enabled.
    */
   isConnectable() {
-    return (<ConnectionHandler>this.connectionHandler).isEnabled();
+    const connectionHandler = this.getPlugin('ConnectionHandler') as ConnectionHandler;
+
+    return connectionHandler.isEnabled();
   },
 };
 

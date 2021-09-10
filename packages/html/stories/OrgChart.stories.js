@@ -40,8 +40,9 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
   div.appendChild(container);
 
+  // Should we allow overriding constants?
   // Makes the shadow brighter
-  Constants.SHADOWCOLOR = '#C0C0C0';
+  //Constants.SHADOWCOLOR = '#C0C0C0';
 
   const outline = document.getElementById('outlineContainer');
 
@@ -64,13 +65,16 @@ const Template = ({ label, ...args }) => {
   graph.setAutoSizeCells(true);
   graph.setPanning(true);
   graph.centerZoom = false;
-  graph.panningHandler.useLeftButtonForPanning = true;
+
+  const panningHandler = graph.getPlugin('PanningHandler');
+
+  panningHandler.useLeftButtonForPanning = true;
 
   // Displays a popupmenu when the user clicks
   // on a cell (using the left mouse button) but
   // do not select the cell when the popup menu
   // is displayed
-  graph.panningHandler.popupMenuHandler = false;
+  panningHandler.popupMenuHandler = false;
 
   // Creates the outline (navigator, overview) for moving
   // around the graph in the top, right corner of the window.
@@ -145,8 +149,10 @@ const Template = ({ label, ...args }) => {
     }
   };
 
+  const popupMenuHandler = graph.getPlugin('PopupMenuHandler');
+
   // Installs a popupmenu handler using local function (see below).
-  graph.popupMenuHandler.factoryMethod = function (menu, cell, evt) {
+  popupMenuHandler.factoryMethod = function (menu, cell, evt) {
     return createPopupMenu(graph, menu, cell, evt);
   };
 

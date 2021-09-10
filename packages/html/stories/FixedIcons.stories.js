@@ -41,8 +41,9 @@ const Template = ({ label, ...args }) => {
     return new Rectangle(x + ix, y + iy, iw, ih);
   };
 
+  // Should we allow overriding constants?
   // Makes the shadow brighter
-  Constants.SHADOWCOLOR = '#C0C0C0';
+  //Constants.SHADOWCOLOR = '#C0C0C0';
 
   // Creates the graph inside the given container
   const graph = new Graph(container);

@@ -22,7 +22,8 @@ const Template = ({ label, ...args }) => {
   container.style.background = 'url(/images/grid.gif)';
   container.style.cursor = 'default';
 
-  Constants.SHADOWCOLOR = '#c0c0c0';
+  // Should we allow overriding constants?
+  // Constants.SHADOWCOLOR = '#c0c0c0';
 
   // Creates the graph inside the given container
   const graph = new Graph(container);

@@ -45,14 +45,15 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
   div.appendChild(container);
 
+  // Allow overriding constants?
   // Sets the global shadow color
-  Constants.SHADOWCOLOR = '#C0C0C0';
-  Constants.SHADOW_OPACITY = 0.5;
-  Constants.SHADOW_OFFSET_X = 4;
-  Constants.SHADOW_OFFSET_Y = 4;
-  Constants.HANDLE_FILLCOLOR = '#99ccff';
-  Constants.HANDLE_STROKECOLOR = '#0088cf';
-  Constants.VERTEX_SELECTION_COLOR = '#00a8ff';
+  // Constants.SHADOWCOLOR = '#C0C0C0';
+  // Constants.SHADOW_OPACITY = 0.5;
+  // Constants.SHADOW_OFFSET_X = 4;
+  // Constants.SHADOW_OFFSET_Y = 4;
+  // Constants.HANDLE_FILLCOLOR = '#99ccff';
+  // Constants.HANDLE_STROKECOLOR = '#0088cf';
+  // Constants.VERTEX_SELECTION_COLOR = '#00a8ff';
 
   // Enables connections along the outline
   ConnectionHandler.prototype.outlineConnect = true;

@@ -31,7 +31,8 @@ const Template = ({ label, ...args }) => {
   container.style.cursor = 'default';
   div.appendChild(container);
 
-  Constants.SHADOWCOLOR = '#e0e0e0';
+  // Should we allow overriding constants?
+  // Constants.SHADOWCOLOR = '#e0e0e0';
 
   // Creates the graph inside the given container
   const graph = createGraph(container);

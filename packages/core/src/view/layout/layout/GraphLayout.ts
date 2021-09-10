@@ -199,7 +199,7 @@ class GraphLayout {
    * @param cell {@link mxCell} whose movable state should be returned.
    */
   isVertexMovable(cell: Cell): boolean {
-    return this.graph.cell.isCellMovable(cell);
+    return this.graph.isCellMovable(cell);
   }
 
   /**

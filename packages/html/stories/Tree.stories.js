@@ -53,7 +53,7 @@ const Template = ({ label, ...args }) => {
 
     redrawPath(path, x, y, w, h, isForeground) {
       const { graph } = this.state.view;
-      const hasChildren = graph.model.getOutgoingEdges(this.state.cell).length > 0;
+      const hasChildren = graph.getOutgoingEdges(this.state.cell).length > 0;
 
       if (isForeground) {
         if (hasChildren) {
@@ -123,7 +123,7 @@ const Template = ({ label, ...args }) => {
 
     isCellFoldable(cell) {
       // Defines the condition for showing the folding icon
-      return this.model.getOutgoingEdges(cell).length > 0;
+      return this.getOutgoingEdges(cell).length > 0;
     }
 
     createCellRenderer() {
@@ -192,7 +192,9 @@ const Template = ({ label, ...args }) => {
   // panning by using the left mouse button.
   graph.setAutoSizeCells(true);
   graph.setPanning(true);
-  graph.panningHandler.useLeftButtonForPanning = true;
+
+  const panningHandler = graph.getPlugin('PanningHandler');
+  panningHandler.useLeftButtonForPanning = true;
 
   // Stops editing on enter or escape keypress
   const keyHandler = new mxKeyHandler(graph);

@@ -94,8 +94,10 @@ const Template = ({ label, ...args }) => {
   style.rounded = true;
   style.edge = EdgeStyle.ElbowConnector;
 
+  const popupMenuHandler = graph.getPlugin('PopupMenuHandler');
+
   // Installs a popupmenu handler using local function (see below).
-  graph.popupMenuHandler.factoryMethod = (menu, cell, evt) => {
+  popupMenuHandler.factoryMethod = (menu, cell, evt) => {
     return createPopupMenu(graph, menu, cell, evt);
   };
 

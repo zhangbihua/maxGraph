@@ -30,8 +30,8 @@ import type { ColorValue } from '../../types';
 class CellHighlight {
   constructor(
     graph: Graph,
-    highlightColor: ColorValue,
-    strokeWidth: number,
+    highlightColor?: ColorValue,
+    strokeWidth?: number,
     dashed?: boolean
   ) {
     this.graph = graph;

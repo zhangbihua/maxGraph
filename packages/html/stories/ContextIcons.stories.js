@@ -89,13 +89,16 @@ const Template = ({ label, ...args }) => {
       img.style.width = '16px';
       img.style.height = '16px';
 
+      const graphHandler = graph.getPlugin('GraphHandler');
+      const connectionHandler = graph.getPlugin('ConnectionHandler');
+
       InternalEvent.addGestureListeners(img, (evt) => {
-        this.graph.graphHandler.start(
+        graphHandler.start(
           this.state.cell,
           EventUtils.getClientX(evt),
           EventUtils.getClientY(evt)
         );
-        this.graph.graphHandler.cellWasClicked = true;
+        graphHandler.cellWasClicked = true;
         this.graph.isMouseDown = true;
         this.graph.isMouseTrigger = EventUtils.isMouseEvent(evt);
         InternalEvent.consume(evt);
@@ -115,7 +118,7 @@ const Template = ({ label, ...args }) => {
           EventUtils.getClientX(evt),
           EventUtils.getClientY(evt)
         );
-        this.graph.connectionHandler.start(this.state, pt.x, pt.y);
+        connectionHandler.start(this.state, pt.x, pt.y);
         this.graph.isMouseDown = true;
         this.graph.isMouseTrigger = EventUtils.isMouseEvent(evt);
         InternalEvent.consume(evt);
@@ -161,7 +164,9 @@ const Template = ({ label, ...args }) => {
   // Creates the graph inside the given container
   const graph = new MyCustomGraph(container);
   graph.setConnectable(true);
-  graph.connectionHandler.createTarget = true;
+
+  const connectionHandler = graph.getPlugin('ConnectionHandler');
+  connectionHandler.createTarget = true;
 
   // Uncomment the following if you want the container
   // to fit the size of the graph

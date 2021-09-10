@@ -48,7 +48,7 @@ const Template = ({ label, ...args }) => {
 
       for (let i = 0; i < childCount; i++) {
         const child = cell.getChildAt(i);
-        const geo = this.getCellGeometry(child);
+        const geo = child.getGeometry();
 
         if (geo != null && geo.relative) {
           return false;
@@ -138,8 +138,10 @@ const Template = ({ label, ...args }) => {
   style.fontStyle = 1;
   graph.getStylesheet().putDefaultVertexStyle(style);
 
+  const graphHandler = graph.getPlugin('GraphHandler');
+
   // Replaces move preview for relative children
-  graph.graphHandler.getDelta = function (me) {
+  graphHandler.getDelta = function (me) {
     const point = utils.convertPoint(this.graph.container, me.getX(), me.getY());
     let delta = new Point(point.x - this.first.x, point.y - this.first.y);
 
@@ -163,7 +165,7 @@ const Template = ({ label, ...args }) => {
   };
 
   // Relative children cannot be removed from parent
-  graph.graphHandler.shouldRemoveCellsFromParent = function (parent, cells, evt) {
+  graphHandler.shouldRemoveCellsFromParent = function (parent, cells, evt) {
     return (
       cells.length === 0 &&
       !cells[0].geometry.relative &&

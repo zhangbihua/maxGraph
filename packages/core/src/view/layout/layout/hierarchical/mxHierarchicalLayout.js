@@ -369,13 +369,13 @@ class mxHierarchicalLayout extends GraphLayout {
       const child = cell.getChildAt(i);
 
       if (this.isPort(child)) {
-        edges = edges.concat(model.getEdges(child, true, true));
+        edges = edges.concat(child.getEdges(true, true));
       } else if (isCollapsed || !child.isVisible()) {
-        edges = edges.concat(model.getEdges(child, true, true));
+        edges = edges.concat(child.getEdges(true, true));
       }
     }
 
-    edges = edges.concat(model.getEdges(cell, true, true));
+    edges = edges.concat(cell.getEdges(true, true));
     const result = [];
 
     for (let i = 0; i < edges.length; i += 1) {

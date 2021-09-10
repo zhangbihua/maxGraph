@@ -70,7 +70,7 @@ const Template = ({ label, ...args }) => {
 
   // Creates the graph inside the given container
   const graph = new MyCustomGraph(container);
-  graph.setTolerance(20);
+  graph.setEventTolerance(20);
 
   // Gets the default parent for inserting new cells. This
   // is normally the first child of the root (ie. layer 0).

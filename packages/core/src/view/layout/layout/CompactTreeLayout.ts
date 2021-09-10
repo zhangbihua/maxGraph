@@ -15,6 +15,7 @@ import WeightedCellSorter from './WeightedCellSorter';
 import CellArray from '../../cell/datatypes/CellArray';
 import Cell from '../../cell/datatypes/Cell';
 import { Graph } from '../../Graph';
+import { findTreeRoots } from '../../../view/cell/TreeTraversal';
 
 /**
  * @class CompactTreeLayout
@@ -237,7 +238,7 @@ class CompactTreeLayout extends GraphLayout {
       // Tries to find a suitable root in the parent's
       // children
       else {
-        const roots = this.graph.findTreeRoots(parent, true, this.invert);
+        const roots = findTreeRoots(this.graph, parent, true, this.invert);
 
         if (roots.length > 0) {
           for (let i = 0; i < roots.length; i += 1) {

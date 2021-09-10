@@ -32,8 +32,10 @@ const Template = ({ label, ...args }) => {
 
   new mxKeyHandler(graph);
 
+  const graphHandler = graph.getPlugin('GraphHandler');
+
   // Do not allow removing labels from parents
-  graph.graphHandler.removeCellsFromParent = false;
+  graphHandler.removeCellsFromParent = false;
 
   // Autosize labels on insert where autosize=1
   graph.autoSizeCellsOnAdd = true;

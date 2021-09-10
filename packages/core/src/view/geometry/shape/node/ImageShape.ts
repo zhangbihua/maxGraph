@@ -11,6 +11,7 @@ import CellState from '../../../cell/datatypes/CellState';
 import AbstractCanvas2D from '../../../../util/canvas/SvgCanvas2D';
 import CellOverlay from '../../../cell/CellOverlay';
 import { NONE } from '../../../../util/Constants';
+import { ColorValue } from 'src/types';
 
 /**
  * Extends {@link mxShape} to implement an image shape.
@@ -23,8 +24,8 @@ class ImageShape extends RectangleShape {
   constructor(
     bounds: Rectangle,
     imageSrc: string,
-    fill: string = '#FFFFFF',
-    stroke: string = '#000000',
+    fill: ColorValue = '#FFFFFF',
+    stroke: ColorValue = '#000000',
     strokeWidth: number = 1
   ) {
     super(bounds, fill, stroke, strokeWidth);
@@ -111,9 +112,9 @@ class ImageShape extends RectangleShape {
    * Generic background painting implementation.
    */
   paintVertexShape(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
-    if (this.imageSrc && this.style) {
-      const fill = this.style.imageBackground;
-      const stroke = this.style.imageBorder;
+    if (this.imageSrc) {
+      const fill = this.style?.imageBackground ?? NONE;
+      const stroke = this.style?.imageBorder ?? NONE;
 
       if (fill !== NONE) {
         // Stroke rendering required for shadow
@@ -126,7 +127,7 @@ class ImageShape extends RectangleShape {
       // FlipH/V are implicit via mxShape.updateTransform
       c.image(x, y, w, h, this.imageSrc, this.preserveImageAspect, false, false);
 
-      if (stroke != null) {
+      if (stroke !== NONE) {
         c.setShadow(false);
         c.setStrokeColor(stroke);
         c.rect(x, y, w, h);

@@ -70,8 +70,10 @@ const Template = ({ label, ...args }) => {
   graph.getStylesheet().getDefaultEdgeStyle().edgeStyle = 'orthogonalEdgeStyle';
   delete graph.getStylesheet().getDefaultEdgeStyle().endArrow;
 
+  const connectionHandler = graph.getPlugin('ConnectionHandler');
+
   // Implements the connect preview
-  graph.connectionHandler.createEdgeState = function (me) {
+  connectionHandler.createEdgeState = function (me) {
     const edge = graph.createEdge(null, null, null, null, null);
 
     return new CellState(this.graph.view, edge, this.graph.getCellStyle(edge));

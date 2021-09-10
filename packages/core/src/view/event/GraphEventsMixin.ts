@@ -67,6 +67,7 @@ declare module '../Graph' {
 
     isNativeDblClickEnabled: () => boolean;
     getEventTolerance: () => number;
+    setEventTolerance: (tolerance: number) => void;
     escape: (evt: Event) => void;
     click: (me: InternalMouseEvent) => boolean;
     dblClick: (evt: MouseEvent, cell?: Cell | null) => void;
@@ -192,6 +193,7 @@ type PartialEvents = Pick<
   | 'tolerance'
   | 'isNativeDblClickEnabled'
   | 'getEventTolerance'
+  | 'setEventTolerance'
   | 'escape'
   | 'click'
   | 'dblClick'
@@ -374,6 +376,10 @@ const GraphEventsMixin: PartialType = {
 
   getEventTolerance() {
     return this.tolerance;
+  },
+
+  setEventTolerance(tolerance: number) {
+    this.tolerance = tolerance;
   },
 
   /*****************************************************************************

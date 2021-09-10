@@ -31,7 +31,7 @@ import {
   FONT_ITALIC,
   FONT_UNDERLINE,
 } from '../util/Constants';
-import graph from '../view/Graph';
+import { Graph } from '../view/Graph';
 import SwimlaneManager from '../view/layout/SwimlaneManager';
 import LayoutManager from '../view/layout/LayoutManager';
 import RubberBand from '../view/selection/RubberBand';
@@ -1457,7 +1457,7 @@ class mxEditor extends EventSource {
    */
   // createGraph(): mxGraph;
   createGraph() {
-    const graph = new graph(null, null, this.graphRenderHint);
+    const graph = new Graph(null, null, this.graphRenderHint);
 
     // Enables rubberband, tooltips, panning
     graph.setTooltips(true);

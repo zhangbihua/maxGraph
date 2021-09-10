@@ -40,7 +40,6 @@ import EdgeHandler from './cell/edge/EdgeHandler';
 import VertexHandler from './cell/vertex/VertexHandler';
 import EdgeSegmentHandler from './cell/edge/EdgeSegmentHandler';
 import ElbowEdgeHandler from './cell/edge/ElbowEdgeHandler';
-import Dictionary from '../util/Dictionary';
 
 import type { GraphPlugin, GraphPluginConstructor } from '../types';
 

@@ -156,7 +156,8 @@ const Template = ({ label, ...args }) => {
 
   // Creates the graph inside the given container
   const graph = new MyCustomGraph(container);
-  graph.panningHandler.ignoreCell = true;
+  const panningHandler = graph.getPlugin('PanningHandler');
+  panningHandler.ignoreCell = true;
   graph.setPanning(true);
 
   // Fits the number of background pages to the graph

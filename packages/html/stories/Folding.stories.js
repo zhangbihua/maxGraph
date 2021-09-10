@@ -18,8 +18,9 @@ const Template = ({ label, ...args }) => {
   container.style.background = 'url(/images/grid.gif)';
   container.style.cursor = 'default';
 
+  // Should we allow overriding constant values?
   // Enables crisp rendering of rectangles in SVG
-  Constants.ENTITY_SEGMENT = 20;
+  // Constants.ENTITY_SEGMENT = 20;
 
   // Creates the graph inside the given container
   const graph = new Graph(container);

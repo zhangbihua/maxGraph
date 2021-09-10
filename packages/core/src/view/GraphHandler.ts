@@ -659,18 +659,7 @@ class GraphHandler implements GraphPlugin {
 
         if (this.isMoveEnabled()) {
           const geo = cell.getGeometry();
-          console.log(
-            'if',
-            this.graph.isCellMovable(cell),
-            !cell.isEdge(),
-            this.graph.getSelectionCount() > 1,
-            geo!.points.length > 0,
-            !cell.getTerminal(true),
-            !cell.getTerminal(false),
-            this.graph.isAllowDanglingEdges(),
-            this.graph.isCloneEvent(me.getEvent()),
-            this.graph.isCellsCloneable()
-          );
+
           if (
             geo &&
             this.graph.isCellMovable(cell) &&
@@ -682,7 +671,6 @@ class GraphHandler implements GraphPlugin {
               this.graph.isAllowDanglingEdges() ||
               (this.graph.isCloneEvent(me.getEvent()) && this.graph.isCellsCloneable()))
           ) {
-            console.log('before start', cell, me.getX(), me.getY());
             this.start(cell, me.getX(), me.getY());
           } else if (this.delayedSelection) {
             this.cell = cell;
@@ -1619,6 +1607,7 @@ class GraphHandler implements GraphPlugin {
               me.getGraphY()
             );
           } else if (this.cells) {
+            console.log('move', this.cells, dx, dy, clone, this.target, me.getEvent());
             this.moveCells(this.cells, dx, dy, clone, this.target, me.getEvent());
           }
         }
@@ -1725,9 +1714,9 @@ class GraphHandler implements GraphPlugin {
 
     // Removes cells from parent
     const parent = this.cell.getParent();
-
+    console.log('parent', parent);
     if (
-      target == null &&
+      !target &&
       parent &&
       this.isRemoveCellsFromParent() &&
       this.shouldRemoveCellsFromParent(parent, cells, evt)
@@ -1761,7 +1750,7 @@ class GraphHandler implements GraphPlugin {
           }
         }
       }
-
+      console.log('moveCells', cells, dx, dy, clone, target, evt);
       // Passes all selected cells in order to correctly clone or move into
       // the target cell. The method checks for each cell if its movable.
       cells = this.graph.moveCells(cells, dx, dy, clone, target, evt);

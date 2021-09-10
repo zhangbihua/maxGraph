@@ -1253,8 +1253,8 @@ class Shape {
     rect.setAttribute('y', String(y));
     rect.setAttribute('width', String(w));
     rect.setAttribute('height', String(h));
-    rect.setAttribute('fill', 'none');
-    rect.setAttribute('stroke', 'none');
+    rect.setAttribute('fill', NONE);
+    rect.setAttribute('stroke', NONE);
     rect.setAttribute('pointer-events', 'all');
     return rect;
   }

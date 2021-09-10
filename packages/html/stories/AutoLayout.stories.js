@@ -82,9 +82,15 @@ const Template = ({ label, ...args }) => {
   // Creates the graph inside the given this.el
   const graph = new MyCustomGraph(container);
   graph.setPanning(true);
-  graph.panningHandler.useLeftButtonForPanning = true;
+
+  const panningHandler = graph.getPlugin('PanningHandler');
+  panningHandler.useLeftButtonForPanning = true;
+
   graph.setAllowDanglingEdges(false);
-  graph.connectionHandler.select = false;
+
+  const connectionHandler = graph.getPlugin('ConnectionHandler');
+  connectionHandler.select = false;
+
   graph.view.setTranslate(20, 20);
 
   // Enables rubberband selection
@@ -161,7 +167,9 @@ const Template = ({ label, ...args }) => {
       const evt2 = eo.getProperty('event');
       const state = eo.getProperty('state');
 
-      graph.popupMenuHandler.hideMenu();
+      const popupMenuHandler = graph.getPlugin('PopupMenuHandler');
+      popupMenuHandler.hideMenu();
+
       graph.stopEditing(false);
 
       const pt = utils.convertPoint(
@@ -169,7 +177,9 @@ const Template = ({ label, ...args }) => {
         EventUtils.getClientX(evt2),
         EventUtils.getClientY(evt2)
       );
-      graph.connectionHandler.start(state, pt.x, pt.y);
+
+      connectionHandler.start(state, pt.x, pt.y);
+
       graph.isMouseDown = true;
       graph.isMouseTrigger = EventUtils.isMouseEvent(evt2);
       InternalEvent.consume(evt2);
@@ -195,7 +205,7 @@ const Template = ({ label, ...args }) => {
     executeLayout();
   };
 
-  graph.connectionHandler.addListener(InternalEvent.CONNECT, function () {
+  connectionHandler.addListener(InternalEvent.CONNECT, function () {
     executeLayout();
   });
 

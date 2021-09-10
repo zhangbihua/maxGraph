@@ -5,7 +5,6 @@ import {
   getBoundingBox,
   getRotatedPoint,
   getSizeForString,
-  getValue,
   intersects,
   mixInto,
   ptSegDistSq,
@@ -1535,7 +1534,7 @@ const GraphCellsMixin: PartialType = {
         let width = size.width + dx;
         let height = size.height + dy;
 
-        if (!getValue(style, 'horizontal', true)) {
+        if (!(style.horizontal ?? true)) {
           const tmp = height;
           height = width;
           width = tmp;
@@ -1998,6 +1997,7 @@ const GraphCellsMixin: PartialType = {
    * <mxEvent.CELLS_MOVED> while the transaction is in progress.
    */
   cellsMoved(cells, dx, dy, disconnect = false, constrain = false, extend = false) {
+    console.log('cellsMoved', cells, dx, dy, disconnect, constrain, extend);
     if (dx !== 0 || dy !== 0) {
       this.batchUpdate(() => {
         if (disconnect) {
@@ -2031,7 +2031,7 @@ const GraphCellsMixin: PartialType = {
    */
   translateCell(cell, dx, dy) {
     let geometry = cell.getGeometry();
-
+    console.log('begin', geometry);
     if (geometry) {
       geometry = geometry.clone();
       geometry.translate(dx, dy);
@@ -2047,7 +2047,7 @@ const GraphCellsMixin: PartialType = {
 
         if (parent.isVertex()) {
           const style = this.getCurrentCellStyle(parent);
-          angle = getValue(style, 'rotation', 0);
+          angle = style.rotation ?? 0;
         }
 
         if (angle !== 0) {
@@ -2066,6 +2066,7 @@ const GraphCellsMixin: PartialType = {
           geometry.offset.y = geometry.offset.y + dy;
         }
       }
+      console.log('end', geometry);
       this.getModel().setGeometry(cell, geometry);
     }
   },
@@ -3088,7 +3089,7 @@ const GraphCellsMixin: PartialType = {
             const style = this.getCurrentCellStyle(cell);
 
             if (bbox) {
-              const angle = style.rotation;
+              const angle = style.rotation ?? 0;
 
               if (angle !== 0) {
                 bbox = getBoundingBox(bbox, angle);
