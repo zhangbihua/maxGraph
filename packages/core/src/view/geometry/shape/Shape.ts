@@ -738,7 +738,7 @@ class Shape {
    * Sets the state of the canvas for drawing the shape.
    */
   configureCanvas(c: AbstractCanvas2D, x: number, y: number, w: number, h: number) {
-    let dash = NONE;
+    let dash: string | null = null;
 
     if (this.style) {
       dash = this.style.dashPattern;
@@ -758,7 +758,9 @@ class Shape {
       c.setDashed(this.isDashed, this.style?.fixDash ?? false);
     }
 
-    c.setDashPattern(dash);
+    if (dash) {
+      c.setDashPattern(dash);
+    }
 
     if (this.fill !== NONE && this.gradient !== NONE) {
       const b = this.getGradientBounds(c, x, y, w, h);

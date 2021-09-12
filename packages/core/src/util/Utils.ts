@@ -2364,6 +2364,6 @@ export const mixInto = (dest: any) => (mixin: any) => {
       });
     }
   } catch (e) {
-    console.log('Error while mixing', e);
+    console.error('Error while mixing', e);
   }
 };

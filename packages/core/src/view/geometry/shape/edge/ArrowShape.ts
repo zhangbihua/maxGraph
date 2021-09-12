@@ -16,7 +16,7 @@ import { ColorValue } from '../../../../types';
  *
  * This shape is registered under {@link mxConstants.SHAPE_ARROW} in {@link mxCellRenderer}.
  */
-class Arrow extends Shape {
+class ArrowShape extends Shape {
   constructor(
     points: Point[],
     fill: ColorValue,
@@ -100,4 +100,4 @@ class Arrow extends Shape {
   }
 }
 
-export default Arrow;
+export default ArrowShape;

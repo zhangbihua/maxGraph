@@ -131,9 +131,9 @@ class TooltipHandler implements GraphPlugin {
   /**
    * Variable: enabled
    *
-   * Specifies if events are handled. Default is true.
+   * Specifies if events are handled. Default is false.
    */
-  enabled = true;
+  enabled = false;
 
   /**
    * Function: isEnabled

@@ -1997,7 +1997,6 @@ const GraphCellsMixin: PartialType = {
    * <mxEvent.CELLS_MOVED> while the transaction is in progress.
    */
   cellsMoved(cells, dx, dy, disconnect = false, constrain = false, extend = false) {
-    console.log('cellsMoved', cells, dx, dy, disconnect, constrain, extend);
     if (dx !== 0 || dy !== 0) {
       this.batchUpdate(() => {
         if (disconnect) {
@@ -2031,7 +2030,7 @@ const GraphCellsMixin: PartialType = {
    */
   translateCell(cell, dx, dy) {
     let geometry = cell.getGeometry();
-    console.log('begin', geometry);
+
     if (geometry) {
       geometry = geometry.clone();
       geometry.translate(dx, dy);
@@ -2066,7 +2065,7 @@ const GraphCellsMixin: PartialType = {
           geometry.offset.y = geometry.offset.y + dy;
         }
       }
-      console.log('end', geometry);
+
       this.getModel().setGeometry(cell, geometry);
     }
   },
@@ -2773,7 +2772,8 @@ const GraphCellsMixin: PartialType = {
   isCellResizable(cell) {
     const style = this.getCurrentCellStyle(cell);
 
-    const r = this.isCellsResizable() && !this.isCellLocked(cell) && style.resizeable;
+    const r =
+      this.isCellsResizable() && !this.isCellLocked(cell) && (style.resizable ?? true);
 
     return r;
   },
@@ -2806,7 +2806,7 @@ const GraphCellsMixin: PartialType = {
   isCellBendable(cell) {
     const style = this.getCurrentCellStyle(cell);
 
-    return this.isCellsBendable() && !this.isCellLocked(cell) && style.bendable;
+    return this.isCellsBendable() && !this.isCellLocked(cell) && !!style.bendable;
   },
 
   /**
@@ -2838,7 +2838,7 @@ const GraphCellsMixin: PartialType = {
   isAutoSizeCell(cell) {
     const style = this.getCurrentCellStyle(cell);
 
-    return this.isAutoSizeCells() || style.autosize;
+    return this.isAutoSizeCells() || !!style.autosize;
   },
 
   /**

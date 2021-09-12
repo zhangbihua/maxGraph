@@ -15,7 +15,7 @@ import { ColorValue } from '../../../../types';
  * @class Line
  * @extends {Shape}
  */
-class Line extends Shape {
+class LineShape extends Shape {
   constructor(bounds: Rectangle, stroke: ColorValue, strokeWidth = 1, vertical = false) {
     super();
     this.bounds = bounds;
@@ -56,4 +56,4 @@ class Line extends Shape {
   }
 }
 
-export default Line;
+export default LineShape;

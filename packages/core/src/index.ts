@@ -112,19 +112,19 @@ export { default as mxRootChangeCodec } from './util/serialization/mxRootChangeC
 export { default as mxStylesheetCodec } from './util/serialization/mxStylesheetCodec';
 export { default as mxTerminalChangeCodec } from './util/serialization/mxTerminalChangeCodec';
 
-export { default as Actor } from './view/geometry/shape/Actor';
+export { default as ActorShape } from './view/geometry/shape/ActorShape';
 export { default as LabelShape } from './view/geometry/shape/node/LabelShape';
 export { default as Shape } from './view/geometry/shape/Shape';
 export { default as SwimlaneShape } from './view/geometry/shape/node/SwimlaneShape';
 export { default as TextShape } from './view/geometry/shape/node/TextShape';
 export { default as TriangleShape } from './view/geometry/shape/node/TriangleShape';
 
-export { default as Arrow } from './view/geometry/shape/edge/Arrow';
-export { default as ArrowConnector } from './view/geometry/shape/edge/ArrowConnector';
-export { default as Connector } from './view/geometry/shape/edge/Connector';
-export { default as Line } from './view/geometry/shape/edge/Line';
-export { default as Marker } from './view/geometry/shape/edge/Marker';
-export { default as Polyline } from './view/geometry/shape/edge/Polyline';
+export { default as ArrowShape } from './view/geometry/shape/edge/ArrowShape';
+export { default as ArrowConnectorShape } from './view/geometry/shape/edge/ArrowConnectorShape';
+export { default as ConnectorShape } from './view/geometry/shape/edge/ConnectorShape';
+export { default as LineShape } from './view/geometry/shape/edge/LineShape';
+export { default as MarkerShape } from './view/geometry/shape/edge/MarkerShape';
+export { default as PolylineShape } from './view/geometry/shape/edge/PolylineShape';
 
 export { default as CloudShape } from './view/geometry/shape/node/CloudShape';
 export { default as CylinderShape } from './view/geometry/shape/node/CylinderShape';

@@ -365,9 +365,9 @@ class CellMarker extends EventSource {
 
     if (!cell) return null;
 
-    const state = this.getStateToMark(view.getState(cell) as CellState);
+    const state = this.getStateToMark(view.getState(cell));
 
-    return this.intersects(state, me) ? state : null;
+    return state && this.intersects(state, me) ? state : null;
   }
 
   /**
@@ -386,7 +386,7 @@ class CellMarker extends EventSource {
    * Returns the <mxCellState> to be marked for the given <mxCellState> under
    * the mouse. This returns the given state.
    */
-  getStateToMark(state: CellState) {
+  getStateToMark(state: CellState | null) {
     return state;
   }
 

@@ -974,7 +974,7 @@ class SvgCanvas2D extends AbstractCanvas2D {
       if (flipH ? !flipV : flipV) {
         theta *= -1;
       }
-      console.log('theta', theta);
+
       if (theta !== 0) {
         s.transform += `rotate(${this.format(theta)},${this.format(cx)},${this.format(
           cy

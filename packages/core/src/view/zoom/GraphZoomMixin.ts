@@ -10,7 +10,7 @@ declare module '../Graph' {
     zoomIn: () => void;
     zoomOut: () => void;
     zoomActual: () => void;
-    zoomTo: (scale: number, center: boolean) => void;
+    zoomTo: (scale: number, center?: boolean) => void;
     zoom: (factor: number, center?: boolean) => void;
     zoomToRect: (rect: Rectangle) => void;
   }

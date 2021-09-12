@@ -25,7 +25,7 @@ import InternalMouseEvent from '../event/InternalMouseEvent';
 import ImageShape from '../geometry/shape/node/ImageShape';
 import CellMarker from '../cell/CellMarker';
 import ConstraintHandler from './ConstraintHandler';
-import Polyline from '../geometry/shape/edge/Polyline';
+import PolylineShape from '../geometry/shape/edge/PolylineShape';
 import EventSource from '../event/EventSource';
 import Rectangle from '../geometry/Rectangle';
 import mxLog from '../../util/gui/mxLog';
@@ -322,9 +322,9 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
   /**
    * Variable: enabled
    *
-   * Specifies if events are handled. Default is true.
+   * Specifies if events are handled. Default is false.
    */
-  enabled = true;
+  enabled = false;
 
   /**
    * Variable: select
@@ -555,7 +555,7 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
     const shape =
       this.livePreview && this.edgeState
         ? this.graph.cellRenderer.createShape(this.edgeState)
-        : new Polyline([], INVALID_COLOR);
+        : new PolylineShape([], INVALID_COLOR);
 
     if (shape && shape.node) {
       shape.dialect = DIALECT_SVG;

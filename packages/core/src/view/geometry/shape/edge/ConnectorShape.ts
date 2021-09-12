@@ -5,9 +5,8 @@
  * Type definitions from the typed-mxgraph project
  */
 import { DEFAULT_MARKERSIZE, NONE } from '../../../../util/Constants';
-import Polyline from './Polyline';
-import { getNumber } from '../../../../util/Utils';
-import Marker from './Marker';
+import PolylineShape from './PolylineShape';
+import MarkerShape from './MarkerShape';
 import Point from '../../Point';
 import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 import Rectangle from '../../Rectangle';
@@ -18,10 +17,10 @@ import { ColorValue } from '../../../../types';
  * The connector shape allows for arrow heads on either side.
  * This shape is registered under {@link mxConstants.SHAPE_CONNECTOR} in {@link mxCellRenderer}.
  *
- * @class Connector
- * @extends {Polyline}
+ * @class ConnectorShape
+ * @extends {PolylineShape}
  */
-class Connector extends Polyline {
+class ConnectorShape extends PolylineShape {
   constructor(points: Point[], stroke: ColorValue, strokewidth: number) {
     super(points, stroke, strokewidth);
   }
@@ -101,9 +100,9 @@ class Connector extends Polyline {
 
       // Allow for stroke width in the end point used and the
       // orthogonal vectors describing the direction of the marker
-      const filled = source ? this.style.startFill : this.style.endFill;
+      const filled = !(source ? this.style.startFill : this.style.endFill);
 
-      result = Marker.createMarker(
+      result = MarkerShape.createMarker(
         c,
         this,
         type,
@@ -143,4 +142,4 @@ class Connector extends Polyline {
   }
 }
 
-export default Connector;
+export default ConnectorShape;

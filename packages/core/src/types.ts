@@ -103,7 +103,7 @@ export type CellStateStyles = {
   perimeter: Function | string | null;
   perimeterSpacing: number;
   pointerEvents: boolean;
-  resizeable: boolean;
+  resizable: boolean;
   resizeHeight: boolean;
   resizeWidth: boolean;
   rotatable: boolean;

@@ -5,7 +5,7 @@ import {
   ConnectionHandler,
   ConnectionConstraint,
   Geometry,
-  Polyline,
+  PolylineShape,
   Point,
   CellState,
 } from '@maxgraph/core';
@@ -81,7 +81,7 @@ const Template = ({ label, ...args }) => {
   }
 
   // Edges have no connection points
-  Polyline.prototype.constraints = null;
+  PolylineShape.prototype.constraints = null;
 
   // Creates the graph inside the given container
   const graph = new MyCustomGraph(container);

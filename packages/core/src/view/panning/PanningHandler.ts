@@ -164,9 +164,9 @@ class PanningHandler extends EventSource implements GraphPlugin {
   /**
    * Variable: panningEnabled
    *
-   * Specifies if panning should be enabled. Default is true.
+   * Specifies if panning should be enabled. Default is false.
    */
-  panningEnabled = true;
+  panningEnabled = false;
 
   /**
    * Variable: pinchEnabled

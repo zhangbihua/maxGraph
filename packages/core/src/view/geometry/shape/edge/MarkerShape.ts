@@ -17,9 +17,9 @@ import Shape from '../Shape';
 /**
  * A static class that implements all markers for VML and SVG using a registry.
  * NOTE: The signatures in this class will change.
- * @class Marker
+ * @class MarkerShape
  */
-class Marker {
+class MarkerShape {
   /**
    * Maps from markers names to functions to paint the markers.
    *
@@ -32,7 +32,7 @@ class Marker {
    * function to paint the marker onto the given canvas.
    */
   static addMarker(type: string, funct: Function) {
-    Marker.markers[type] = funct;
+    MarkerShape.markers[type] = funct;
   }
 
   /**
@@ -52,7 +52,7 @@ class Marker {
     sw: number,
     filled: boolean
   ) {
-    const funct = Marker.markers[type];
+    const funct = MarkerShape.markers[type];
     return funct
       ? funct(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled)
       : null;
@@ -120,10 +120,10 @@ class Marker {
     };
   }
 
-  Marker.addMarker('classic', createArrow(2));
-  Marker.addMarker('classicThin', createArrow(3));
-  Marker.addMarker('block', createArrow(2));
-  Marker.addMarker('blockThin', createArrow(3));
+  MarkerShape.addMarker('classic', createArrow(2));
+  MarkerShape.addMarker('classicThin', createArrow(3));
+  MarkerShape.addMarker('block', createArrow(2));
+  MarkerShape.addMarker('blockThin', createArrow(3));
 
   function createOpenArrow(widthFactor = 2) {
     return (
@@ -170,10 +170,10 @@ class Marker {
     };
   }
 
-  Marker.addMarker('open', createOpenArrow(2));
-  Marker.addMarker('openThin', createOpenArrow(3));
+  MarkerShape.addMarker('open', createOpenArrow(2));
+  MarkerShape.addMarker('openThin', createOpenArrow(3));
 
-  Marker.addMarker(
+  MarkerShape.addMarker(
     'oval',
     (
       canvas: AbstractCanvas2D,
@@ -255,8 +255,8 @@ class Marker {
     };
   }
 
-  Marker.addMarker('diamond', diamond);
-  Marker.addMarker('diamondThin', diamond);
+  MarkerShape.addMarker('diamond', diamond);
+  MarkerShape.addMarker('diamondThin', diamond);
 })();
 
-export default Marker;
+export default MarkerShape;

@@ -7,7 +7,13 @@
 
 import mxClient from '../mxClient';
 import InternalEvent from './event/InternalEvent';
-import { contains, convertPoint, getRotatedPoint, toRadians } from '../util/Utils';
+import {
+  contains,
+  convertPoint,
+  getRotatedPoint,
+  isNumeric,
+  toRadians,
+} from '../util/Utils';
 import RectangleShape from './geometry/shape/node/RectangleShape';
 import mxGuide from '../util/Guide';
 import Point from './geometry/Point';
@@ -1562,8 +1568,8 @@ class GraphHandler implements GraphPlugin {
         this.cell &&
         this.first &&
         (this.shape || this.livePreviewUsed) &&
-        this.currentDx &&
-        this.currentDy
+        isNumeric(this.currentDx) &&
+        isNumeric(this.currentDy)
       ) {
         const { graph } = this;
         const cell = me.getCell();
@@ -1607,7 +1613,6 @@ class GraphHandler implements GraphPlugin {
               me.getGraphY()
             );
           } else if (this.cells) {
-            console.log('move', this.cells, dx, dy, clone, this.target, me.getEvent());
             this.moveCells(this.cells, dx, dy, clone, this.target, me.getEvent());
           }
         }
@@ -1714,7 +1719,7 @@ class GraphHandler implements GraphPlugin {
 
     // Removes cells from parent
     const parent = this.cell.getParent();
-    console.log('parent', parent);
+
     if (
       !target &&
       parent &&
@@ -1725,7 +1730,7 @@ class GraphHandler implements GraphPlugin {
     }
 
     // Cloning into locked cells is not allowed
-    clone = clone && !this.graph.isCellLocked(target || this.graph.getDefaultParent());
+    clone = !!clone && !this.graph.isCellLocked(target || this.graph.getDefaultParent());
 
     this.graph.getModel().beginUpdate();
     try {
@@ -1750,7 +1755,7 @@ class GraphHandler implements GraphPlugin {
           }
         }
       }
-      console.log('moveCells', cells, dx, dy, clone, target, evt);
+
       // Passes all selected cells in order to correctly clone or move into
       // the target cell. The method checks for each cell if its movable.
       cells = this.graph.moveCells(cells, dx, dy, clone, target, evt);

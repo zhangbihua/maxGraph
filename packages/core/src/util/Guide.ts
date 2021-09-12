@@ -7,14 +7,11 @@
 
 import { DIALECT_SVG, GUIDE_COLOR, GUIDE_STROKEWIDTH } from './Constants';
 import Point from '../view/geometry/Point';
-import Polyline from '../view/geometry/shape/edge/Polyline';
+import PolylineShape from '../view/geometry/shape/edge/PolylineShape';
 import CellState from '../view/cell/datatypes/CellState';
 import Shape from '../view/geometry/shape/Shape';
 import Rectangle from '../view/geometry/Rectangle';
 import { Graph } from '../view/Graph';
-import EventObject from '../view/event/EventObject';
-import GraphView from '../view/view/GraphView';
-import { ColorValue } from '../types';
 
 /**
  * Class: mxGuide
@@ -130,7 +127,7 @@ class Guide {
    */
   createGuideShape(horizontal = false) {
     // TODO: Should vertical guides be supported here?? ============================
-    const guide = new Polyline([], GUIDE_COLOR, GUIDE_STROKEWIDTH);
+    const guide = new PolylineShape([], GUIDE_COLOR, GUIDE_STROKEWIDTH);
     guide.isDashed = true;
     return guide;
   }

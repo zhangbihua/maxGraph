@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import Actor from '../Actor';
+import ActorShape from '../ActorShape';
 import Point from '../../Point';
 import { LINE_ARCSIZE } from '../../../../util/Constants';
 import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
@@ -12,9 +12,9 @@ import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 /**
  * Implementation of the hexagon shape.
  * @class HexagonShape
- * @extends {Actor}
+ * @extends {ActorShape}
  */
-class HexagonShape extends Actor {
+class HexagonShape extends ActorShape {
   constructor() {
     super();
   }

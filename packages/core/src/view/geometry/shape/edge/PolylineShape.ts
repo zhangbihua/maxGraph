@@ -30,7 +30,7 @@ import { ColorValue } from '../../../../types';
  * strokewidth - Optional integer that defines the stroke width. Default is
  * 1. This is stored in <strokewidth>.
  */
-class Polyline extends Shape {
+class PolylineShape extends Shape {
   constructor(points: Point[], stroke: ColorValue, strokeWidth = 1) {
     super();
     this.points = points;
@@ -111,4 +111,4 @@ class Polyline extends Shape {
   }
 }
 
-export default Polyline;
+export default PolylineShape;

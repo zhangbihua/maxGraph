@@ -7,18 +7,18 @@ import RectangleShape from '../geometry/shape/node/RectangleShape';
 import EllipseShape from '../geometry/shape/node/EllipseShape';
 import RhombusShape from '../geometry/shape/node/RhombusShape';
 import CylinderShape from '../geometry/shape/node/CylinderShape';
-import Connector from '../geometry/shape/edge/Connector';
-import Actor from '../geometry/shape/Actor';
+import ConnectorShape from '../geometry/shape/edge/ConnectorShape';
+import ActorShape from '../geometry/shape/ActorShape';
 import TriangleShape from '../geometry/shape/node/TriangleShape';
 import HexagonShape from '../geometry/shape/node/HexagonShape';
 import CloudShape from '../geometry/shape/node/CloudShape';
-import Line from '../geometry/shape/edge/Line';
-import Arrow from '../geometry/shape/edge/Arrow';
-import ArrowConnector from '../geometry/shape/edge/ArrowConnector';
+import LineShape from '../geometry/shape/edge/LineShape';
+import ArrowShape from '../geometry/shape/edge/ArrowShape';
+import ArrowConnectorShape from '../geometry/shape/edge/ArrowConnectorShape';
 import DoubleEllipseShape from '../geometry/shape/node/DoubleEllipseShape';
 import SwimlaneShape from '../geometry/shape/node/SwimlaneShape';
 import ImageShape from '../geometry/shape/node/ImageShape';
-import Label from '../geometry/shape/node/LabelShape';
+import LabelShape from '../geometry/shape/node/LabelShape';
 import TextShape from '../geometry/shape/node/TextShape';
 import {
   ALIGN_CENTER,
@@ -121,7 +121,7 @@ class CellRenderer {
    * Defines the default shape for edges. Default is <mxConnector>.
    */
   // @ts-expect-error The constructors for Shape and Connector are different.
-  defaultEdgeShape: typeof Shape = Connector;
+  defaultEdgeShape: typeof Shape = ConnectorShape;
 
   /**
    * Variable: defaultVertexShape
@@ -1637,8 +1637,9 @@ class CellRenderer {
     return (
       shape.bounds == null ||
       shape.scale !== state.view.scale ||
-      (state.absolutePoints == null && !shape.bounds.equals(state)) ||
-      (state.absolutePoints != null && !equalPoints(shape.points, state.absolutePoints))
+      (state.absolutePoints.length === 0 && !shape.bounds.equals(state)) ||
+      (state.absolutePoints.length > 0 &&
+        !equalPoints(shape.points, state.absolutePoints))
     );
   }
 
@@ -1685,19 +1686,19 @@ CellRenderer.registerShape(SHAPE_RHOMBUS, RhombusShape);
 // @ts-ignore
 CellRenderer.registerShape(SHAPE_CYLINDER, CylinderShape);
 // @ts-ignore
-CellRenderer.registerShape(SHAPE_CONNECTOR, Connector);
+CellRenderer.registerShape(SHAPE_CONNECTOR, ConnectorShape);
 // @ts-ignore
-CellRenderer.registerShape(SHAPE_ACTOR, Actor);
+CellRenderer.registerShape(SHAPE_ACTOR, ActorShape);
 CellRenderer.registerShape(SHAPE_TRIANGLE, TriangleShape);
 CellRenderer.registerShape(SHAPE_HEXAGON, HexagonShape);
 // @ts-ignore
 CellRenderer.registerShape(SHAPE_CLOUD, CloudShape);
 // @ts-ignore
-CellRenderer.registerShape(SHAPE_LINE, Line);
+CellRenderer.registerShape(SHAPE_LINE, LineShape);
 // @ts-ignore
-CellRenderer.registerShape(SHAPE_ARROW, Arrow);
+CellRenderer.registerShape(SHAPE_ARROW, ArrowShape);
 // @ts-ignore
-CellRenderer.registerShape(SHAPE_ARROW_CONNECTOR, ArrowConnector);
+CellRenderer.registerShape(SHAPE_ARROW_CONNECTOR, ArrowConnectorShape);
 // @ts-ignore
 CellRenderer.registerShape(SHAPE_DOUBLE_ELLIPSE, DoubleEllipseShape);
 // @ts-ignore
@@ -1705,6 +1706,6 @@ CellRenderer.registerShape(SHAPE_SWIMLANE, SwimlaneShape);
 // @ts-ignore
 CellRenderer.registerShape(SHAPE_IMAGE, ImageShape);
 // @ts-ignore
-CellRenderer.registerShape(SHAPE_LABEL, Label);
+CellRenderer.registerShape(SHAPE_LABEL, LabelShape);
 
 export default CellRenderer;

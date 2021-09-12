@@ -253,6 +253,7 @@ const GraphSelectionMixin: PartialType = {
         tmp.push(cells[i]);
       }
     }
+
     this.changeSelection(tmp, this.cells);
   },
 

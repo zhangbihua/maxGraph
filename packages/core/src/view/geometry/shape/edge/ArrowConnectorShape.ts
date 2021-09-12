@@ -19,7 +19,7 @@ import { ColorValue } from '../../../../types';
  *
  * This shape is registered under {@link mxConstants.SHAPE_ARROW_CONNECTOR} in {@link mxCellRenderer}.
  */
-class ArrowConnector extends Shape {
+class ArrowConnectorShape extends Shape {
   constructor(
     points: Point[],
     fill: ColorValue,
@@ -483,4 +483,4 @@ class ArrowConnector extends Shape {
   }
 }
 
-export default ArrowConnector;
+export default ArrowConnectorShape;

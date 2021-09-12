@@ -3,9 +3,9 @@ import {
   EdgeHandler,
   GraphHandler,
   CellRenderer,
-  Marker,
+  MarkerShape,
   CylinderShape,
-  Arrow,
+  ArrowShape,
   Point,
 } from '@maxgraph/core';
 
@@ -32,7 +32,7 @@ const Template = ({ label, ...args }) => {
   EdgeHandler.prototype.snapToTerminals = true;
 
   // Registers and defines the custom marker
-  Marker.addMarker(
+  MarkerShape.addMarker(
     'dash',
     function (canvas, shape, type, pe, unitX, unitY, size, source, sw, filled) {
       const nx = unitX * (size + sw + 1);
@@ -66,7 +66,7 @@ const Template = ({ label, ...args }) => {
   CellRenderer.registerShape('message', MessageShape);
 
   // Defines custom edge shape
-  class LinkShape extends Arrow {
+  class LinkShape extends ArrowShape {
     paintEdgeShape(c, pts) {
       const width = 10;
 

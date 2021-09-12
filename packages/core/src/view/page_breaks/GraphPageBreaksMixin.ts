@@ -1,6 +1,6 @@
 import Rectangle from '../geometry/Rectangle';
 import Point from '../geometry/Point';
-import Polyline from '../geometry/shape/edge/Polyline';
+import PolylineShape from '../geometry/shape/edge/PolylineShape';
 import { Graph } from '../Graph';
 import { mixInto } from '../../util/Utils';
 
@@ -111,7 +111,7 @@ const GraphPageBreaksMixin: PartialType = {
             breaks[i].points = pts;
             breaks[i].redraw();
           } else {
-            const pageBreak = new Polyline(pts, this.getPageBreakColor());
+            const pageBreak = new PolylineShape(pts, this.getPageBreakColor());
             pageBreak.dialect = this.getDialect();
             pageBreak.pointerEvents = false;
             pageBreak.isDashed = this.isPageBreakDashed();

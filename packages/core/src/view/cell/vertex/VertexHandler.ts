@@ -58,8 +58,6 @@ import SelectionCellsHandler from '../../selection/SelectionCellsHandler';
  * state - <mxCellState> of the cell to be resized.
  */
 class VertexHandler {
-  dependencies = ['selection', 'cells'];
-
   constructor(state: CellState) {
     this.state = state;
     this.graph = this.state.view.graph;

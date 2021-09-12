@@ -33,7 +33,7 @@ import { NONE } from '../../../util/Constants';
  * }
  * ```
  */
-class Actor extends Shape {
+class ActorShape extends Shape {
   constructor(
     bounds: Rectangle | null = null,
     fill: ColorValue = NONE,
@@ -71,4 +71,4 @@ class Actor extends Shape {
   }
 }
 
-export default Actor;
+export default ActorShape;

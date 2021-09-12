@@ -4,16 +4,16 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import Actor from '../Actor';
+import ActorShape from '../ActorShape';
 import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 import Rectangle from '../../Rectangle';
 
 /**
- * Extends {@link Actor} to implement a cloud shape.
+ * Extends {@link ActorShape} to implement a cloud shape.
  *
  * This shape is registered under {@link mxConstants.SHAPE_CLOUD} in {@link cellRenderer}.
  */
-class CloudShape extends Actor {
+class CloudShape extends ActorShape {
   constructor(bounds: Rectangle, fill: string, stroke: string, strokeWidth = 1) {
     super();
     this.bounds = bounds;

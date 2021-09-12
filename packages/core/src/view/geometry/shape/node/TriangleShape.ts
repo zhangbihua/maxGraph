@@ -6,16 +6,16 @@
  */
 
 import Point from '../../Point';
-import Actor from '../Actor';
+import ActorShape from '../ActorShape';
 import { LINE_ARCSIZE } from '../../../../util/Constants';
 import AbstractCanvas2D from '../../../../util/canvas/AbstractCanvas2D';
 
 /**
  * Implementation of the triangle shape.
  * @class TriangleShape
- * @extends {Actor}
+ * @extends {ActorShape}
  */
-class TriangleShape extends Actor {
+class TriangleShape extends ActorShape {
   constructor() {
     super();
   }
