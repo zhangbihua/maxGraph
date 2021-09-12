@@ -1358,6 +1358,7 @@ class VertexHandler {
 
           const s = this.graph.view.scale;
           const recurse = this.isRecursiveResize(this.state, me);
+
           this.resizeCell(
             this.state.cell,
             this.roundLength(dx / s),
@@ -1519,8 +1520,12 @@ class VertexHandler {
   ) {
     let geo = cell.getGeometry();
 
-    if (geo && this.labelShape && this.labelShape.bounds) {
-      if (index === InternalEvent.LABEL_HANDLE) {
+    if (geo) {
+      if (
+        index === InternalEvent.LABEL_HANDLE &&
+        this.labelShape &&
+        this.labelShape.bounds
+      ) {
         const alpha = -toRadians(this.state.style.rotation ?? 0);
         const cos = Math.cos(alpha);
         const sin = Math.sin(alpha);
