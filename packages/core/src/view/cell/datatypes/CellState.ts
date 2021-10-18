@@ -43,17 +43,6 @@ import CellOverlay from '../CellOverlay';
  * style - Array of key, value pairs that constitute the style.
  */
 class CellState extends Rectangle {
-  constructor(view: GraphView, cell: Cell, style: CellStateStyles) {
-    super();
-
-    this.view = view;
-    this.cell = cell;
-    this.style = style ?? {};
-
-    this.origin = new Point();
-    this.absoluteOffset = new Point();
-  }
-
   // referenced in mxCellRenderer
   node: HTMLElement | null = null;
 
@@ -199,6 +188,17 @@ class CellState extends Rectangle {
   parentHighlight: RectangleShape | null = null;
 
   point: Point | null = null;
+
+  constructor(view: GraphView, cell: Cell, style: CellStateStyles) {
+    super();
+
+    this.view = view;
+    this.cell = cell;
+    this.style = style ?? {};
+
+    this.origin = new Point();
+    this.absoluteOffset = new Point();
+  }
 
   /**
    * Function: getPerimeterBounds

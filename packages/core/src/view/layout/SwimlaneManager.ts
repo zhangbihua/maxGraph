@@ -6,13 +6,11 @@
  */
 
 import EventSource from '../event/EventSource';
-import { getValue } from '../../util/Utils';
 import InternalEvent from '../event/InternalEvent';
 import Rectangle from '../geometry/Rectangle';
-import graph from '../Graph';
+import { Graph } from '../Graph';
 import EventObject from '../event/EventObject';
 import Cell from '../cell/datatypes/Cell';
-import Geometry from '../geometry/Geometry';
 import CellArray from '../cell/datatypes/CellArray';
 
 /**
@@ -26,7 +24,7 @@ import CellArray from '../cell/datatypes/CellArray';
  */
 class SwimlaneManager extends EventSource {
   constructor(
-    graph: graph,
+    graph: Graph,
     horizontal: boolean = true,
     addEnabled: boolean = true,
     resizeEnabled: boolean = true
@@ -37,13 +35,13 @@ class SwimlaneManager extends EventSource {
     this.addEnabled = addEnabled;
     this.resizeEnabled = resizeEnabled;
 
-    this.addHandler = (sender: any, evt: EventObject) => {
+    this.addHandler = (sender: EventSource, evt: EventObject) => {
       if (this.isEnabled() && this.isAddEnabled()) {
         this.cellsAdded(evt.getProperty('cells'));
       }
     };
 
-    this.resizeHandler = (sender: any, evt: EventObject) => {
+    this.resizeHandler = (sender: EventSource, evt: EventObject) => {
       if (this.isEnabled() && this.isResizeEnabled()) {
         this.cellsResized(evt.getProperty('cells'));
       }
@@ -55,48 +53,48 @@ class SwimlaneManager extends EventSource {
   /**
    * Reference to the enclosing {@link graph}.
    */
-  graph: graph | null = null;
+  graph!: Graph;
 
   /**
    * Specifies if event handling is enabled.
    * @default true
    */
-  enabled: boolean = true;
+  enabled = true;
 
   /**
    * Specifies the orientation of the swimlanes.
    * @default true
    */
-  horizontal: boolean = true;
+  horizontal = true;
 
   /**
    * Specifies if newly added cells should be resized to match the size of their
    * existing siblings.
    * @default true
    */
-  addEnabled: boolean = true;
+  addEnabled = true;
 
   /**
    * Specifies if resizing of swimlanes should be handled.
    * @default true
    */
-  resizeEnabled: boolean = true;
+  resizeEnabled = true;
 
   /**
    * Holds the function that handles the move event.
    */
-  addHandler: Function | null = null;
+  addHandler: (sender: EventSource, evt: EventObject) => void;
 
   /**
    * Holds the function that handles the move event.
    */
-  resizeHandler: Function | null = null;
+  resizeHandler: (sender: EventSource, evt: EventObject) => void;
 
   /**
    * Returns true if events are handled. This implementation
    * returns {@link enabled}.
    */
-  isEnabled(): boolean {
+  isEnabled() {
     return this.enabled;
   }
 
@@ -106,71 +104,72 @@ class SwimlaneManager extends EventSource {
    *
    * @param enabled Boolean that specifies the new enabled state.
    */
-  setEnabled(value: boolean): void {
+  setEnabled(value: boolean) {
     this.enabled = value;
   }
 
   /**
    * Returns {@link horizontal}.
    */
-  isHorizontal(): boolean {
+  isHorizontal() {
     return this.horizontal;
   }
 
   /**
    * Sets {@link horizontal}.
    */
-  setHorizontal(value: boolean): void {
+  setHorizontal(value: boolean) {
     this.horizontal = value;
   }
 
   /**
    * Returns {@link addEnabled}.
    */
-  isAddEnabled(): boolean {
+  isAddEnabled() {
     return this.addEnabled;
   }
 
   /**
    * Sets {@link addEnabled}.
    */
-  setAddEnabled(value: boolean): void {
+  setAddEnabled(value: boolean) {
     this.addEnabled = value;
   }
 
   /**
    * Returns {@link resizeEnabled}.
    */
-  isResizeEnabled(): boolean {
+  isResizeEnabled() {
     return this.resizeEnabled;
   }
 
   /**
    * Sets {@link resizeEnabled}.
    */
-  setResizeEnabled(value: boolean): void {
+  setResizeEnabled(value: boolean) {
     this.resizeEnabled = value;
   }
 
   /**
    * Returns the graph that this manager operates on.
    */
-  getGraph(): graph | null {
+  getGraph() {
     return this.graph;
   }
 
   /**
    * Sets the graph that the manager operates on.
    */
-  setGraph(graph: graph | null): void {
-    if (this.graph != null) {
+  setGraph(graph: Graph | null) {
+    if (this.graph) {
       this.graph.removeListener(this.addHandler);
       this.graph.removeListener(this.resizeHandler);
     }
 
+    // @ts-expect-error this.graph can be null only when it is being destroyed.
     this.graph = graph;
 
-    if (this.graph != null) {
+    if (this.graph) {
       this.graph.addListener(InternalEvent.ADD_CELLS, this.addHandler);
       this.graph.addListener(InternalEvent.CELLS_RESIZED, this.resizeHandler);
     }
@@ -179,19 +178,20 @@ class SwimlaneManager extends EventSource {
   /**
    * Returns true if the given swimlane should be ignored.
    */
-  isSwimlaneIgnored(swimlane: Cell): boolean {
-    return !(<graph>this.getGraph()).isSwimlane(swimlane);
+  isSwimlaneIgnored(swimlane: Cell) {
+    return !this.getGraph()!.isSwimlane(swimlane);
   }
 
   /**
    * Returns true if the given cell is horizontal. If the given cell is not a
    * swimlane, then the global orientation is returned.
    */
-  isCellHorizontal(cell: Cell): boolean {
-    if ((<graph>this.graph).isSwimlane(cell)) {
-      const style = (<graph>this.graph).getCellStyle(cell);
-      return getValue(style, 'horizontal', 1) == 1;
+  isCellHorizontal(cell: Cell) {
+    if (this.graph.isSwimlane(cell)) {
+      const style = this.graph.getCellStyle(cell);
+      return style.horizontal ?? true;
     }
+
     return !this.isHorizontal();
   }
 
@@ -200,9 +200,9 @@ class SwimlaneManager extends EventSource {
    *
    * @param cell Array of {@link Cell} that have been added.
    */
-  cellsAdded(cells: CellArray): void {
-    if (cells != null) {
-      const model = (<graph>this.graph).getModel();
+  cellsAdded(cells: CellArray) {
+    if (cells.length > 0) {
+      const model = this.graph.getModel();
 
       model.beginUpdate();
       try {
@@ -223,28 +223,26 @@ class SwimlaneManager extends EventSource {
    *
    * @param swimlane {@link mxCell} that represents the new swimlane.
    */
-  // swimlaneAdded(swimlane: mxCell): void;
-  swimlaneAdded(swimlane: Cell): void {
+  swimlaneAdded(swimlane: Cell) {
     const parent = <Cell>swimlane.getParent();
     const childCount = parent.getChildCount();
     let geo = null;
 
     // Finds the first valid sibling swimlane as reference
     for (let i = 0; i < childCount; i += 1) {
-      const child = <Cell>parent.getChildAt(i);
+      const child = parent.getChildAt(i);
 
       if (child !== swimlane && !this.isSwimlaneIgnored(child)) {
         geo = child.getGeometry();
-        if (geo != null) {
+        if (geo) {
           break;
         }
       }
     }
 
     // Applies the size of the refernece to the newly added swimlane
-    if (geo != null) {
-      const parentHorizontal =
-        parent != null ? this.isCellHorizontal(parent) : this.horizontal;
+    if (geo) {
+      const parentHorizontal = parent ? this.isCellHorizontal(parent) : this.horizontal;
       this.resizeSwimlane(swimlane, geo.width, geo.height, parentHorizontal);
     }
   }
@@ -255,9 +253,9 @@ class SwimlaneManager extends EventSource {
    *
    * @param cells Array of {@link Cell} whose size was changed.
    */
-  cellsResized(cells: CellArray | null): void {
-    if (cells != null) {
-      const model = (<graph>this.getGraph()).getModel();
+  cellsResized(cells: CellArray) {
+    if (cells.length > 0) {
+      const model = this.getGraph().getModel();
 
       model.beginUpdate();
       try {
@@ -266,23 +264,24 @@ class SwimlaneManager extends EventSource {
           if (!this.isSwimlaneIgnored(cell)) {
             const geo = cell.getGeometry();
 
-            if (geo != null) {
+            if (geo) {
               const size = new Rectangle(0, 0, geo.width, geo.height);
               let top = cell;
               let current = top;
 
-              while (current != null) {
+              while (current) {
                 top = current;
                 current = <Cell>current.getParent();
-                const tmp = (<graph>this.graph).isSwimlane(current)
-                  ? (<graph>this.graph).getStartSize(current)
+                const tmp = this.graph.isSwimlane(current)
+                  ? this.graph.getStartSize(current)
                   : new Rectangle();
                 size.width += tmp.width;
                 size.height += tmp.height;
               }
 
-              const parentHorizontal =
-                current != null ? this.isCellHorizontal(current) : this.horizontal;
+              const parentHorizontal = current
+                ? this.isCellHorizontal(current)
+                : this.horizontal;
               this.resizeSwimlane(top, size.width, size.height, parentHorizontal);
             }
           }
@@ -300,17 +299,17 @@ class SwimlaneManager extends EventSource {
    *
    * @param swimlane {@link mxCell} whose size has changed.
    */
-  resizeSwimlane(swimlane: Cell, w: number, h: number, parentHorizontal: boolean): void {
-    const model = (<graph>this.graph).getModel();
+  resizeSwimlane(swimlane: Cell, w: number, h: number, parentHorizontal: boolean) {
+    const model = this.graph.getModel();
 
     model.beginUpdate();
     try {
       const horizontal = this.isCellHorizontal(swimlane);
 
       if (!this.isSwimlaneIgnored(swimlane)) {
-        let geo = <Geometry>swimlane.getGeometry();
+        let geo = swimlane.getGeometry();
 
-        if (geo != null) {
+        if (geo) {
           if (
             (parentHorizontal && geo.height !== h) ||
             (!parentHorizontal && geo.width !== w)
@@ -328,8 +327,8 @@ class SwimlaneManager extends EventSource {
         }
       }
 
-      const tmp = (<graph>this.graph).isSwimlane(swimlane)
-        ? (<graph>this.graph).getStartSize(swimlane)
+      const tmp = this.graph.isSwimlane(swimlane)
+        ? this.graph.getStartSize(swimlane)
         : new Rectangle();
       w -= tmp.width;
       h -= tmp.height;
@@ -337,7 +336,7 @@ class SwimlaneManager extends EventSource {
       const childCount = swimlane.getChildCount();
 
       for (let i = 0; i < childCount; i += 1) {
-        const child = <Cell>swimlane.getChildAt(i);
+        const child = swimlane.getChildAt(i);
         this.resizeSwimlane(child, w, h, horizontal);
       }
     } finally {
@@ -348,7 +347,7 @@ class SwimlaneManager extends EventSource {
   /**
    * Removes all handlers from the {@link graph} and deletes the reference to it.
    */
-  destroy(): void {
+  destroy() {
     this.setGraph(null);
   }
 }

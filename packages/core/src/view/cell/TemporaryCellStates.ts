@@ -14,10 +14,30 @@ import GraphView from '../view/GraphView';
 import Cell from './datatypes/Cell';
 import CellState from './datatypes/CellState';
 import Shape from '../geometry/shape/Shape';
-import graph from '../Graph';
 import CellArray from './datatypes/CellArray';
 
 class TemporaryCellStates {
+  oldValidateCellState: Function | null;
+
+  oldDoRedrawShape: Function | null;
+
+  view: GraphView;
+
+  /**
+   * Holds the states of the rectangle.
+   */
+  oldStates: Dictionary<Cell, CellState>;
+
+  /**
+   * Holds the bounds of the rectangle.
+   */
+  oldBounds: Rectangle;
+
+  /**
+   * Holds the scale of the rectangle.
+   */
+  oldScale: number;
+
   constructor(
     view: GraphView,
     scale: number = 1,
@@ -87,27 +107,6 @@ class TemporaryCellStates {
     }
     view.setGraphBounds(bbox || new Rectangle());
   }
-
-  oldValidateCellState: Function | null;
-
-  oldDoRedrawShape: Function | null;
-
-  view: GraphView;
-
-  /**
-   * Holds the states of the rectangle.
-   */
-  oldStates: Dictionary<Cell, CellState>;
-
-  /**
-   * Holds the bounds of the rectangle.
-   */
-  oldBounds: Rectangle;
-
-  /**
-   * Holds the scale of the rectangle.
-   */
-  oldScale: number;
 
   destroy(): void {
     const view = this.view;

@@ -84,50 +84,6 @@ import type {
  * ```
  */
 class Shape {
-  constructor(stencil: StencilShape | null = null) {
-    // `stencil` is not null when instantiated directly,
-    // but can be null when instantiated through a child class.
-    if (stencil) {
-      this.stencil = stencil;
-    }
-
-    // moved from init()
-    this.node = this.create();
-  }
-
-  /**
-   * Function: init
-   *
-   * Initializes the shape by creaing the DOM node using <create>
-   * and adding it into the given container.
-   *
-   * Parameters:
-   *
-   * container - DOM node that will contain the shape.
-   */
-  init(container: HTMLElement | SVGElement) {
-    if (!this.node.parentNode) {
-      container.appendChild(this.node);
-    }
-  }
-
-  /**
-   * Function: initStyles
-   *
-   * Sets the styles to their default values.
-   */
-  initStyles() {
-    this.strokeWidth = 1;
-    this.rotation = 0;
-    this.opacity = 100;
-    this.fillOpacity = 100;
-    this.strokeOpacity = 100;
-    this.flipH = false;
-    this.flipV = false;
-  }
-
-  // TODO: Document me!!
-
   // Assigned in mxCellRenderer
   preserveImageAspect = false;
   overlay: CellOverlay | null = null;
@@ -339,6 +295,48 @@ class Shape {
   indicatorDirection: DirectionValue = DIRECTION_EAST;
 
   indicatorImageSrc: string | null = null;
+
+  constructor(stencil: StencilShape | null = null) {
+    // `stencil` is not null when instantiated directly,
+    // but can be null when instantiated through a child class.
+    if (stencil) {
+      this.stencil = stencil;
+    }
+
+    // moved from init()
+    this.node = this.create();
+  }
+
+  /**
+   * Function: init
+   *
+   * Initializes the shape by creaing the DOM node using <create>
+   * and adding it into the given container.
+   *
+   * Parameters:
+   *
+   * container - DOM node that will contain the shape.
+   */
+  init(container: HTMLElement | SVGElement) {
+    if (!this.node.parentNode) {
+      container.appendChild(this.node);
+    }
+  }
+
+  /**
+   * Function: initStyles
+   *
+   * Sets the styles to their default values.
+   */
+  initStyles() {
+    this.strokeWidth = 1;
+    this.rotation = 0;
+    this.opacity = 100;
+    this.fillOpacity = 100;
+    this.strokeOpacity = 100;
+    this.flipH = false;
+    this.flipV = false;
+  }
 
   /**
    * Function: isHtmlAllowed

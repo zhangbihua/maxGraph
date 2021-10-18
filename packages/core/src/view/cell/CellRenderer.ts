@@ -104,8 +104,6 @@ import SelectionCellsHandler from '../selection/SelectionCellsHandler';
  * swimlane, connector, actor and cloud.
  */
 class CellRenderer {
-  constructor() {}
-
   /**
    * Variable: defaultShapes
    *

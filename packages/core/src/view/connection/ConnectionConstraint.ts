@@ -12,20 +12,6 @@ import Point from '../geometry/Point';
  * @class ConnectionConstraint
  */
 class ConnectionConstraint {
-  constructor(
-    point: Point | null,
-    perimeter = true,
-    name: string | null = null,
-    dx = 0,
-    dy = 0
-  ) {
-    this.point = point;
-    this.perimeter = perimeter;
-    this.name = name;
-    this.dx = dx;
-    this.dy = dy;
-  }
-
   /**
    * Variable: point
    *
@@ -61,6 +47,20 @@ class ConnectionConstraint {
    * Optional float that specifies the vertical offset of the constraint.
    */
   dy = 0;
+
+  constructor(
+    point: Point | null,
+    perimeter = true,
+    name: string | null = null,
+    dx = 0,
+    dy = 0
+  ) {
+    this.point = point;
+    this.perimeter = perimeter;
+    this.name = name;
+    this.dx = dx;
+    this.dy = dy;
+  }
 }
 
 export default ConnectionConstraint;

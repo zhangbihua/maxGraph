@@ -206,18 +206,6 @@ import type { FilterFunction } from '../../types';
  * @class Model
  */
 class Model extends EventSource {
-  constructor(root: Cell | null = null) {
-    super();
-
-    this.currentEdit = this.createUndoableEdit();
-
-    if (root != null) {
-      this.setRoot(root);
-    } else {
-      this.clear();
-    }
-  }
-
   /**
    * Holds the root cell, which in turn contains the cells that represent the
    * layers of the diagram as child cells. That is, the actual elements of the
@@ -284,31 +272,43 @@ class Model extends EventSource {
    */
   endingUpdate: boolean = false;
 
+  constructor(root: Cell | null = null) {
+    super();
+
+    this.currentEdit = this.createUndoableEdit();
+
+    if (root != null) {
+      this.setRoot(root);
+    } else {
+      this.clear();
+    }
+  }
+
   /**
    * Sets a new root using {@link createRoot}.
    */
-  clear(): void {
+  clear() {
     this.setRoot(this.createRoot());
   }
 
   /**
    * Returns {@link createIds}.
    */
-  isCreateIds(): boolean {
+  isCreateIds() {
     return this.createIds;
   }
 
   /**
    * Sets {@link createIds}.
    */
-  setCreateIds(value: boolean): void {
+  setCreateIds(value: boolean) {
     this.createIds = value;
   }
 
   /**
    * Creates a new root cell with a default layer (child 0).
    */
-  createRoot(): Cell {
+  createRoot() {
     const cell = new Cell();
     cell.insert(new Cell());
     return cell;

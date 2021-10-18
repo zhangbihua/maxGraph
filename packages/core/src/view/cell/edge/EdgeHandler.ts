@@ -81,94 +81,6 @@ import GraphHandler from '../../GraphHandler';
  * @class EdgeHandler
  */
 class EdgeHandler {
-  constructor(state: CellState) {
-    // `state.shape` must exists.
-    this.state = state;
-
-    this.graph = this.state.view.graph;
-    this.marker = this.createMarker();
-    this.constraintHandler = new ConstraintHandler(this.graph);
-
-    // Clones the original points from the cell
-    // and makes sure at least one point exists
-    this.points = [];
-
-    // Uses the absolute points of the state
-    // for the initial configuration and preview
-    this.abspoints = this.getSelectionPoints(this.state);
-    this.shape = this.createSelectionShape(this.abspoints);
-    this.shape.dialect =
-      this.graph.dialect !== DIALECT_SVG ? DIALECT_MIXEDHTML : DIALECT_SVG;
-    this.shape.init(this.graph.getView().getOverlayPane());
-    this.shape.pointerEvents = false;
-    this.shape.setCursor(CURSOR_MOVABLE_EDGE);
-    InternalEvent.redirectMouseEvents(this.shape.node, this.graph, this.state);
-
-    // Updates preferHtml
-    this.preferHtml =
-      this.state.text != null && this.state.text.node.parentNode === this.graph.container;
-
-    if (!this.preferHtml) {
-      // Checks source terminal
-      const sourceState = this.state.getVisibleTerminalState(true);
-
-      if (sourceState != null) {
-        this.preferHtml =
-          sourceState.text != null &&
-          sourceState.text.node.parentNode === this.graph.container;
-      }
-
-      if (!this.preferHtml) {
-        // Checks target terminal
-        const targetState = this.state.getVisibleTerminalState(false);
-
-        if (targetState != null) {
-          this.preferHtml =
-            targetState.text != null &&
-            targetState.text.node.parentNode === this.graph.container;
-        }
-      }
-    }
-
-    const graphHandler = this.graph.getPlugin('GraphHandler') as GraphHandler;
-
-    // Creates bends for the non-routed absolute points
-    // or bends that don't correspond to points
-    if (
-      this.graph.getSelectionCount() < graphHandler.maxCells ||
-      graphHandler.maxCells <= 0
-    ) {
-      this.bends = this.createBends();
-
-      if (this.isVirtualBendsEnabled()) {
-        this.virtualBends = this.createVirtualBends();
-      }
-    }
-
-    // Adds a rectangular handle for the label position
-    this.label = new Point(this.state.absoluteOffset.x, this.state.absoluteOffset.y);
-    this.labelShape = this.createLabelHandleShape();
-    this.initBend(this.labelShape);
-    this.labelShape.setCursor(CURSOR_LABEL_HANDLE);
-
-    this.customHandles = this.createCustomHandles();
-
-    this.updateParentHighlight();
-    this.redraw();
-
-    // Handles escape keystrokes
-    this.escapeHandler = (sender: Listenable, evt: Event) => {
-      const dirty = this.index != null;
-      this.reset();
-
-      if (dirty) {
-        this.graph.cellRenderer.redraw(this.state, false, state.view.isRendering());
-      }
-    };
-
-    this.state.view.graph.addListener(InternalEvent.ESCAPE, this.escapeHandler);
-  }
-
   /**
    * Variable: graph
    *
@@ -391,6 +303,94 @@ class EdgeHandler {
   outline = true;
 
   active = true;
+
+  constructor(state: CellState) {
+    // `state.shape` must exists.
+    this.state = state;
+
+    this.graph = this.state.view.graph;
+    this.marker = this.createMarker();
+    this.constraintHandler = new ConstraintHandler(this.graph);
+
+    // Clones the original points from the cell
+    // and makes sure at least one point exists
+    this.points = [];
+
+    // Uses the absolute points of the state
+    // for the initial configuration and preview
+    this.abspoints = this.getSelectionPoints(this.state);
+    this.shape = this.createSelectionShape(this.abspoints);
+    this.shape.dialect =
+      this.graph.dialect !== DIALECT_SVG ? DIALECT_MIXEDHTML : DIALECT_SVG;
+    this.shape.init(this.graph.getView().getOverlayPane());
+    this.shape.pointerEvents = false;
+    this.shape.setCursor(CURSOR_MOVABLE_EDGE);
+    InternalEvent.redirectMouseEvents(this.shape.node, this.graph, this.state);
+
+    // Updates preferHtml
+    this.preferHtml =
+      this.state.text != null && this.state.text.node.parentNode === this.graph.container;
+
+    if (!this.preferHtml) {
+      // Checks source terminal
+      const sourceState = this.state.getVisibleTerminalState(true);
+
+      if (sourceState != null) {
+        this.preferHtml =
+          sourceState.text != null &&
+          sourceState.text.node.parentNode === this.graph.container;
+      }
+
+      if (!this.preferHtml) {
+        // Checks target terminal
+        const targetState = this.state.getVisibleTerminalState(false);
+
+        if (targetState != null) {
+          this.preferHtml =
+            targetState.text != null &&
+            targetState.text.node.parentNode === this.graph.container;
+        }
+      }
+    }
+
+    const graphHandler = this.graph.getPlugin('GraphHandler') as GraphHandler;
+
+    // Creates bends for the non-routed absolute points
+    // or bends that don't correspond to points
+    if (
+      this.graph.getSelectionCount() < graphHandler.maxCells ||
+      graphHandler.maxCells <= 0
+    ) {
+      this.bends = this.createBends();
+
+      if (this.isVirtualBendsEnabled()) {
+        this.virtualBends = this.createVirtualBends();
+      }
+    }
+
+    // Adds a rectangular handle for the label position
+    this.label = new Point(this.state.absoluteOffset.x, this.state.absoluteOffset.y);
+    this.labelShape = this.createLabelHandleShape();
+    this.initBend(this.labelShape);
+    this.labelShape.setCursor(CURSOR_LABEL_HANDLE);
+
+    this.customHandles = this.createCustomHandles();
+
+    this.updateParentHighlight();
+    this.redraw();
+
+    // Handles escape keystrokes
+    this.escapeHandler = (sender: Listenable, evt: Event) => {
+      const dirty = this.index != null;
+      this.reset();
+
+      if (dirty) {
+        this.graph.cellRenderer.redraw(this.state, false, state.view.isRendering());
+      }
+    };
+
+    this.state.view.graph.addListener(InternalEvent.ESCAPE, this.escapeHandler);
+  }
 
   /**
    * Function: isParentHighlightVisible
@@ -629,29 +629,28 @@ class EdgeHandler {
           }
         }
 
-        /* disable swimlane for now
-        const model = self.graph.getModel();
-
-        if (
-          (this.graph.isSwimlane(cell) &&
-            self.currentPoint != null &&
-            this.graph.hitsSwimlaneContent(
-              cell,
-              self.currentPoint.x,
-              self.currentPoint.y
-            )) ||
-          !self.isConnectableCell(cell) ||
-          cell === self.state.cell ||
-          (cell != null && !self.graph.connectableEdges && cell.isEdge()) ||
-          model.isAncestor(self.state.cell, cell)
-        ) {
-          cell = null;
+        if (cell) {
+          if (
+            (this.graph.isSwimlane(cell) &&
+              self.currentPoint &&
+              this.graph.hitsSwimlaneContent(
+                cell,
+                self.currentPoint.x,
+                self.currentPoint.y
+              )) ||
+            !self.isConnectableCell(cell) ||
+            cell === self.state.cell ||
+            (cell && !self.graph.connectableEdges && cell.isEdge()) ||
+            self.state.cell.isAncestor(cell)
+          ) {
+            cell = null;
+          }
         }
-        */
 
         if (cell && !cell.isConnectable()) {
           cell = null;
         }
+
         return cell;
       };
 
@@ -2470,13 +2469,16 @@ class EdgeHandler {
    * normally not need to be called as handlers are destroyed automatically
    * when the corresponding cell is deselected.
    */
-  // destroy(): void;
   destroy() {
     this.state.view.graph.removeListener(this.escapeHandler);
 
     this.marker.destroy();
+    // @ts-expect-error Can be null when destroyed.
+    this.marker = null;
 
     this.shape.destroy();
+    // @ts-expect-error Can be null when destroyed.
+    this.shape = null;
 
     if (this.parentHighlight) {
       const parent = this.state.cell.getParent();
@@ -2491,8 +2493,12 @@ class EdgeHandler {
     }
 
     this.labelShape.destroy();
+    // @ts-expect-error Can be null when destroyed.
+    this.labelShape = null;
 
     this.constraintHandler.destroy();
+    // @ts-expect-error Can be null when destroyed.
+    this.constraintHandler = null;
 
     this.destroyBends(this.virtualBends);
     this.virtualBends = [];

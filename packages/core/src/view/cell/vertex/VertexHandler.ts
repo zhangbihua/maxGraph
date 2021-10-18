@@ -58,129 +58,6 @@ import SelectionCellsHandler from '../../selection/SelectionCellsHandler';
  * state - <mxCellState> of the cell to be resized.
  */
 class VertexHandler {
-  constructor(state: CellState) {
-    this.state = state;
-    this.graph = this.state.view.graph;
-    this.selectionBounds = this.getSelectionBounds(this.state);
-    this.bounds = new Rectangle(
-      this.selectionBounds.x,
-      this.selectionBounds.y,
-      this.selectionBounds.width,
-      this.selectionBounds.height
-    );
-    this.selectionBorder = this.createSelectionShape(this.bounds);
-    // VML dialect required here for event transparency in IE
-    this.selectionBorder.dialect = DIALECT_SVG;
-    this.selectionBorder.pointerEvents = false;
-    this.selectionBorder.rotation = this.state.style.rotation ?? 0;
-    this.selectionBorder.init(this.graph.getView().getOverlayPane());
-    InternalEvent.redirectMouseEvents(this.selectionBorder.node, this.graph, this.state);
-
-    if (this.graph.isCellMovable(this.state.cell)) {
-      this.selectionBorder.setCursor(CURSOR_MOVABLE_VERTEX);
-    }
-
-    const graphHandler = this.graph.getPlugin('GraphHandler') as GraphHandler;
-
-    // Adds the sizer handles
-    if (
-      graphHandler.maxCells <= 0 ||
-      this.graph.getSelectionCount() < graphHandler.maxCells
-    ) {
-      const resizable = this.graph.isCellResizable(this.state.cell);
-      this.sizers = [];
-
-      if (
-        resizable ||
-        (this.graph.isLabelMovable(this.state.cell) &&
-          this.state.width >= 2 &&
-          this.state.height >= 2)
-      ) {
-        let i = 0;
-
-        if (resizable) {
-          if (!this.singleSizer) {
-            this.sizers.push(this.createSizer('nw-resize', i++));
-            this.sizers.push(this.createSizer('n-resize', i++));
-            this.sizers.push(this.createSizer('ne-resize', i++));
-            this.sizers.push(this.createSizer('w-resize', i++));
-            this.sizers.push(this.createSizer('e-resize', i++));
-            this.sizers.push(this.createSizer('sw-resize', i++));
-            this.sizers.push(this.createSizer('s-resize', i++));
-          }
-
-          this.sizers.push(this.createSizer('se-resize', i++));
-        }
-
-        const geo = this.state.cell.getGeometry();
-
-        if (
-          geo != null &&
-          !geo.relative &&
-          //!this.graph.isSwimlane(this.state.cell) &&      disable for now
-          this.graph.isLabelMovable(this.state.cell)
-        ) {
-          // Marks this as the label handle for getHandleForEvent
-          this.labelShape = this.createSizer(
-            CURSOR_LABEL_HANDLE,
-            InternalEvent.LABEL_HANDLE,
-            LABEL_HANDLE_SIZE,
-            LABEL_HANDLE_FILLCOLOR
-          );
-          this.sizers.push(this.labelShape);
-        }
-      } else if (
-        this.graph.isCellMovable(this.state.cell) &&
-        !this.graph.isCellResizable(this.state.cell) &&
-        this.state.width < 2 &&
-        this.state.height < 2
-      ) {
-        this.labelShape = this.createSizer(
-          CURSOR_MOVABLE_VERTEX,
-          InternalEvent.LABEL_HANDLE,
-          undefined,
-          LABEL_HANDLE_FILLCOLOR
-        );
-        this.sizers.push(this.labelShape);
-      }
-    }
-
-    // Adds the rotation handler
-    if (this.isRotationHandleVisible()) {
-      this.rotationShape = this.createSizer(
-        this.rotationCursor,
-        InternalEvent.ROTATION_HANDLE,
-        HANDLE_SIZE + 3,
-        HANDLE_FILLCOLOR
-      );
-      this.sizers.push(this.rotationShape);
-    }
-
-    this.customHandles = this.createCustomHandles();
-    this.redraw();
-
-    if (this.constrainGroupByChildren) {
-      this.updateMinBounds();
-    }
-
-    // Handles escape keystrokes
-    this.escapeHandler = (sender: Listenable, evt: Event) => {
-      if (this.livePreview && this.index != null) {
-        // Redraws the live preview
-        this.state.view.graph.cellRenderer.redraw(this.state, true);
-
-        // Redraws connected edges
-        this.state.view.invalidate(this.state.cell);
-        this.state.invalid = false;
-        this.state.view.validate();
-      }
-
-      this.reset();
-    };
-
-    this.state.view.graph.addListener(InternalEvent.ESCAPE, this.escapeHandler);
-  }
-
   escapeHandler: (sender: Listenable, evt: Event) => void;
   selectionBounds: Rectangle;
   bounds: Rectangle;
@@ -367,6 +244,129 @@ class VertexHandler {
   edgeHandlers: EdgeHandler[] = [];
 
   EMPTY_POINT = new Point();
+
+  constructor(state: CellState) {
+    this.state = state;
+    this.graph = this.state.view.graph;
+    this.selectionBounds = this.getSelectionBounds(this.state);
+    this.bounds = new Rectangle(
+      this.selectionBounds.x,
+      this.selectionBounds.y,
+      this.selectionBounds.width,
+      this.selectionBounds.height
+    );
+    this.selectionBorder = this.createSelectionShape(this.bounds);
+    // VML dialect required here for event transparency in IE
+    this.selectionBorder.dialect = DIALECT_SVG;
+    this.selectionBorder.pointerEvents = false;
+    this.selectionBorder.rotation = this.state.style.rotation ?? 0;
+    this.selectionBorder.init(this.graph.getView().getOverlayPane());
+    InternalEvent.redirectMouseEvents(this.selectionBorder.node, this.graph, this.state);
+
+    if (this.graph.isCellMovable(this.state.cell)) {
+      this.selectionBorder.setCursor(CURSOR_MOVABLE_VERTEX);
+    }
+
+    const graphHandler = this.graph.getPlugin('GraphHandler') as GraphHandler;
+
+    // Adds the sizer handles
+    if (
+      graphHandler.maxCells <= 0 ||
+      this.graph.getSelectionCount() < graphHandler.maxCells
+    ) {
+      const resizable = this.graph.isCellResizable(this.state.cell);
+      this.sizers = [];
+
+      if (
+        resizable ||
+        (this.graph.isLabelMovable(this.state.cell) &&
+          this.state.width >= 2 &&
+          this.state.height >= 2)
+      ) {
+        let i = 0;
+
+        if (resizable) {
+          if (!this.singleSizer) {
+            this.sizers.push(this.createSizer('nw-resize', i++));
+            this.sizers.push(this.createSizer('n-resize', i++));
+            this.sizers.push(this.createSizer('ne-resize', i++));
+            this.sizers.push(this.createSizer('w-resize', i++));
+            this.sizers.push(this.createSizer('e-resize', i++));
+            this.sizers.push(this.createSizer('sw-resize', i++));
+            this.sizers.push(this.createSizer('s-resize', i++));
+          }
+
+          this.sizers.push(this.createSizer('se-resize', i++));
+        }
+
+        const geo = this.state.cell.getGeometry();
+
+        if (
+          geo != null &&
+          !geo.relative &&
+          //!this.graph.isSwimlane(this.state.cell) &&      disable for now
+          this.graph.isLabelMovable(this.state.cell)
+        ) {
+          // Marks this as the label handle for getHandleForEvent
+          this.labelShape = this.createSizer(
+            CURSOR_LABEL_HANDLE,
+            InternalEvent.LABEL_HANDLE,
+            LABEL_HANDLE_SIZE,
+            LABEL_HANDLE_FILLCOLOR
+          );
+          this.sizers.push(this.labelShape);
+        }
+      } else if (
+        this.graph.isCellMovable(this.state.cell) &&
+        !this.graph.isCellResizable(this.state.cell) &&
+        this.state.width < 2 &&
+        this.state.height < 2
+      ) {
+        this.labelShape = this.createSizer(
+          CURSOR_MOVABLE_VERTEX,
+          InternalEvent.LABEL_HANDLE,
+          undefined,
+          LABEL_HANDLE_FILLCOLOR
+        );
+        this.sizers.push(this.labelShape);
+      }
+    }
+
+    // Adds the rotation handler
+    if (this.isRotationHandleVisible()) {
+      this.rotationShape = this.createSizer(
+        this.rotationCursor,
+        InternalEvent.ROTATION_HANDLE,
+        HANDLE_SIZE + 3,
+        HANDLE_FILLCOLOR
+      );
+      this.sizers.push(this.rotationShape);
+    }
+
+    this.customHandles = this.createCustomHandles();
+    this.redraw();
+
+    if (this.constrainGroupByChildren) {
+      this.updateMinBounds();
+    }
+
+    // Handles escape keystrokes
+    this.escapeHandler = (sender: Listenable, evt: Event) => {
+      if (this.livePreview && this.index != null) {
+        // Redraws the live preview
+        this.state.view.graph.cellRenderer.redraw(this.state, true);
+
+        // Redraws connected edges
+        this.state.view.invalidate(this.state.cell);
+        this.state.invalid = false;
+        this.state.view.validate();
+      }
+
+      this.reset();
+    };
+
+    this.state.view.graph.addListener(InternalEvent.ESCAPE, this.escapeHandler);
+  }
 
   /**
    * Function: isRotationHandleVisible
@@ -2195,9 +2195,13 @@ class VertexHandler {
       this.sizers[i].destroy();
     }
 
+    this.sizers = [];
+
     for (let i = 0; i < this.customHandles.length; i += 1) {
       this.customHandles[i].destroy();
     }
+
+    this.customHandles = [];
   }
 }
 

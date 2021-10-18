@@ -56,18 +56,11 @@ import type { UndoableChange } from '../../types';
  * Constructs a new undoable edit for the given source.
  */
 class UndoableEdit {
-  constructor(source: EventSource, significant: boolean = true) {
-    this.source = source;
-    this.changes = [];
-    this.significant = significant;
-  }
-
   /**
    * Variable: source
    *
    * Specifies the source of the edit.
    */
-  // source: any;
   source: EventSource;
 
   /**
@@ -100,6 +93,12 @@ class UndoableEdit {
    * Specifies if this edit has been redone. Default is false.
    */
   redone = false;
+
+  constructor(source: EventSource, significant: boolean = true) {
+    this.source = source;
+    this.changes = [];
+    this.significant = significant;
+  }
 
   /**
    * Function: isEmpty
@@ -166,9 +165,7 @@ class UndoableEdit {
         }
 
         // New global executed event
-        this.source.fireEvent(
-          new EventObject(InternalEvent.EXECUTED, 'change', change)
-        );
+        this.source.fireEvent(new EventObject(InternalEvent.EXECUTED, 'change', change));
       }
 
       this.undone = true;
@@ -199,9 +196,7 @@ class UndoableEdit {
         }
 
         // New global executed event
-        this.source.fireEvent(
-          new EventObject(InternalEvent.EXECUTED, 'change', change)
-        );
+        this.source.fireEvent(new EventObject(InternalEvent.EXECUTED, 'change', change));
       }
 
       this.undone = false;

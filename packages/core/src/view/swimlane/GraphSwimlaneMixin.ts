@@ -198,7 +198,7 @@ const GraphSwimlaneMixin: PartialType = {
   getStartSize(swimlane, ignoreState = false) {
     const result = new Rectangle();
     const style = this.getCurrentCellStyle(swimlane, ignoreState);
-    const size = parseInt(getValue(style, 'startSize', DEFAULT_STARTSIZE));
+    const size = style.startSize ?? DEFAULT_STARTSIZE;
 
     if (style.horizontal === true) {
       result.height = size;
@@ -255,7 +255,7 @@ const GraphSwimlaneMixin: PartialType = {
 
     if (this.isSwimlane(swimlane, ignoreState)) {
       const style = this.getCurrentCellStyle(swimlane, ignoreState);
-      const size = parseInt(getValue(style, 'startSize', DEFAULT_STARTSIZE));
+      const size = style.startSize ?? DEFAULT_STARTSIZE;
       const dir = this.getSwimlaneDirection(style);
 
       if (dir === DIRECTION_NORTH) {

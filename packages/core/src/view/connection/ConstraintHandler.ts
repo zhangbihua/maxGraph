@@ -35,28 +35,6 @@ import Cell from '../cell/datatypes/Cell';
  * @class ConstraintHandler
  */
 class ConstraintHandler {
-  constructor(graph: Graph) {
-    this.graph = graph;
-
-    // Adds a graph model listener to update the current focus on changes
-    this.resetHandler = () => {
-      if (
-        this.currentFocus != null &&
-        this.graph.view.getState(this.currentFocus.cell) == null
-      ) {
-        this.reset();
-      } else {
-        this.redraw();
-      }
-    };
-
-    this.graph.model.addListener(InternalEvent.CHANGE, this.resetHandler);
-    this.graph.view.addListener(InternalEvent.SCALE_AND_TRANSLATE, this.resetHandler);
-    this.graph.view.addListener(InternalEvent.TRANSLATE, this.resetHandler);
-    this.graph.view.addListener(InternalEvent.SCALE, this.resetHandler);
-    this.graph.addListener(InternalEvent.ROOT, this.resetHandler);
-  }
-
   /**
    * {@link Image} to be used as the image for fixed connection points.
    */
@@ -98,6 +76,28 @@ class ConstraintHandler {
 
   mouseleaveHandler: (() => void) | null = null;
 
+  constructor(graph: Graph) {
+    this.graph = graph;
+
+    // Adds a graph model listener to update the current focus on changes
+    this.resetHandler = () => {
+      if (
+        this.currentFocus != null &&
+        this.graph.view.getState(this.currentFocus.cell) == null
+      ) {
+        this.reset();
+      } else {
+        this.redraw();
+      }
+    };
+
+    this.graph.model.addListener(InternalEvent.CHANGE, this.resetHandler);
+    this.graph.view.addListener(InternalEvent.SCALE_AND_TRANSLATE, this.resetHandler);
+    this.graph.view.addListener(InternalEvent.TRANSLATE, this.resetHandler);
+    this.graph.view.addListener(InternalEvent.SCALE, this.resetHandler);
+    this.graph.addListener(InternalEvent.ROOT, this.resetHandler);
+  }
+
   /**
    * Returns true if events are handled. This implementation
    * returns {@link enabled}.
@@ -122,15 +122,13 @@ class ConstraintHandler {
    * Resets the state of this handler.
    */
   reset() {
-    if (this.focusIcons != null) {
-      for (let i = 0; i < this.focusIcons.length; i += 1) {
-        this.focusIcons[i].destroy();
-      }
-
-      this.focusIcons = [];
+    for (let i = 0; i < this.focusIcons.length; i += 1) {
+      this.focusIcons[i].destroy();
     }
 
-    if (this.focusHighlight != null) {
+    this.focusIcons = [];
+
+    if (this.focusHighlight) {
       this.focusHighlight.destroy();
       this.focusHighlight = null;
     }
@@ -183,24 +181,20 @@ class ConstraintHandler {
   /**
    * Destroys the {@link focusIcons} if they exist.
    */
-  // destroyIcons(): void;
   destroyIcons() {
-    if (this.focusIcons != null) {
-      for (let i = 0; i < this.focusIcons.length; i += 1) {
-        this.focusIcons[i].destroy();
-      }
-
-      this.focusIcons = [];
-      this.focusPoints = [];
+    for (let i = 0; i < this.focusIcons.length; i += 1) {
+      this.focusIcons[i].destroy();
     }
+
+    this.focusIcons = [];
+    this.focusPoints = [];
   }
 
   /**
    * Destroys the {@link focusHighlight} if one exists.
    */
-  // destroyFocusHighlight(): void;
   destroyFocusHighlight() {
-    if (this.focusHighlight != null) {
+    if (this.focusHighlight) {
       this.focusHighlight.destroy();
       this.focusHighlight = null;
     }
@@ -363,7 +357,6 @@ class ConstraintHandler {
    * the handler is not enabled then the outline is painted, but the constraints
    * are ignored.
    */
-  // redraw(): void;
   redraw() {
     if (
       this.currentFocus != null &&
@@ -410,17 +403,12 @@ class ConstraintHandler {
       this.currentFocus = state;
       this.currentFocusArea = new Rectangle(state.x, state.y, state.width, state.height);
 
-      if (this.focusIcons != null) {
-        for (let i = 0; i < this.focusIcons.length; i += 1) {
-          this.focusIcons[i].destroy();
-        }
-
-        this.focusIcons = [];
-        this.focusPoints = [];
+      for (let i = 0; i < this.focusIcons.length; i += 1) {
+        this.focusIcons[i].destroy();
       }
 
-      this.focusPoints = [];
       this.focusIcons = [];
+      this.focusPoints = [];
 
       for (let i = 0; i < this.constraints.length; i += 1) {
         const cp = this.graph.getConnectionPoint(state, this.constraints[i]) as Point;
@@ -490,7 +478,6 @@ class ConstraintHandler {
   /**
    * Destroy this handler.
    */
-  // destroy(): void;
   destroy() {
     this.reset();
 

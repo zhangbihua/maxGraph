@@ -10,6 +10,7 @@ import {
   ptSegDistSq,
   setCellStyleFlags,
   setCellStyles,
+  setStyle,
   toRadians,
 } from '../../util/Utils';
 import {
@@ -20,6 +21,10 @@ import {
   ALIGN_TOP,
   DEFAULT_FONTSIZE,
   DEFAULT_IMAGESIZE,
+  DIRECTION_EAST,
+  DIRECTION_NORTH,
+  DIRECTION_SOUTH,
+  DIRECTION_WEST,
   SHAPE_LABEL,
 } from '../../util/Constants';
 import Geometry from '../geometry/Geometry';
@@ -293,6 +298,8 @@ type PartialGraph = Pick<
   | 'isAllowNegativeCoordinates'
   | 'setAllowNegativeCoordinates'
   | 'getEventTolerance'
+  | 'isSwimlane'
+  | 'getStartSize'
 >;
 
 type PartialCells = Pick<
@@ -1378,8 +1385,7 @@ const GraphCellsMixin: PartialType = {
         const collapsed = cell.isCollapsed();
         geo = geo.clone();
 
-        /* disable swimlane for now
-        if (this.graph.swimlane.isSwimlane(cell)) {
+        if (this.isSwimlane(cell)) {
           const style = this.getCellStyle(cell);
           let cellStyle = cell.getStyle();
 
@@ -1387,7 +1393,7 @@ const GraphCellsMixin: PartialType = {
             cellStyle = '';
           }
 
-          if (getValue(style, 'horizontal', true)) {
+          if (style.horizontal ?? true) {
             cellStyle = setStyle(cellStyle, 'startSize', size.height + 8);
 
             if (collapsed) {
@@ -1406,27 +1412,27 @@ const GraphCellsMixin: PartialType = {
           }
 
           this.getModel().setStyle(cell, cellStyle);
-        } else {*/
-        const state = this.getView().createState(cell);
-        const align = state.style.align ?? ALIGN_CENTER;
+        } else {
+          const state = this.getView().createState(cell);
+          const align = state.style.align ?? ALIGN_CENTER;
 
-        if (align === ALIGN_RIGHT) {
-          geo.x += geo.width - size.width;
-        } else if (align === ALIGN_CENTER) {
-          geo.x += Math.round((geo.width - size.width) / 2);
+          if (align === ALIGN_RIGHT) {
+            geo.x += geo.width - size.width;
+          } else if (align === ALIGN_CENTER) {
+            geo.x += Math.round((geo.width - size.width) / 2);
+          }
+
+          const valign = state.getVerticalAlign();
+
+          if (valign === ALIGN_BOTTOM) {
+            geo.y += geo.height - size.height;
+          } else if (valign === ALIGN_MIDDLE) {
+            geo.y += Math.round((geo.height - size.height) / 2);
+          }
+
+          geo.width = size.width;
+          geo.height = size.height;
         }
-
-        const valign = state.getVerticalAlign();
-
-        if (valign === ALIGN_BOTTOM) {
-          geo.y += geo.height - size.height;
-        } else if (valign === ALIGN_MIDDLE) {
-          geo.y += Math.round((geo.height - size.height) / 2);
-        }
-
-        geo.width = size.width;
-        geo.height = size.height;
-        /*}*/
 
         if (!ignoreChildren && !collapsed) {
           const bounds = this.getView().getBounds(cell.getChildren());
@@ -2088,13 +2094,12 @@ const GraphCellsMixin: PartialType = {
           let w = g.width;
           let h = g.height;
 
-          /* disable swimlane for now
           if (this.isSwimlane(parent)) {
             const size = this.getStartSize(parent);
             const style = this.getCurrentCellStyle(parent);
-            const dir = getValue(style, 'direction', DIRECTION_EAST);
-            const flipH = getValue(style, 'flipH', 0) == 1;
-            const flipV = getValue(style, 'flipV', 0) == 1;
+            const dir = style.direction ?? DIRECTION_EAST;
+            const flipH = style.flipH ?? false;
+            const flipV = style.flipV ?? false;
 
             if (dir === DIRECTION_SOUTH || dir === DIRECTION_NORTH) {
               const tmp = size.width;
@@ -2115,7 +2120,6 @@ const GraphCellsMixin: PartialType = {
             w -= size.width;
             h -= size.height;
           }
-          */
 
           return new Rectangle(x, y, w, h);
         }

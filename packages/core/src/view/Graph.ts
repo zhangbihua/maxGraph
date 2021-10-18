@@ -71,49 +71,9 @@ const defaultPlugins: GraphPluginConstructor[] = [
  * @extends {EventSource}
  */
 class Graph extends EventSource {
-  constructor(
-    container: HTMLElement,
-    model?: Model,
-    plugins: GraphPluginConstructor[] = defaultPlugins,
-    stylesheet: Stylesheet | null = null
-  ) {
-    super();
-
-    this.container = container;
-    this.model = model ?? new Model();
-    this.plugins = plugins;
-    this.cellRenderer = this.createCellRenderer();
-    this.setStylesheet(stylesheet != null ? stylesheet : this.createStylesheet());
-    this.view = this.createGraphView();
-
-    // Adds a graph model listener to update the view
-    this.graphModelChangeListener = (sender: any, evt: EventObject) => {
-      this.graphModelChanged(evt.getProperty('edit').changes);
-    };
-
-    this.getModel().addListener(InternalEvent.CHANGE, this.graphModelChangeListener);
-
-    // Initializes the container using the view
-    this.view.init();
-
-    // Updates the size of the container for the current graph
-    this.sizeDidChange();
-
-    // Initiailzes plugins
-    this.plugins.forEach((p: GraphPluginConstructor) => {
-      this.pluginsMap[p.pluginId] = new p(this);
-    });
-
-    this.view.revalidate();
-  }
-
   container: HTMLElement;
 
-  getContainer = () => this.container;
-
   destroyed: boolean = false;
-
-  getPlugin = (id: string) => this.pluginsMap[id] as unknown;
 
   graphModelChangeListener: Function | null = null;
   paintBackground: Function | null = null;
@@ -156,10 +116,6 @@ class Graph extends EventSource {
    */
   cellRenderer: CellRenderer;
 
-  getCellRenderer() {
-    return this.cellRenderer;
-  }
-
   /**
    * RenderHint as it was passed to the constructor.
    */
@@ -170,8 +126,6 @@ class Graph extends EventSource {
    * constants in {@link mxConstants} with a DIALECT-prefix.
    */
   dialect: 'svg' | 'mixedHtml' | 'preferHtml' | 'strictHtml' = 'svg';
-
-  getDialect = () => this.dialect;
 
   /**
    * Value returned by {@link getOverlap} if {@link isAllowOverlapParent} returns
@@ -208,8 +162,6 @@ class Graph extends EventSource {
    */
   pageVisible = false;
 
-  isPageVisible = () => this.pageVisible;
-
   /**
    * Specifies if a dashed line should be drawn between multiple pages.
    * If you change this value while a graph is being displayed then you
@@ -218,15 +170,11 @@ class Graph extends EventSource {
    */
   pageBreaksVisible = false;
 
-  isPageBreaksVisible = () => this.pageBreaksVisible;
-
   /**
    * Specifies the color for page breaks.
    * @default gray
    */
   pageBreakColor = 'gray';
-
-  getPageBreakColor = () => this.pageBreakColor;
 
   /**
    * Specifies the page breaks should be dashed.
@@ -234,15 +182,11 @@ class Graph extends EventSource {
    */
   pageBreakDashed = true;
 
-  isPageBreakDashed = () => this.pageBreakDashed;
-
   /**
    * Specifies the minimum distance in pixels for page breaks to be visible.
    * @default 20
    */
   minPageBreakDist = 20;
-
-  getMinPageBreakDist = () => this.minPageBreakDist;
 
   /**
    * Specifies if the graph size should be rounded to the next page number in
@@ -250,8 +194,6 @@ class Graph extends EventSource {
    * @default false
    */
   preferPageSize = false;
-
-  isPreferPageSize = () => this.preferPageSize;
 
   /**
    * Specifies the page format for the background page.
@@ -261,16 +203,12 @@ class Graph extends EventSource {
    */
   pageFormat = new Rectangle(...PAGE_FORMAT_A4_PORTRAIT);
 
-  getPageFormat = () => this.pageFormat;
-
   /**
    * Specifies the scale of the background page.
    * Not yet implemented.
    * @default 1.5
    */
   pageScale = 1.5;
-
-  getPageScale = () => this.pageScale;
 
   /**
    * Specifies the return value for {@link isEnabled}.
@@ -284,15 +222,11 @@ class Graph extends EventSource {
    */
   exportEnabled = true;
 
-  isExportEnabled = () => this.exportEnabled;
-
   /**
    * Specifies the return value for {@link canImportCell}.
    * @default true
    */
   importEnabled = true;
-
-  isImportEnabled = () => this.importEnabled;
 
   /**
    * Specifies if the graph should automatically scroll regardless of the
@@ -302,8 +236,6 @@ class Graph extends EventSource {
    */
   ignoreScrollbars = false;
 
-  isIgnoreScrollbars = () => this.ignoreScrollbars;
-
   /**
    * Specifies if the graph should automatically convert the current scroll
    * position to a translate in the graph view when a mouseUp event is received.
@@ -311,8 +243,6 @@ class Graph extends EventSource {
    * {@link ignoreScrollbars} with no scrollbars in the container.
    */
   translateToScrollPosition = false;
-
-  isTranslateToScrollPosition = () => this.translateToScrollPosition;
 
   /**
    * {@link Rectangle} that specifies the area in which all cells in the diagram
@@ -328,18 +258,11 @@ class Graph extends EventSource {
    */
   minimumGraphSize: Rectangle | null = null;
 
-  getMinimumGraphSize = () => this.minimumGraphSize;
-  setMinimumGraphSize = (size: Rectangle | null) => (this.minimumGraphSize = size);
-
   /**
    * {@link Rectangle} that specifies the minimum size of the {@link container} if
    * {@link resizeContainer} is `true`.
    */
   minimumContainerSize: Rectangle | null = null;
-
-  getMinimumContainerSize = () => this.minimumContainerSize;
-  setMinimumContainerSize = (size: Rectangle | null) =>
-    (this.minimumContainerSize = size);
 
   /**
    * {@link Rectangle} that specifies the maximum size of the container if
@@ -434,10 +357,6 @@ class Graph extends EventSource {
     16
   );
 
-  getWarningImage() {
-    return this.warningImage;
-  }
-
   /**
    * Specifies the resource key for the error message to be displayed in
    * non-multigraphs when two vertices are already connected. If the resource
@@ -447,8 +366,6 @@ class Graph extends EventSource {
   alreadyConnectedResource: string =
     mxClient.language != 'none' ? 'alreadyConnected' : '';
 
-  getAlreadyConnectedResource = () => this.alreadyConnectedResource;
-
   /**
    * Specifies the resource key for the warning message to be displayed when
    * a collapsed cell contains validation errors. If the resource for this
@@ -457,6 +374,89 @@ class Graph extends EventSource {
    */
   containsValidationErrorsResource: string =
     mxClient.language != 'none' ? 'containsValidationErrors' : '';
+
+  constructor(
+    container: HTMLElement,
+    model?: Model,
+    plugins: GraphPluginConstructor[] = defaultPlugins,
+    stylesheet: Stylesheet | null = null
+  ) {
+    super();
+
+    this.container = container;
+    this.model = model ?? new Model();
+    this.plugins = plugins;
+    this.cellRenderer = this.createCellRenderer();
+    this.setStylesheet(stylesheet != null ? stylesheet : this.createStylesheet());
+    this.view = this.createGraphView();
+
+    // Adds a graph model listener to update the view
+    this.graphModelChangeListener = (sender: any, evt: EventObject) => {
+      this.graphModelChanged(evt.getProperty('edit').changes);
+    };
+
+    this.getModel().addListener(InternalEvent.CHANGE, this.graphModelChangeListener);
+
+    // Initializes the container using the view
+    this.view.init();
+
+    // Updates the size of the container for the current graph
+    this.sizeDidChange();
+
+    // Initiailzes plugins
+    this.plugins.forEach((p: GraphPluginConstructor) => {
+      this.pluginsMap[p.pluginId] = new p(this);
+    });
+
+    this.view.revalidate();
+  }
+
+  getContainer = () => this.container;
+
+  getPlugin = (id: string) => this.pluginsMap[id] as unknown;
+
+  getCellRenderer() {
+    return this.cellRenderer;
+  }
+
+  getDialect = () => this.dialect;
+
+  isPageVisible = () => this.pageVisible;
+
+  isPageBreaksVisible = () => this.pageBreaksVisible;
+
+  getPageBreakColor = () => this.pageBreakColor;
+
+  isPageBreakDashed = () => this.pageBreakDashed;
+
+  getMinPageBreakDist = () => this.minPageBreakDist;
+
+  isPreferPageSize = () => this.preferPageSize;
+
+  getPageFormat = () => this.pageFormat;
+
+  getPageScale = () => this.pageScale;
+
+  isExportEnabled = () => this.exportEnabled;
+
+  isImportEnabled = () => this.importEnabled;
+
+  isIgnoreScrollbars = () => this.ignoreScrollbars;
+
+  isTranslateToScrollPosition = () => this.translateToScrollPosition;
+
+  getMinimumGraphSize = () => this.minimumGraphSize;
+  setMinimumGraphSize = (size: Rectangle | null) => (this.minimumGraphSize = size);
+
+  getMinimumContainerSize = () => this.minimumContainerSize;
+  setMinimumContainerSize = (size: Rectangle | null) =>
+    (this.minimumContainerSize = size);
+
+  getWarningImage() {
+    return this.warningImage;
+  }
+
+  getAlreadyConnectedResource = () => this.alreadyConnectedResource;
 
   getContainsValidationErrorsResource = () => this.containsValidationErrorsResource;
 
@@ -1392,7 +1392,7 @@ class Graph extends EventSource {
    *
    * @param cell {@link mxCell} for which the overlap ratio should be returned.
    */
-  getOverlap(cell: Cell): number {
+  getOverlap(cell: Cell) {
     return this.isAllowOverlapParent(cell) ? this.defaultOverlap : 0;
   }
 
@@ -1416,17 +1416,18 @@ class Graph extends EventSource {
    * this function should be used as the parent for new cells (aka default
    * layer).
    */
-  getDefaultParent(): Cell {
+  getDefaultParent() {
     let parent = this.getCurrentRoot();
 
-    if (parent == null) {
+    if (!parent) {
       parent = this.defaultParent;
 
-      if (parent == null) {
+      if (!parent) {
         const root = <Cell>this.getModel().getRoot();
         parent = root.getChildAt(0);
       }
     }
+
     return <Cell>parent;
   }
 
@@ -1434,14 +1435,14 @@ class Graph extends EventSource {
    * Sets the {@link defaultParent} to the given cell. Set this to null to return
    * the first child of the root in getDefaultParent.
    */
-  setDefaultParent(cell: Cell | null): void {
+  setDefaultParent(cell: Cell | null) {
     this.defaultParent = cell;
   }
 
   /**
    * Destroys the graph and all its resources.
    */
-  destroy(): void {
+  destroy() {
     if (!this.destroyed) {
       this.destroyed = true;
 
@@ -1449,7 +1450,7 @@ class Graph extends EventSource {
 
       this.view.destroy();
 
-      if (this.model != null && this.graphModelChangeListener != null) {
+      if (this.model && this.graphModelChangeListener) {
         this.getModel().removeListener(this.graphModelChangeListener);
         this.graphModelChangeListener = null;
       }

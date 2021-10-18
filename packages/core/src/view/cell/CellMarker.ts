@@ -64,21 +64,6 @@ import Cell from './datatypes/Cell';
  * <mxConstants.DEFAULT_HOTSPOT>.
  */
 class CellMarker extends EventSource {
-  constructor(
-    graph: Graph,
-    validColor: ColorValue = DEFAULT_VALID_COLOR,
-    invalidColor: ColorValue = DEFAULT_INVALID_COLOR,
-    hotspot: number = DEFAULT_HOTSPOT
-  ) {
-    super();
-
-    this.graph = graph;
-    this.validColor = validColor;
-    this.invalidColor = invalidColor;
-    this.hotspot = hotspot;
-    this.highlight = new CellHighlight(graph);
-  }
-
   /**
    * Variable: graph
    *
@@ -146,6 +131,21 @@ class CellMarker extends EventSource {
   markedState: CellState | null = null;
 
   highlight: CellHighlight;
+
+  constructor(
+    graph: Graph,
+    validColor: ColorValue = DEFAULT_VALID_COLOR,
+    invalidColor: ColorValue = DEFAULT_INVALID_COLOR,
+    hotspot: number = DEFAULT_HOTSPOT
+  ) {
+    super();
+
+    this.graph = graph;
+    this.validColor = validColor;
+    this.invalidColor = invalidColor;
+    this.hotspot = hotspot;
+    this.highlight = new CellHighlight(graph);
+  }
 
   /**
    * Function: setEnabled

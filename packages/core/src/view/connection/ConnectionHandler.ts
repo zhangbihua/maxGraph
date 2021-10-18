@@ -20,7 +20,7 @@ import {
   TOOLTIP_VERTICAL_OFFSET,
   VALID_COLOR,
 } from '../../util/Constants';
-import { convertPoint, getOffset, getRotatedPoint, getValue } from '../../util/Utils';
+import { convertPoint, getOffset, getRotatedPoint, toRadians } from '../../util/Utils';
 import InternalMouseEvent from '../event/InternalMouseEvent';
 import ImageShape from '../geometry/shape/node/ImageShape';
 import CellMarker from '../cell/CellMarker';
@@ -204,54 +204,6 @@ type FactoryMethod = (source: Cell | null, target: Cell | null, style?: string) 
  */
 class ConnectionHandler extends EventSource implements GraphPlugin {
   static pluginId = 'ConnectionHandler';
-
-  constructor(graph: Graph, factoryMethod: FactoryMethod | null = null) {
-    super();
-
-    this.graph = graph;
-    this.factoryMethod = factoryMethod;
-
-    this.graph.addMouseListener(this);
-    this.marker = this.createMarker();
-    this.constraintHandler = new ConstraintHandler(this.graph);
-
-    // Redraws the icons if the graph changes
-    this.changeHandler = (sender: Listenable) => {
-      if (this.iconState) {
-        this.iconState = this.graph.getView().getState(this.iconState.cell);
-      }
-
-      if (this.iconState) {
-        this.redrawIcons(this.icons, this.iconState);
-        this.constraintHandler.reset();
-      } else if (this.previous && !this.graph.view.getState(this.previous.cell)) {
-        this.reset();
-      }
-    };
-
-    this.graph.getModel().addListener(InternalEvent.CHANGE, this.changeHandler);
-    this.graph.getView().addListener(InternalEvent.SCALE, this.changeHandler);
-    this.graph.getView().addListener(InternalEvent.TRANSLATE, this.changeHandler);
-    this.graph
-      .getView()
-      .addListener(InternalEvent.SCALE_AND_TRANSLATE, this.changeHandler);
-
-    // Removes the icon if we step into/up or start editing
-    this.drillHandler = (sender: Listenable) => {
-      this.reset();
-    };
-
-    this.graph.addListener(InternalEvent.START_EDITING, this.drillHandler);
-    this.graph.getView().addListener(InternalEvent.DOWN, this.drillHandler);
-    this.graph.getView().addListener(InternalEvent.UP, this.drillHandler);
-
-    // Handles escape keystrokes
-    this.escapeHandler = () => {
-      this.reset();
-    };
-
-    this.graph.addListener(InternalEvent.ESCAPE, this.escapeHandler);
-  }
 
   // TODO: Document me!
   previous: CellState | null = null;
@@ -475,6 +427,54 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
 
   escapeHandler: () => void;
 
+  constructor(graph: Graph, factoryMethod: FactoryMethod | null = null) {
+    super();
+
+    this.graph = graph;
+    this.factoryMethod = factoryMethod;
+
+    this.graph.addMouseListener(this);
+    this.marker = this.createMarker();
+    this.constraintHandler = new ConstraintHandler(this.graph);
+
+    // Redraws the icons if the graph changes
+    this.changeHandler = (sender: Listenable) => {
+      if (this.iconState) {
+        this.iconState = this.graph.getView().getState(this.iconState.cell);
+      }
+
+      if (this.iconState) {
+        this.redrawIcons(this.icons, this.iconState);
+        this.constraintHandler.reset();
+      } else if (this.previous && !this.graph.view.getState(this.previous.cell)) {
+        this.reset();
+      }
+    };
+
+    this.graph.getModel().addListener(InternalEvent.CHANGE, this.changeHandler);
+    this.graph.getView().addListener(InternalEvent.SCALE, this.changeHandler);
+    this.graph.getView().addListener(InternalEvent.TRANSLATE, this.changeHandler);
+    this.graph
+      .getView()
+      .addListener(InternalEvent.SCALE_AND_TRANSLATE, this.changeHandler);
+
+    // Removes the icon if we step into/up or start editing
+    this.drillHandler = (sender: Listenable) => {
+      this.reset();
+    };
+
+    this.graph.addListener(InternalEvent.START_EDITING, this.drillHandler);
+    this.graph.getView().addListener(InternalEvent.DOWN, this.drillHandler);
+    this.graph.getView().addListener(InternalEvent.UP, this.drillHandler);
+
+    // Handles escape keystrokes
+    this.escapeHandler = () => {
+      this.reset();
+    };
+
+    this.graph.addListener(InternalEvent.ESCAPE, this.escapeHandler);
+  }
+
   /**
    * Function: isEnabled
    *
@@ -610,20 +610,20 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
           }
         }
 
-        /* disable swimlane for now
-        if (
-          (self.graph.swimlane.isSwimlane(cell) &&
-            self.currentPoint != null &&
-            self.graph.swimlane.hitsSwimlaneContent(
-              cell,
-              self.currentPoint.x,
-              self.currentPoint.y
-            )) ||
-          !self.isConnectableCell(cell)
-        ) {
-          cell = null;
+        if (cell) {
+          if (
+            (self.graph.isSwimlane(cell) &&
+              self.currentPoint != null &&
+              self.graph.hitsSwimlaneContent(
+                cell,
+                self.currentPoint.x,
+                self.currentPoint.y
+              )) ||
+            !self.isConnectableCell(cell)
+          ) {
+            cell = null;
+          }
         }
-        */
 
         if (cell) {
           if (self.isConnecting()) {
@@ -876,18 +876,17 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
 
   // TODO: Document me! ===========================================================================================================
   getIconPosition(icon: ImageShape, state: CellState) {
-    // const { scale } = this.graph.getView();
+    const { scale } = this.graph.getView();
     let cx = state.getCenterX();
     let cy = state.getCenterY();
 
-    /* disable swimlane for now
     if (this.graph.isSwimlane(state.cell)) {
       const size = this.graph.getStartSize(state.cell);
 
       cx = size.width !== 0 ? state.x + (size.width * scale) / 2 : cx;
       cy = size.height !== 0 ? state.y + (size.height * scale) / 2 : cy;
 
-      const alpha = toRadians(getValue(state.style, 'rotation') || 0);
+      const alpha = toRadians(state.style.rotation ?? 0);
 
       if (alpha !== 0) {
         const cos = Math.cos(alpha);
@@ -897,7 +896,7 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
         cx = pt.x;
         cy = pt.y;
       }
-    }*/
+    }
 
     return new Point(cx - icon.bounds!.width / 2, cy - icon.bounds!.height / 2);
   }
@@ -912,6 +911,7 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
       this.icons[i].destroy();
     }
 
+    this.icons = [];
     this.icon = null;
     this.selectedIcon = null;
     this.iconState = null;
@@ -963,7 +963,7 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
         // Stores the location of the initial mousedown
         this.first = new Point(me.getGraphX(), me.getGraphY());
       }
-      
+
       this.edgeState = this.createEdgeState(me);
       this.mouseDownCounter = 1;
 
@@ -1606,7 +1606,7 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
     const c = new Point(state.getCenterX(), state.getCenterY());
 
     if (sourcePerimeter) {
-      const theta = getValue(state.style, 'rotation', 0);
+      const theta = state.style.rotation ?? 0;
       const rad = -theta * (Math.PI / 180);
 
       if (theta !== 0) {
@@ -2215,30 +2215,32 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
   onDestroy() {
     this.graph.removeMouseListener(this);
 
-    if (this.shape != null) {
+    if (this.shape) {
       this.shape.destroy();
       this.shape = null;
     }
 
-    if (this.marker != null) {
+    if (this.marker) {
       this.marker.destroy();
+      // @ts-expect-error this.marker is null when it is destroyed.
+      this.marker = null;
     }
 
-    if (this.constraintHandler != null) {
+    if (this.constraintHandler) {
       this.constraintHandler.destroy();
     }
 
-    if (this.changeHandler != null) {
+    if (this.changeHandler) {
       this.graph.getModel().removeListener(this.changeHandler);
       this.graph.getView().removeListener(this.changeHandler);
     }
 
-    if (this.drillHandler != null) {
+    if (this.drillHandler) {
       this.graph.removeListener(this.drillHandler);
       this.graph.getView().removeListener(this.drillHandler);
     }
 
-    if (this.escapeHandler != null) {
+    if (this.escapeHandler) {
       this.graph.removeListener(this.escapeHandler);
     }
   }

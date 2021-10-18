@@ -28,49 +28,6 @@ import type { ColorValue } from '../../types';
  * ```
  */
 class CellHighlight {
-  constructor(
-    graph: Graph,
-    highlightColor?: ColorValue,
-    strokeWidth?: number,
-    dashed?: boolean
-  ) {
-    this.graph = graph;
-    this.highlightColor = highlightColor ?? DEFAULT_VALID_COLOR;
-    this.strokeWidth = strokeWidth ?? HIGHLIGHT_STROKEWIDTH;
-    this.dashed = dashed ?? false;
-    this.opacity = HIGHLIGHT_OPACITY;
-
-    // Updates the marker if the graph changes
-    this.repaintHandler = () => {
-      // Updates reference to state
-      if (this.state) {
-        const tmp = this.graph.view.getState(this.state.cell);
-
-        if (!tmp) {
-          this.hide();
-        } else {
-          this.state = tmp;
-          this.repaint();
-        }
-      }
-    };
-
-    this.graph.getView().addListener(InternalEvent.SCALE, this.repaintHandler);
-    this.graph.getView().addListener(InternalEvent.TRANSLATE, this.repaintHandler);
-    this.graph
-      .getView()
-      .addListener(InternalEvent.SCALE_AND_TRANSLATE, this.repaintHandler);
-    this.graph.getModel().addListener(InternalEvent.CHANGE, this.repaintHandler);
-
-    // Hides the marker if the current root changes
-    this.resetHandler = () => {
-      this.hide();
-    };
-
-    this.graph.getView().addListener(InternalEvent.DOWN, this.resetHandler);
-    this.graph.getView().addListener(InternalEvent.UP, this.resetHandler);
-  }
-
   // TODO: Document me!!
   highlightColor: ColorValue;
 
@@ -113,6 +70,49 @@ class CellHighlight {
    * @default null
    */
   resetHandler: Function;
+
+  constructor(
+    graph: Graph,
+    highlightColor?: ColorValue,
+    strokeWidth?: number,
+    dashed?: boolean
+  ) {
+    this.graph = graph;
+    this.highlightColor = highlightColor ?? DEFAULT_VALID_COLOR;
+    this.strokeWidth = strokeWidth ?? HIGHLIGHT_STROKEWIDTH;
+    this.dashed = dashed ?? false;
+    this.opacity = HIGHLIGHT_OPACITY;
+
+    // Updates the marker if the graph changes
+    this.repaintHandler = () => {
+      // Updates reference to state
+      if (this.state) {
+        const tmp = this.graph.view.getState(this.state.cell);
+
+        if (!tmp) {
+          this.hide();
+        } else {
+          this.state = tmp;
+          this.repaint();
+        }
+      }
+    };
+
+    this.graph.getView().addListener(InternalEvent.SCALE, this.repaintHandler);
+    this.graph.getView().addListener(InternalEvent.TRANSLATE, this.repaintHandler);
+    this.graph
+      .getView()
+      .addListener(InternalEvent.SCALE_AND_TRANSLATE, this.repaintHandler);
+    this.graph.getModel().addListener(InternalEvent.CHANGE, this.repaintHandler);
+
+    // Hides the marker if the current root changes
+    this.resetHandler = () => {
+      this.hide();
+    };
+
+    this.graph.getView().addListener(InternalEvent.DOWN, this.resetHandler);
+    this.graph.getView().addListener(InternalEvent.UP, this.resetHandler);
+  }
 
   /**
    * Sets the color of the rectangle used to highlight drop targets.

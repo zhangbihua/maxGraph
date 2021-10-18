@@ -492,15 +492,15 @@ class GraphHandler implements GraphPlugin {
       const geo = cell.isEdge() ? null : cell.getGeometry();
 
       return (
-        !this.graph.isSiblingSelected(cell) &&
-        geo &&
-        geo.relative /* disable swimlane for now || !this.graph.isSwimlane(parent) */
+        (!this.graph.isSiblingSelected(cell) && geo && geo.relative) ||
+        !this.graph.isSwimlane(parent)
       );
     }
     return (
       (!this.graph.isToggleEvent(me.getEvent()) ||
-        (!this.graph.isSiblingSelected(cell) && !this.graph.isCellSelected(cell)) ||
-        /* disable swimlane for now !this.graph.isSwimlane(parent)*/
+        (!this.graph.isSiblingSelected(cell) &&
+          !this.graph.isCellSelected(cell) &&
+          !this.graph.isSwimlane(parent)) ||
         this.graph.isCellSelected(parent)) &&
       (this.graph.isToggleEvent(me.getEvent()) || !this.graph.isCellSelected(parent))
     );
@@ -1100,27 +1100,27 @@ class GraphHandler implements GraphPlugin {
 
             if (state) {
               const error = graph.getEdgeValidationError(null, this.cell, cell);
-              const color = error == null ? VALID_COLOR : INVALID_CONNECT_TARGET_COLOR;
+              const color = error === null ? VALID_COLOR : INVALID_CONNECT_TARGET_COLOR;
               this.setHighlightColor(color);
               highlight = true;
             }
           }
         }
 
-        if (state != null && highlight) {
+        if (state && highlight) {
           this.highlight.highlight(state);
         } else {
           this.highlight.hide();
         }
 
-        if (this.guide != null && this.useGuidesForEvent(me)) {
+        if (this.guide && this.useGuidesForEvent(me)) {
           delta = this.guide.move(this.bounds, delta, gridEnabled, clone);
           hideGuide = false;
         } else {
           delta = this.graph.snapDelta(delta, this.bounds, !gridEnabled, false, false);
         }
 
-        if (this.guide != null && hideGuide) {
+        if (this.guide && hideGuide) {
           this.guide.hide();
         }
 
@@ -1153,7 +1153,7 @@ class GraphHandler implements GraphPlugin {
       (this.isMoveEnabled() || this.isCloneEnabled()) &&
       this.updateCursor &&
       !me.isConsumed() &&
-      (me.getState() != null || me.sourceState != null) &&
+      (me.getState() || me.sourceState) &&
       !graph.isMouseDown
     ) {
       let cursor = graph.getCursorForMouseEvent(me);
@@ -1224,7 +1224,7 @@ class GraphHandler implements GraphPlugin {
     if (!this.suspended) {
       const states: CellState[][] = [];
 
-      if (this.allCells != null) {
+      if (this.allCells) {
         this.allCells.visit((key, state: CellState | null) => {
           const realState = state ? this.graph.view.getState(state.cell) : null;
 
@@ -1278,21 +1278,21 @@ class GraphHandler implements GraphPlugin {
                 state.invalid = false;
 
                 // Hides folding icon
-                if (state.control != null && state.control.node != null) {
+                if (state.control && state.control.node) {
                   state.control.node.style.visibility = 'hidden';
                 }
               }
               // Clone live preview may use text bounds
-              else if (state.text != null) {
+              else if (state.text) {
                 state.text.updateBoundingBox();
 
                 // Fixes preview box for edge labels
-                if (state.text.boundingBox != null) {
+                if (state.text.boundingBox) {
                   state.text.boundingBox.x += dx;
                   state.text.boundingBox.y += dy;
                 }
 
-                if (state.text.unrotatedBoundingBox != null) {
+                if (state.text.unrotatedBoundingBox) {
                   state.text.unrotatedBoundingBox.x += dx;
                   state.text.unrotatedBoundingBox.y += dy;
                 }
@@ -1483,8 +1483,8 @@ class GraphHandler implements GraphPlugin {
 
       // Shows folding icon
       if (
-        state.control != null &&
-        state.control.node != null &&
+        state.control &&
+        state.control.node &&
         state.control.node.style.visibility === 'hidden'
       ) {
         state.control.node.style.visibility = '';
@@ -1492,7 +1492,7 @@ class GraphHandler implements GraphPlugin {
 
       // Fixes preview box for edge labels
       if (!this.cloning) {
-        if (state.text !== null) {
+        if (state.text) {
           state.text.updateBoundingBox();
         }
       }
@@ -1634,7 +1634,6 @@ class GraphHandler implements GraphPlugin {
    *
    * Resets the state of this handler.
    */
-  // reset(): void;
   reset() {
     if (this.livePreviewUsed) {
       this.resetLivePreview();
@@ -1806,7 +1805,6 @@ class GraphHandler implements GraphPlugin {
    *
    * Destroy the preview and highlight shapes.
    */
-  // destroyShapes(): void;
   destroyShapes() {
     // Destroys the preview dashed rectangle
     if (this.shape) {
@@ -1820,7 +1818,7 @@ class GraphHandler implements GraphPlugin {
     }
 
     // Destroys the drop target highlight
-    if (this.highlight != null) {
+    if (this.highlight) {
       this.highlight.destroy();
       this.highlight = null;
     }
@@ -1831,7 +1829,6 @@ class GraphHandler implements GraphPlugin {
    *
    * Destroys the handler and all its resources and DOM nodes.
    */
-  // destroy(): void;
   onDestroy() {
     this.graph.removeMouseListener(this);
     this.graph.removeListener(this.panHandler);

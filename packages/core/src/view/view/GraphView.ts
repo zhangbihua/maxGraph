@@ -1239,7 +1239,8 @@ class GraphView extends EventSource {
     pts.push((<Point[]>edge.absolutePoints)[0]);
     const edgeStyle = this.getEdgeStyle(edge, points, source, target);
 
-    if (edgeStyle && source) { // target can be null
+    if (edgeStyle && source) {
+      // target can be null
       const src = this.getTerminalPort(edge, source, true);
       const trg = target ? this.getTerminalPort(edge, target, false) : null;
 
@@ -2291,15 +2292,14 @@ class GraphView extends EventSource {
    * Destroys the view and all its resources.
    */
   destroy() {
-    let root: SVGElement | null =
-      this.canvas != null ? this.canvas.ownerSVGElement : null;
+    let root = this.canvas ? (this.canvas.ownerSVGElement as SVGElement) : null;
 
-    if (root == null) {
+    if (!root) {
       root = this.canvas;
     }
 
-    if (root != null && root.parentNode != null) {
-      this.clear(<Cell>this.currentRoot, true);
+    if (root && root.parentNode) {
+      this.clear(this.currentRoot, true);
       InternalEvent.removeGestureListeners(
         document,
         null,
@@ -2311,6 +2311,17 @@ class GraphView extends EventSource {
 
       this.moveHandler = null;
       this.endHandler = null;
+
+      // @ts-expect-error Can be null when destroyed.
+      this.canvas = null;
+      // @ts-expect-error Can be null when destroyed.
+      this.backgroundPane = null;
+      // @ts-expect-error Can be null when destroyed.
+      this.drawPane = null;
+      // @ts-expect-error Can be null when destroyed.
+      this.overlayPane = null;
+      // @ts-expect-error Can be null when destroyed.
+      this.decoratorPane = null;
     }
   }
 

@@ -21,6 +21,7 @@ import InternalMouseEvent from '../event/InternalMouseEvent';
 import { getClientX, getClientY } from '../../util/EventUtils';
 import CellArray from '../cell/datatypes/CellArray';
 import { Graph } from '../Graph';
+import { GraphLayout, UndoableEdit } from 'src';
 
 /**
  * @class LayoutManager
@@ -48,6 +49,39 @@ import { Graph } from '../Graph';
  * been passed to {@link layoutCells}.
  */
 class LayoutManager extends EventSource {
+  /**
+   * Reference to the enclosing {@link graph}.
+   */
+  graph!: Graph;
+
+  /**
+   * Specifies if the layout should bubble along
+   * the cell hierarchy.
+   * @default true
+   */
+  bubbling = true;
+
+  /**
+   * Specifies if event handling is enabled.
+   * @default true
+   */
+  enabled = true;
+
+  /**
+   * Holds the function that handles the endUpdate event.
+   */
+  undoHandler: (...args: any[]) => any;
+
+  /**
+   * Holds the function that handles the move event.
+   */
+  moveHandler: (...args: any[]) => any;
+
+  /**
+   * Holds the function that handles the resize event.
+   */
+  resizeHandler: (...args: any[]) => any;
+
   constructor(graph: Graph) {
     super();
 
@@ -78,39 +112,6 @@ class LayoutManager extends EventSource {
 
     this.setGraph(graph);
   }
-
-  /**
-   * Reference to the enclosing {@link graph}.
-   */
-  graph: Graph | null = null;
-
-  /**
-   * Specifies if the layout should bubble along
-   * the cell hierarchy.
-   * @default true
-   */
-  bubbling: boolean = true;
-
-  /**
-   * Specifies if event handling is enabled.
-   * @default true
-   */
-  enabled: boolean = true;
-
-  /**
-   * Holds the function that handles the endUpdate event.
-   */
-  undoHandler: (...args: any[]) => any;
-
-  /**
-   * Holds the function that handles the move event.
-   */
-  moveHandler: (...args: any[]) => any;
-
-  /**
-   * Holds the function that handles the resize event.
-   */
-  resizeHandler: (...args: any[]) => any;
 
   /**
    * Returns true if events are handled. This implementation
@@ -149,25 +150,24 @@ class LayoutManager extends EventSource {
   /**
    * Returns the graph that this layout operates on.
    */
-  getGraph(): Graph | null {
+  getGraph() {
     return this.graph;
   }
 
   /**
    * Sets the graph that the layouts operate on.
    */
-  // setGraph(graph: mxGraph): void;
-  setGraph(graph: Graph | null): void {
-    if (this.graph != null) {
+  setGraph(graph: Graph | null) {
+    if (this.graph) {
       const model = this.graph.getModel();
       model.removeListener(this.undoHandler);
       this.graph.removeListener(this.moveHandler);
       this.graph.removeListener(this.resizeHandler);
     }
 
-    this.graph = graph;
+    this.graph = graph!;
 
-    if (this.graph != null) {
+    if (this.graph) {
       const model = this.graph.getModel();
       model.addListener(InternalEvent.BEFORE_UNDO, this.undoHandler);
       this.graph.addListener(InternalEvent.MOVE_CELLS, this.moveHandler);
@@ -184,7 +184,7 @@ class LayoutManager extends EventSource {
    * <getLayout> will return a layout for the given cell for
    * <mxEvent.BEGIN_UPDATE> or <mxEvent.END_UPDATE>.
    */
-  hasLayout(cell: Cell | null): boolean {
+  hasLayout(cell: Cell | null) {
     return !!this.getLayout(cell, InternalEvent.LAYOUT_CELLS);
   }
 
@@ -195,8 +195,7 @@ class LayoutManager extends EventSource {
    * {@link InternalEvent.BEGIN_UPDATE} and {@link InternalEvent.END_UPDATE} for the capture
    * and bubble phase of the layout after any changes of the model.
    */
-  // getLayout(cell: mxCell, eventName?: string): mxGraphLayout | null;
-  getLayout(cell: Cell | null, eventName: string): any {
+  getLayout(cell: Cell | null, eventName: string): GraphLayout | null {
     return null;
   }
 
@@ -208,7 +207,7 @@ class LayoutManager extends EventSource {
    *
    * TODO: what is undoableEdit type?
    */
-  beforeUndo(undoableEdit: any): void {
+  beforeUndo(undoableEdit: UndoableEdit) {
     this.executeLayoutForCells(this.getCellsForChanges(undoableEdit.changes));
   }
 
@@ -218,19 +217,18 @@ class LayoutManager extends EventSource {
    * @param cell Array of {@link Cell} that have been moved.
    * @param evt Mouse event that represents the mousedown.
    */
-  cellsMoved(cells: CellArray, evt: InternalMouseEvent): void {
-    if (cells != null && evt != null) {
+  cellsMoved(cells: CellArray, evt: MouseEvent) {
+    if (cells.length > 0 && evt) {
       const point = convertPoint(
-        (<Graph>this.getGraph()).container,
+        this.getGraph().container,
         getClientX(evt),
         getClientY(evt)
       );
-      const model = (<Graph>this.getGraph()).getModel();
 
       for (let i = 0; i < cells.length; i += 1) {
         const layout = this.getLayout(cells[i].getParent(), InternalEvent.MOVE_CELLS);
 
-        if (layout != null) {
+        if (layout) {
           layout.moveCell(cells[i], point.x, point.y);
         }
       }
@@ -247,13 +245,11 @@ class LayoutManager extends EventSource {
     cells: CellArray | null = null,
     bounds: Rectangle[] | null = null,
     prev: CellArray | null = null
-  ): void {
-    if (cells != null && bounds != null) {
-      const model = (<Graph>this.getGraph()).getModel();
-
+  ) {
+    if (cells && bounds) {
       for (let i = 0; i < cells.length; i += 1) {
         const layout = this.getLayout(cells[i].getParent(), InternalEvent.RESIZE_CELLS);
-        if (layout != null) {
+        if (layout) {
           layout.resizeCell(cells[i], bounds[i], prev?.[i]);
         }
       }
@@ -301,24 +297,26 @@ class LayoutManager extends EventSource {
   /**
    * Adds all ancestors of the given cell that have a layout.
    */
-  addCellsWithLayout(cell: Cell, result: CellArray = new CellArray()): CellArray {
+  addCellsWithLayout(cell: Cell | null, result: CellArray = new CellArray()) {
     return this.addDescendantsWithLayout(cell, this.addAncestorsWithLayout(cell, result));
   }
 
   /**
    * Adds all ancestors of the given cell that have a layout.
    */
-  addAncestorsWithLayout(cell: Cell, result: CellArray = new CellArray()): CellArray {
-    if (cell != null) {
+  addAncestorsWithLayout(
+    cell: Cell | null,
+    result: CellArray = new CellArray()
+  ): CellArray {
+    if (cell) {
       const layout = this.hasLayout(cell);
 
-      if (layout != null) {
+      if (layout) {
         result.push(cell);
       }
 
       if (this.isBubbling()) {
-        const model = (<Graph>this.getGraph()).getModel();
-        this.addAncestorsWithLayout(<Cell>cell.getParent(), result);
+        this.addAncestorsWithLayout(cell.getParent(), result);
       }
     }
     return result;
@@ -327,10 +325,8 @@ class LayoutManager extends EventSource {
   /**
    * Adds all descendants of the given cell that have a layout.
    */
-  addDescendantsWithLayout(cell: Cell, result: CellArray = new CellArray()): CellArray {
-    if (cell != null && this.hasLayout(cell)) {
-      const model = (<Graph>this.getGraph()).getModel();
-
+  addDescendantsWithLayout(cell: Cell | null, result: CellArray = new CellArray()) {
+    if (cell && this.hasLayout(cell)) {
       for (let i = 0; i < cell.getChildCount(); i += 1) {
         const child = <Cell>cell.getChildAt(i);
 
@@ -340,25 +336,26 @@ class LayoutManager extends EventSource {
         }
       }
     }
+
     return result;
   }
 
   /**
    * Executes the given layout on the given parent.
    */
-  executeLayoutForCells(cells: CellArray): void {
+  executeLayoutForCells(cells: CellArray) {
     const sorted = sortCells(cells, false);
     this.layoutCells(sorted, true);
-    this.layoutCells(sorted.reverse(), false);
+    this.layoutCells(new CellArray(...sorted.reverse()), false);
   }
 
   /**
    * Executes all layouts which have been scheduled during the changes.
    */
-  layoutCells(cells: CellArray, bubble: boolean = false): void {
+  layoutCells(cells: CellArray, bubble: boolean = false) {
     if (cells.length > 0) {
       // Invokes the layouts while removing duplicates
-      const model = (<Graph>this.getGraph()).getModel();
+      const model = this.getGraph().getModel();
 
       model.beginUpdate();
       try {
@@ -381,12 +378,12 @@ class LayoutManager extends EventSource {
   /**
    * Executes the given layout on the given parent.
    */
-  executeLayout(cell: Cell, bubble: boolean = false): void {
+  executeLayout(cell: Cell, bubble: boolean = false) {
     const layout = this.getLayout(
       cell,
       bubble ? InternalEvent.BEGIN_UPDATE : InternalEvent.END_UPDATE
     );
-    if (layout != null) {
+    if (layout) {
       layout.execute(cell);
     }
   }
@@ -394,7 +391,7 @@ class LayoutManager extends EventSource {
   /**
    * Removes all handlers from the {@link graph} and deletes the reference to it.
    */
-  destroy(): void {
+  destroy() {
     this.setGraph(null);
   }
 }

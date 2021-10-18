@@ -74,7 +74,7 @@ class GraphLayout {
    * cell - <mxCell> which has been moved.
    * bounds - <mxRectangle> that represents the new cell bounds.
    */
-  resizeCell(cell: Cell, bounds: Rectangle) {}
+  resizeCell(cell: Cell, bounds: Rectangle, prev?: Cell) {}
 
   /**
    * Executes the layout algorithm for the children of the given parent.

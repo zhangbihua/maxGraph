@@ -36,20 +36,6 @@ import type { CellHandle, CellStateStyles } from '../../../types';
 class VertexHandle implements CellHandle {
   dependencies = ['snap', 'cells'];
 
-  constructor(
-    state: CellState,
-    cursor: string = 'default',
-    image: ImageBox | null = null,
-    shape: Shape | null = null
-  ) {
-    this.graph = state.view.graph;
-    this.state = state;
-    this.cursor = cursor;
-    this.image = image;
-    this.shape = shape;
-    this.init();
-  }
-
   graph: Graph;
   state: CellState;
   shape: Shape | ImageShape | null;
@@ -70,6 +56,20 @@ class VertexHandle implements CellHandle {
   ignoreGrid = false;
 
   active = true;
+
+  constructor(
+    state: CellState,
+    cursor: string = 'default',
+    image: ImageBox | null = null,
+    shape: Shape | null = null
+  ) {
+    this.graph = state.view.graph;
+    this.state = state;
+    this.cursor = cursor;
+    this.image = image;
+    this.shape = shape;
+    this.init();
+  }
 
   /**
    * Hook for subclassers to return the current position of the handle.
@@ -306,7 +306,7 @@ class VertexHandle implements CellHandle {
   /**
    * Destroys this handle.
    */
-  destroy(): void {
+  destroy() {
     if (this.shape) {
       this.shape.destroy();
       this.shape = null;
