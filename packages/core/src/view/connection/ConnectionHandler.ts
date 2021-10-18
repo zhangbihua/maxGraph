@@ -927,12 +927,13 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
    * <icons> is null or <icons> and <icon> are not null.
    */
   isStartEvent(me: InternalMouseEvent) {
+    console.log('isStartEvent', this.constraintHandler.currentFocus, this.constraintHandler.currentConstraint, this.previous, this.error, this.icons, this.icon)
     return (
       (this.constraintHandler.currentFocus !== null &&
         this.constraintHandler.currentConstraint !== null) ||
       (this.previous !== null &&
         this.error === null &&
-        (this.icons === null || this.icon !== null))
+        (this.icons.length === 0 || this.icon !== null))
     );
   }
 
@@ -943,7 +944,8 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
    */
   mouseDown(sender: EventSource, me: InternalMouseEvent) {
     this.mouseDownCounter += 1;
-
+console.log('mouseDown in ConnectionHandler')
+console.log(this.isEnabled(), this.graph.isEnabled(), me.isConsumed(), this.isConnecting(), this.isStartEvent(me))
     if (
       this.isEnabled() &&
       this.graph.isEnabled() &&
@@ -963,7 +965,7 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
         // Stores the location of the initial mousedown
         this.first = new Point(me.getGraphX(), me.getGraphY());
       }
-
+console.log('if')
       this.edgeState = this.createEdgeState(me);
       this.mouseDownCounter = 1;
 
@@ -1440,7 +1442,7 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
         ) {
           this.icons = this.createIcons(this.currentState);
 
-          if (this.icons == null) {
+          if (this.icons.length === 0) {
             this.currentState.setCursor(CURSOR_CONNECT);
             me.consume();
           }
@@ -1450,7 +1452,7 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
       } else if (
         this.previous === this.currentState &&
         this.currentState != null &&
-        this.icons == null &&
+        this.icons.length === 0 &&
         !this.graph.isMouseDown
       ) {
         // Makes sure that no cursors are changed
@@ -2055,7 +2057,7 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
         }
       } catch (e) {
         mxLog.show();
-        mxLog.debug(e.message);
+        // mxLog.debug(e.message);
       } finally {
         model.endUpdate();
       }
