@@ -927,7 +927,6 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
    * <icons> is null or <icons> and <icon> are not null.
    */
   isStartEvent(me: InternalMouseEvent) {
-    console.log('isStartEvent', this.constraintHandler.currentFocus, this.constraintHandler.currentConstraint, this.previous, this.error, this.icons, this.icon)
     return (
       (this.constraintHandler.currentFocus !== null &&
         this.constraintHandler.currentConstraint !== null) ||
@@ -944,8 +943,7 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
    */
   mouseDown(sender: EventSource, me: InternalMouseEvent) {
     this.mouseDownCounter += 1;
-console.log('mouseDown in ConnectionHandler')
-console.log(this.isEnabled(), this.graph.isEnabled(), me.isConsumed(), this.isConnecting(), this.isStartEvent(me))
+
     if (
       this.isEnabled() &&
       this.graph.isEnabled() &&
@@ -965,7 +963,7 @@ console.log(this.isEnabled(), this.graph.isEnabled(), me.isConsumed(), this.isCo
         // Stores the location of the initial mousedown
         this.first = new Point(me.getGraphX(), me.getGraphY());
       }
-console.log('if')
+      
       this.edgeState = this.createEdgeState(me);
       this.mouseDownCounter = 1;
 
