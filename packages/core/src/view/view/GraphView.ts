@@ -1239,9 +1239,9 @@ class GraphView extends EventSource {
     pts.push((<Point[]>edge.absolutePoints)[0]);
     const edgeStyle = this.getEdgeStyle(edge, points, source, target);
 
-    if (edgeStyle && source && target) {
+    if (edgeStyle && source) { // target can be null
       const src = this.getTerminalPort(edge, source, true);
-      const trg = this.getTerminalPort(edge, target, false);
+      const trg = target ? this.getTerminalPort(edge, target, false) : null;
 
       // Uses the stencil bounds for routing and restores after routing
       const srcBounds = this.updateBoundsFromStencil(src);
@@ -1250,11 +1250,11 @@ class GraphView extends EventSource {
       edgeStyle(edge, src, trg, points, pts);
 
       // Restores previous bounds
-      if (srcBounds) {
+      if (src && srcBounds) {
         src.setRect(srcBounds.x, srcBounds.y, srcBounds.width, srcBounds.height);
       }
 
-      if (trgBounds) {
+      if (trg && trgBounds) {
         trg.setRect(trgBounds.x, trgBounds.y, trgBounds.width, trgBounds.height);
       }
     } else if (points) {
