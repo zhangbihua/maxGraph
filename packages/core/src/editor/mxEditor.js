@@ -1455,9 +1455,8 @@ class mxEditor extends EventSource {
    * container and is initialized from {@link setGraphContainer}.
    * @returns graph instance
    */
-  // createGraph(): mxGraph;
   createGraph() {
-    const graph = new Graph(null, null, this.graphRenderHint);
+    const graph = new Graph();
 
     // Enables rubberband, tooltips, panning
     graph.setTooltips(true);
@@ -1484,13 +1483,17 @@ class mxEditor extends EventSource {
 
     // Redirects the function for creating the
     // popupmenu items
-    graph.popupMenuHandler.factoryMethod = (menu, cell, evt) => {
+    const popupMenuHandler = graph.getPlugin('PopupMenuHandler');
+
+    popupMenuHandler.factoryMethod = (menu, cell, evt) => {
       return this.createPopupMenu(menu, cell, evt);
     };
 
     // Redirects the function for creating
     // new connections in the diagram
-    graph.connectionHandler.factoryMethod = (source, target) => {
+    const connectionHandler = graph.getPlugin('ConnectionHandler');
+
+    connectionHandler.factoryMethod = (source, target) => {
       return this.createEdge(source, target);
     };
 

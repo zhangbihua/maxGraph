@@ -51,7 +51,9 @@ const Template = ({ label, ...args }) => {
   graph.border = 80;
   graph.getView().translate = new Point(graph.border / 2, graph.border / 2);
   graph.setResizeContainer(true);
-  graph.graphHandler.setRemoveCellsFromParent(false);
+
+  const graphHandler = graph.getPlugin('GraphHandler');
+  graphHandler.setRemoveCellsFromParent(false);
 
   // Changes the default vertex style in-place
   let style = graph.getStylesheet().getDefaultVertexStyle();
@@ -63,7 +65,7 @@ const Template = ({ label, ...args }) => {
   style.horizontal = false;
   style.fontColor = 'black';
   style.strokeColor = 'black';
-  delete style.fillColor;
+  // delete style.fillColor;
 
   style = CloneUtils.clone(style);
   style.shape = Constants.SHAPE_RECTANGLE;

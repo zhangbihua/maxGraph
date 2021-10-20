@@ -37,8 +37,8 @@ const Template = ({ label, ...args }) => {
   style.imageVerticalAlign = 'top'; // indicator v-alignment
   style.imageAlign = 'center';
   style.indicatorColor = 'green';
-  delete style.strokeColor; // transparent
-  delete style.fillColor; // transparent
+  // delete style.strokeColor; // transparent
+  // delete style.fillColor; // transparent
 
   // Creates a style with an indicator
   style = graph.getStylesheet().getDefaultEdgeStyle();

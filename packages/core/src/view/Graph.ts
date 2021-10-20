@@ -383,7 +383,7 @@ class Graph extends EventSource {
   ) {
     super();
 
-    this.container = container;
+    this.container = container ?? document.createElement('div');
     this.model = model ?? new Model();
     this.plugins = plugins;
     this.cellRenderer = this.createCellRenderer();
