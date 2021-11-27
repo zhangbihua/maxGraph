@@ -6,7 +6,6 @@
  */
 
 import { getFunctionName } from './StringUtils';
-import { isNullish } from './Utils';
 
 const FIELD_NAME = 'mxObjectId';
 
@@ -46,7 +45,7 @@ class ObjectIdentity {
    */
   static get(obj: IdentityObject | IdentityFunction | null) {
     if (obj) {
-      if (isNullish(obj[FIELD_NAME])) {
+      if (obj[FIELD_NAME] === null || obj[FIELD_NAME] === undefined) {
         if (typeof obj === 'object') {
           const ctor = getFunctionName(obj.constructor);
           obj[FIELD_NAME] = `${ctor}#${ObjectIdentity.counter++}`;

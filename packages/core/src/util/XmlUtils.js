@@ -22,48 +22,6 @@ export const createXmlDocument = () => {
 };
 
 /**
- * Function: createMsXmlDocument
- *
- * Returns a new, empty Microsoft.XMLDOM document using ActiveXObject.
- */
-export const createMsXmlDocument = () => {
-  const doc = new ActiveXObject('Microsoft.XMLDOM');
-  doc.async = false;
-
-  // Workaround for parsing errors with SVG DTD
-  doc.validateOnParse = false;
-  doc.resolveExternals = false;
-
-  return doc;
-};
-
-/**
- * Function: parseXml
- *
- * Parses the specified XML string into a new XML document and returns the
- * new document.
- *
- * Example:
- *
- * (code)
- * let doc = mxUtils.parseXml(
- *   '<Transactions><root><MyDiagram id="0"><mxCell/></MyDiagram>'+
- *   '<MyLayer id="1"><mxCell parent="0" /></MyLayer><MyObject id="2">'+
- *   '<mxCell style="strokeColor=blue;fillColor=red" parent="1" vertex="1">'+
- *   '<mxGeometry x="10" y="10" width="80" height="30" as="geometry"/>'+
- *   '</mxCell></MyObject></root></Transactions>');
- * (end)
- *
- * Parameters:
- *
- * xml - String that contains the XML data.
- */
-export const parseXml = (xml) => {
-  const parser = new DOMParser();
-  return parser.parseFromString(xml, 'text/xml');
-};
-
-/**
  * Function: getViewXml
  */
 export const getViewXml = (graph, scale, cells, x0, y0) => {

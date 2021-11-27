@@ -3,7 +3,6 @@
  * Copyright (c) 2006-2020, draw.io AG
  */
 import { write } from '../DomUtils';
-import { parseXml } from '../XmlUtils';
 
 /**
  * XML HTTP request wrapper. See also: {@link mxUtils.get}, {@link mxUtils.post} and
@@ -216,7 +215,7 @@ class mxXmlRequest {
     // document. This happens in IE9 standards mode and with XML user
     // objects only, as they are used directly as values in cells.
     if (xml == null || xml.documentElement == null) {
-      xml = parseXml(this.request.responseText);
+      xml = new DOMParser().parseFromString(this.request.responseText, 'text/xml');
     }
 
     return xml;

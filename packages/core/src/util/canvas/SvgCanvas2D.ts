@@ -33,7 +33,7 @@ import {
 } from '../Constants';
 import Rectangle from '../../view/geometry/Rectangle';
 import AbstractCanvas2D from './AbstractCanvas2D';
-import { getXml, parseXml } from '../XmlUtils';
+import { getXml } from '../XmlUtils';
 import { importNodeImplementation, isNode, write } from '../DomUtils';
 import { htmlEntities, trim } from '../StringUtils';
 import {
@@ -1184,7 +1184,7 @@ class SvgCanvas2D extends AbstractCanvas2D {
     val = `<div xmlns="http://www.w3.org/1999/xhtml">${val}</div>`;
 
     // NOTE: FF 3.6 crashes if content CSS contains "height:100%"
-    return parseXml(val).documentElement;
+    return new DOMParser().parseFromString(val, 'text/xml').documentElement;
   }
 
   /**

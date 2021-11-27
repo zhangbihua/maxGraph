@@ -4,6 +4,7 @@ javascript/dist
 javascript/examples/**/dist
 .idea/
 dist
+package-lock.json
 
 # dependencies
 /node_modules

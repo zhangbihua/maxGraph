@@ -12,19 +12,9 @@ import Cell from '../../view/cell/datatypes/Cell';
 import mxLog from '../gui/mxLog';
 import { getFunctionName } from '../StringUtils';
 import { importNode, isNode } from '../DomUtils';
-import { createMsXmlDocument } from '../XmlUtils';
 
 const createXmlDocument = () => {
-  // Put here from '../util/mxXmlUtils' to eliminate circular dependency
-  let doc = null;
-
-  if (document.implementation && document.implementation.createDocument) {
-    doc = document.implementation.createDocument('', '', null);
-  } else if ('ActiveXObject' in window) {
-    doc = createMsXmlDocument();
-  }
-
-  return doc;
+  return document.implementation.createDocument('', '', null);
 };
 
 /**
