@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/maxgraph-react.js",
   "scripts": {
-    "dev": "start-storybook -p 8902"
+    "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider start-storybook -p 8902"
   },
   "author": "",
   "license": "ISC",
