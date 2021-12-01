@@ -366,7 +366,7 @@ const mxClient = {
       document.createElementNS(
         'http://www.w3.org/2000/svg',
         'foreignObject'
-      ) !== '[object SVGForeignObjectElement]' ||
+      ).toString() !== '[object SVGForeignObjectElement]' ||
       navigator.userAgent.indexOf('Opera/') >= 0),
 
   /**
