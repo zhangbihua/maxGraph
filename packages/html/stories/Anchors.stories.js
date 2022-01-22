@@ -44,16 +44,17 @@ const Template = ({ label, ...args }) => {
 
   class MyCustomGraph extends Graph {
     getAllConnectionConstraints(terminal, source) {
-      // Overridden to define per-shape connection points
-      if (terminal != null && terminal.shape != null) {
-        if (terminal.shape.stencil != null) {
-          if (terminal.shape.stencil.constraints != null) {
+      // Overridden to define per-geometry connection points
+      if (terminal && terminal.cell) {
+        if (terminal.shape.stencil) {
+          if (terminal.shape.stencil.constraints) {
             return terminal.shape.stencil.constraints;
           }
-        } else if (terminal.shape.constraints != null) {
-          return terminal.shape.constraints;
+        } else if (terminal.cell.geometry.constraints) {
+          return terminal.cell.geometry.constraints;
         }
       }
+
       return null;
     }
 
@@ -116,8 +117,8 @@ const Template = ({ label, ...args }) => {
     const e1 = graph.insertEdge({
       parent,
       value: '',
-      position: v1,
-      size: v2,
+      source: v1,
+      target: v2,
     });
   });
 

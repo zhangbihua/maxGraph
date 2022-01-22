@@ -577,6 +577,7 @@ export const CellsMixin: PartialType = {
     if (!style) {
       style = {} as CellStateStyles;
     }
+
     return style;
   },
 
@@ -2009,7 +2010,9 @@ export const CellsMixin: PartialType = {
           this.resetEdges(cells);
         }
 
-        this.fireEvent(new EventObject(InternalEvent.CELLS_MOVED, { cells, dx, dy, disconnect }));
+        this.fireEvent(
+          new EventObject(InternalEvent.CELLS_MOVED, { cells, dx, dy, disconnect })
+        );
       });
     }
   },
@@ -2755,9 +2758,8 @@ export const CellsMixin: PartialType = {
    */
   isCellResizable(cell) {
     const style = this.getCurrentCellStyle(cell);
-    const r = this.isCellsResizable() && 
-              !this.isCellLocked(cell) && 
-              (style.resizable ?? true);
+    const r =
+      this.isCellsResizable() && !this.isCellLocked(cell) && (style.resizable ?? true);
     return r;
   },
 
