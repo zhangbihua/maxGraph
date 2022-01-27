@@ -610,7 +610,6 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
    * Starts a new connection for the given state and coordinates.
    */
   start(state: CellState, x: number, y: number, edgeState: CellState) {
-    console.log("ConnectionHandler start");
     this.previous = state;
     this.first = new Point(x, y);
     this.edgeState = edgeState ?? this.createEdgeState();
@@ -1191,9 +1190,8 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
         // Uses edge state to compute the terminal points
         if (this.edgeState) {
           this.updateEdgeState(current, constraint);
-          current = this.edgeState.absolutePoints[
-            this.edgeState.absolutePoints.length - 1
-          ];
+          current =
+            this.edgeState.absolutePoints[this.edgeState.absolutePoints.length - 1];
           pt2 = this.edgeState.absolutePoints[0];
         } else {
           if (this.currentState) {
@@ -1225,9 +1223,8 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
           let tmp = pt2;
 
           if (this.edgeState && this.edgeState.absolutePoints.length >= 2) {
-            const tmp2 = this.edgeState.absolutePoints[
-              this.edgeState.absolutePoints.length - 2
-            ];
+            const tmp2 =
+              this.edgeState.absolutePoints[this.edgeState.absolutePoints.length - 2];
 
             if (tmp2) {
               tmp = tmp2;
