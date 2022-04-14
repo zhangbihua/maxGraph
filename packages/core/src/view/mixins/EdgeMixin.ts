@@ -9,6 +9,7 @@ import InternalEvent from '../event/InternalEvent';
 import Dictionary from '../../util/Dictionary';
 import { Graph } from '../Graph';
 import Point from '../geometry/Point';
+import { CellStyle } from 'src/types';
 
 declare module '../Graph' {
   interface Graph {
@@ -18,7 +19,7 @@ declare module '../Graph' {
     connectableEdges: boolean;
     allowDanglingEdges: boolean;
     cloneInvalidEdges: boolean;
-    alternateEdgeStyle: string | null;
+    alternateEdgeStyle: CellStyle;
     edgeLabelsMovable: boolean;
 
     isResetEdgesOnMove: () => boolean;
@@ -189,7 +190,7 @@ const EdgeMixin: PartialType = {
    * on an edge is being double clicked.
    * @default null
    */
-  alternateEdgeStyle: null,
+  alternateEdgeStyle: {},
 
   /**
    * Specifies the return value for edges in {@link isLabelMovable}.
@@ -300,10 +301,10 @@ const EdgeMixin: PartialType = {
       this.batchUpdate(() => {
         const style = edge.getStyle();
 
-        if (!style || style.length === 0) {
+        if (Object.keys(style).length) {
           this.getDataModel().setStyle(edge, this.alternateEdgeStyle);
         } else {
-          this.getDataModel().setStyle(edge, null);
+          this.getDataModel().setStyle(edge, {});
         }
 
         // Removes all existing control points

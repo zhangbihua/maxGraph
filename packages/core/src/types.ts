@@ -24,7 +24,9 @@ export type Properties = {
   [k: string]: any;
 };
 
-export type CellStateStyles = {
+export type CellStyle = CellStateStyle & { baseStyleName?: string };
+
+export type CellStateStyle = {
   absoluteArcSize?: number;
   align?: AlignValue;
   anchorPointDirection?: boolean;
@@ -38,8 +40,8 @@ export type CellStateStyles = {
   curved?: boolean;
   dashed?: boolean;
   dashPattern?: string;
-  defaultEdge?: CellStateStyles;
-  defaultVertex?: CellStateStyles;
+  defaultEdge?: CellStateStyle;
+  defaultVertex?: CellStateStyle;
   deletable?: boolean;
   direction?: DirectionValue;
   edgeStyle?: string;
@@ -138,6 +140,12 @@ export type CellStateStyles = {
   whiteSpace?: WhiteSpaceValue;
 };
 
+export type NumericCellStateStyleKeys = NonNullable<
+  {
+    [k in keyof CellStateStyle]: CellStateStyle[k] extends number | undefined ? k : never;
+  }[keyof CellStateStyle]
+>;
+
 export type ColorValue = string;
 export type DirectionValue = 'north' | 'south' | 'east' | 'west';
 export type TextDirectionValue = '' | 'ltr' | 'rtl' | 'auto';
@@ -220,7 +228,7 @@ export type GradientMap = {
 };
 
 export interface GraphPluginConstructor {
-  new(graph: Graph): GraphPlugin;
+  new (graph: Graph): GraphPlugin;
   pluginId: string;
 }
 
