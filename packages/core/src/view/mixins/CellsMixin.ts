@@ -557,26 +557,18 @@ export const CellsMixin: PartialType = {
    * @param cell {@link mxCell} whose style should be returned as an array.
    */
   getCellStyle(cell) {
-    const stylename = cell.getStyle();
-    let style;
+    const cellStyle = cell.getStyle();
     const stylesheet = this.getStylesheet();
 
     // Gets the default style for the cell
-    if (cell.isEdge()) {
-      style = stylesheet.getDefaultEdgeStyle();
-    } else {
-      style = stylesheet.getDefaultVertexStyle();
-    }
+    const defaultStyle = cell.isEdge()
+      ? stylesheet.getDefaultEdgeStyle()
+      : stylesheet.getDefaultVertexStyle();
 
     // Resolves the stylename using the above as the default
-    if (style && stylename) {
-      style = this.postProcessCellStyle(stylesheet.getCellStyle(stylename, style));
-    }
-
-    // Returns a non-null value if no style can be found
-    if (!style) {
-      style = {} as CellStateStyle;
-    }
+    const style = this.postProcessCellStyle(
+      stylesheet.getCellStyle(cellStyle, defaultStyle ?? {})
+    );
 
     return style;
   },
@@ -615,6 +607,7 @@ export const CellsMixin: PartialType = {
 
       style.image = image;
     }
+
     return style;
   },
 

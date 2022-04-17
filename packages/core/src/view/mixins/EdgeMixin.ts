@@ -51,7 +51,7 @@ declare module '../Graph' {
       value: any,
       source: Cell | null,
       target: Cell | null,
-      style: any
+      style: CellStyle
     ) => Cell;
     addEdge: (
       edge: Cell,
@@ -404,7 +404,7 @@ const EdgeMixin: PartialType = {
     let value: any; // note me - can be a string or a class instance!!!
     let source: Cell;
     let target: Cell;
-    let style: string = ''; // TODO: Also allow for an object or class instance??
+    let style: CellStyle;
 
     if (args.length === 1) {
       // If only a single parameter, treat as an object
@@ -421,6 +421,9 @@ const EdgeMixin: PartialType = {
       [parent, id, value, source, target, style] = args;
     }
 
+    if (typeof style === 'string')
+      throw new Error(`String-typed style is no longer supported: ${style}`);
+
     const edge = this.createEdge(parent, id, value, source, target, style);
     return this.addEdge(edge, parent, source, target);
   },
@@ -431,7 +434,14 @@ const EdgeMixin: PartialType = {
    * are set when the edge is added to the model.
    *
    */
-  createEdge(parent = null, id, value, source = null, target = null, style) {
+  createEdge(
+    parent = null,
+    id,
+    value,
+    source = null,
+    target = null,
+    style: CellStyle = {}
+  ) {
     // Creates the edge
     const edge = new Cell(value, new Geometry(), style);
     edge.setId(id);

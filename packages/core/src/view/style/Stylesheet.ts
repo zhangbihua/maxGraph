@@ -14,9 +14,9 @@ import MaxLog from '../../gui/MaxLog';
 import StyleRegistry from './StyleRegistry';
 import ObjectCodec from '../../serialization/ObjectCodec';
 import { getTextContent } from '../../util/domUtils';
+import Codec from '../../serialization/Codec';
 
 import type { CellStateStyle, CellStyle } from '../../types';
-import Codec from '../../serialization/Codec';
 
 /**
  * @class Stylesheet
@@ -175,7 +175,7 @@ export class Stylesheet {
    * @param name Name for the style to be stored.
    * @param style Key, value pairs that define the style.
    */
-  putCellStyle(name: keyof CellStateStyle, style: CellStateStyle) {
+  putCellStyle(name: string, style: CellStateStyle) {
     this.styles.set(name, style);
   }
 
@@ -187,26 +187,23 @@ export class Stylesheet {
    * @param defaultStyle Default style to be returned if no style can be found.
    */
   getCellStyle(cellStyle: CellStyle, defaultStyle: CellStateStyle) {
-    let style = defaultStyle;
+    let style;
 
-    if (Object.keys(cellStyle).length > 0) {
-      if (style && cellStyle.baseStyleName) {
-        style = clone(style);
-      } else {
-        style = {} as CellStateStyle;
-      }
-
-      // Merges the entries from a named style
-      if (cellStyle.baseStyleName) {
-        style = { ...this.styles.get(cellStyle.baseStyleName) };
-      }
-
-      // Merges cellStyle into style
-      style = {
-        ...style,
-        ...cellStyle,
-      };
+    if (cellStyle.baseStyleName) {
+      // creates style with the given baseStyleName.
+      style = { ...this.styles.get(cellStyle.baseStyleName) };
+    } else if (cellStyle.baseStyleName === null) {
+      // baseStyleName is explicitly null, so don't use any default styles.
+      style = {};
+    } else {
+      style = { ...defaultStyle };
     }
+
+    // Merges cellStyle into style
+    style = {
+      ...style,
+      ...cellStyle,
+    };
 
     return style;
   }
