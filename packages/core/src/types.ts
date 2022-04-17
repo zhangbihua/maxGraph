@@ -139,7 +139,7 @@ export type CellStateStyle = {
   strokeWidth?: number;
   swimlaneFillColor?: ColorValue;
   swimlaneLine?: boolean;
-  targetJettySize: number | 'auto';
+  targetJettySize?: number | 'auto';
   targetPerimeterSpacing?: number;
   targetPort?: string;
   targetPortConstraint?: DIRECTION;

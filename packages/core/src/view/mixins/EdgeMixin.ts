@@ -396,7 +396,7 @@ const EdgeMixin: PartialType = {
    * @param value JavaScript object to be used as the user object.
    * @param source {@link mxCell} that defines the source of the edge.
    * @param target {@link mxCell} that defines the target of the edge.
-   * @param style Optional string that defines the cell style.
+   * @param style Optional object that defines the cell style.
    */
   insertEdge(...args) {
     let parent: Cell;

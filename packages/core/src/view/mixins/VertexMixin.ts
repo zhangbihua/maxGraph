@@ -107,7 +107,7 @@ const VertexMixin: PartialType = {
    * @param y Integer that defines the y coordinate of the vertex.
    * @param width Integer that defines the width of the vertex.
    * @param height Integer that defines the height of the vertex.
-   * @param style Optional string that defines the cell style.
+   * @param style Optional object that defines the cell style.
    * @param relative Optional boolean that specifies if the geometry is relative.
    * Default is false.
    * @param geometryClass Optional class reference to a class derived from mxGeometry.

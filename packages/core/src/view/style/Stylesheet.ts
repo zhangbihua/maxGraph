@@ -180,10 +180,10 @@ export class Stylesheet {
   }
 
   /**
-   * Returns the cell style for the specified stylename or the given
-   * defaultStyle if no style can be found for the given stylename.
+   * Returns the cell style for the specified baseStyleName or the given
+   * defaultStyle if no style can be found for the given baseStyleName.
    *
-   * @param cellStyle String of the form [(stylename|key=value);] that represents the style. // TODO
+   * @param cellStyle An object that represents the style.
    * @param defaultStyle Default style to be returned if no style can be found.
    */
   getCellStyle(cellStyle: CellStyle, defaultStyle: CellStateStyle) {
