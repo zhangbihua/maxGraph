@@ -181,14 +181,14 @@ const EdgeMixin: PartialType = {
   /**
    * Specifies if edges that are cloned should be validated and only inserted
    * if they are valid.
-   * @default true
+   * @default false
    */
   cloneInvalidEdges: false,
 
   /**
    * Specifies the alternate edge style to be used if the main control point
    * on an edge is being double clicked.
-   * @default null
+   * @default {}
    */
   alternateEdgeStyle: {},
 
