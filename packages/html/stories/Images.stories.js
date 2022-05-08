@@ -54,7 +54,7 @@ const Template = ({ label, ...args }) => {
       10,
       80,
       100,
-      { baseStyleName: 'bottom' }
+      { baseStyleNames: ['bottom'] }
     );
     var v1 = graph.insertVertex(
       parent,
@@ -64,10 +64,10 @@ const Template = ({ label, ...args }) => {
       10,
       80,
       100,
-      { baseStyleName: 'top' }
+      { baseStyleNames: ['top'] }
     );
     var v1 = graph.insertVertex(parent, null, '', 230, 10, 100, 100, {
-      baseStyleName: 'image',
+      baseStyleNames: ['image'],
     });
     var v2 = graph.insertVertex(
       parent,
@@ -77,7 +77,7 @@ const Template = ({ label, ...args }) => {
       130,
       140,
       60,
-      { baseStyleName: 'right' }
+      { baseStyleNames: ['right'] }
     );
     var v2 = graph.insertVertex(
       parent,
@@ -87,7 +87,7 @@ const Template = ({ label, ...args }) => {
       130,
       140,
       60,
-      { baseStyleName: 'left' }
+      { baseStyleNames: ['left'] }
     );
   });
 

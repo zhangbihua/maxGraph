@@ -114,7 +114,7 @@ const Template = ({ label, ...args }) => {
       1,
       0,
       0,
-      { baseStyleName: null },
+      { baseStyleNames: [] },
       true
     );
     const label12 = graph.insertVertex(
@@ -125,7 +125,7 @@ const Template = ({ label, ...args }) => {
       0,
       0,
       0,
-      { baseStyleName: null },
+      { baseStyleNames: [] },
       true
     );
 
@@ -150,7 +150,7 @@ const Template = ({ label, ...args }) => {
       1,
       0,
       0,
-      { baseStyleName: null },
+      { baseStyleNames: [] },
       true
     );
     const label22 = graph.insertVertex(
@@ -161,7 +161,7 @@ const Template = ({ label, ...args }) => {
       0,
       0,
       0,
-      { baseStyleName: null },
+      { baseStyleNames: [] },
       true
     );
   });

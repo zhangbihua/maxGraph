@@ -25,7 +25,7 @@ export type Properties = {
   [k: string]: any;
 };
 
-export type CellStyle = CellStateStyle & { baseStyleName?: string };
+export type CellStyle = CellStateStyle & { baseStyleNames?: string[] };
 
 export type CellStateStyle = {
   absoluteArcSize?: number;

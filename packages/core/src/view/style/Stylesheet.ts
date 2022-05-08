@@ -180,20 +180,25 @@ export class Stylesheet {
   }
 
   /**
-   * Returns the cell style for the specified baseStyleName or the given
-   * defaultStyle if no style can be found for the given baseStyleName.
+   * Returns the cell style for the specified baseStyleNames or the given
+   * defaultStyle if no style can be found for the given baseStyleNames.
    *
    * @param cellStyle An object that represents the style.
    * @param defaultStyle Default style to be returned if no style can be found.
    */
   getCellStyle(cellStyle: CellStyle, defaultStyle: CellStateStyle) {
-    let style;
+    let style: CellStateStyle;
 
-    if (cellStyle.baseStyleName) {
-      // creates style with the given baseStyleName.
-      style = { ...this.styles.get(cellStyle.baseStyleName) };
-    } else if (cellStyle.baseStyleName === null) {
-      // baseStyleName is explicitly null, so don't use any default styles.
+    if (cellStyle.baseStyleNames && cellStyle.baseStyleNames.length > 0) {
+      // creates style with the given baseStyleNames. (merges from left to right)
+      style = cellStyle.baseStyleNames.reduce((acc, styleName) => {
+        return (acc = {
+          ...acc,
+          ...this.styles.get(styleName),
+        });
+      }, {});
+    } else if (cellStyle.baseStyleNames && cellStyle.baseStyleNames.length === 0) {
+      // baseStyleNames is explicitly an empty array, so don't use any default styles.
       style = {};
     } else {
       style = { ...defaultStyle };
