@@ -32,7 +32,7 @@ Chrome, Edge, Firefox, Safari, Chromium based browsers (Brave, Opera, ....) for 
 maxGraph is under active development. An alpha version will be released soon with the npm package once [licensing](#license)
 and [versioning](https://github.com/maxGraph/maxGraph/issues/92) issues have been resolved.
 
-In the meantime, you can test the project by running the [Storybook examples](#development).
+In the meantime, you can test the project by running the [Storybook examples](#development) or [build the npm package locally](#build-local-npm-package).
 
 
 ## <a id="license"></a> Transition to Apache 2.0 license
@@ -52,10 +52,11 @@ const container = <HTMLElement>document.getElementById('graph-container');
 // Disables the built-in context menu
 InternalEvent.disableContextMenu(container);
 
+const graph = new Graph(container);
+graph.setPanning(true); // Use mouse right button for panning
 // Gets the default parent for inserting new cells. This
 // is normally the first child of the root (ie. layer 0).
 const parent = graph.getDefaultParent();
-graph.setPanning(true); // Use mouse right button for panning
 
 // Adds cells to the model in a single step
 graph.batchUpdate(() => {
@@ -65,7 +66,7 @@ graph.batchUpdate(() => {
 });
 ```
 
-You will see something like in the following:
+You will see something like in the following _maxGraph panning_ demo:
 
 ![maxGraph panning demo](docs/maxgraph_demo.gif "maxGraph panning demo")
 
@@ -162,6 +163,12 @@ and select `@mxgraph/html`.
 Since both commands are in watch mode, so it's recommended to open two terminals and run them separately. When a file is saved from the core package, the html storybook will be automatically updated.
 
 
-### Building the npm package for local usage
+### <a id="build-local-npm-package"></a> Building the npm package for usage in external project
 
-Will be documented soon.
+Run
+- from the project root: `npm install`
+- then, from the `packages/core` folder: `npm pack`
+
+The `packages/core` folder or the generated `packages/core/maxgraph-core-***.tgz` file are now ready for use in an external project, using [npm link](https://docs.npmjs.com/cli/v8/commands/npm-link) or `npm install`.
+
+Examples of use can be found in this [repository].(https://github.com/tbouffard/maxgraph-integration-examples).
