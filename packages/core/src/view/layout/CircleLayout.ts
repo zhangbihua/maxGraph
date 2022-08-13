@@ -6,7 +6,6 @@
  */
 import GraphLayout from './GraphLayout';
 import { Graph } from '../Graph';
-import CellArray from '../cell/CellArray';
 import Cell from '../cell/Cell';
 
 /**
@@ -130,7 +129,7 @@ class CircleLayout extends GraphLayout {
         left = this.x0;
         top = this.y0;
       }
-      this.circle(new CellArray(...vertices), r, <number>left, <number>top);
+      this.circle(vertices, r, <number>left, <number>top);
     });
   }
 
@@ -147,7 +146,7 @@ class CircleLayout extends GraphLayout {
    * of vertices and the given radius. This is called from
    * <execute>.
    */
-  circle(vertices: CellArray, r: number, left: number, top: number) {
+  circle(vertices: Cell[], r: number, left: number, top: number) {
     const vertexCount = vertices.length;
     const phi = (2 * Math.PI) / vertexCount;
 

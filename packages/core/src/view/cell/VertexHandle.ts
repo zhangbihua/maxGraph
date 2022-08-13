@@ -21,7 +21,6 @@ import Shape from '../geometry/Shape';
 import InternalMouseEvent from '../event/InternalMouseEvent';
 import ImageBox from '../image/ImageBox';
 import CellState from './CellState';
-import CellArray from './CellArray';
 
 import type { Graph } from '../Graph';
 import type { CellHandle, CellStateStyle } from '../../types';
@@ -90,7 +89,7 @@ class VertexHandle implements CellHandle {
    * Sets the cell style with the given name to the corresponding value in <state>.
    */
   copyStyle(key: keyof CellStateStyle) {
-    this.graph.setCellStyles(key, this.state.style[key], new CellArray(this.state.cell));
+    this.graph.setCellStyles(key, this.state.style[key], [this.state.cell]);
   }
 
   /**

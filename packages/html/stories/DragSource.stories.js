@@ -9,7 +9,6 @@ import {
   Guide,
   eventUtils,
   Cell,
-  CellArray,
   Geometry,
 } from '@maxgraph/core';
 
@@ -134,7 +133,7 @@ const Template = ({ label, ...args }) => {
   const funct = (graph, evt, target, x, y) => {
     const cell = new Cell('Test', new Geometry(0, 0, 120, 40));
     cell.vertex = true;
-    const cells = graph.importCells(new CellArray(cell), x, y, target);
+    const cells = graph.importCells([cell], x, y, target);
 
     if (cells != null && cells.length > 0) {
       graph.scrollCellToVisible(cells[0]);
@@ -158,7 +157,16 @@ const Template = ({ label, ...args }) => {
   // if scalePreview (last) argument is true. Dx and dy are null to force
   // the use of the defaults. Note that dx and dy are only used for the
   // drag icon but not for the preview.
-  const ds = gestureUtils.makeDraggable(img, graphF, funct, dragElt, null, null, graphs[0].autoscroll, true);
+  const ds = gestureUtils.makeDraggable(
+    img,
+    graphF,
+    funct,
+    dragElt,
+    null,
+    null,
+    graphs[0].autoscroll,
+    true
+  );
 
   // Redirects feature to global switch. Note that this feature should only be used
   // if the the x and y arguments are used in funct to insert the cell.

@@ -1,4 +1,3 @@
-import CellArray from '../cell/CellArray';
 import Cell from '../cell/Cell';
 import Dictionary from '../../util/Dictionary';
 import { Graph } from '../Graph';
@@ -8,11 +7,11 @@ declare module '../Graph' {
   interface Graph {
     isTerminalPointMovable: (cell: Cell, source: boolean) => boolean;
     getOpposites: (
-      edges: CellArray,
+      edges: Cell[],
       terminal: Cell | null,
       sources?: boolean,
       targets?: boolean
-    ) => CellArray;
+    ) => Cell[];
   }
 }
 
@@ -58,7 +57,7 @@ const TerminalMixin: PartialType = {
    * included in the result. Default is `true`.
    */
   getOpposites(edges, terminal = null, sources = true, targets = true) {
-    const terminals = new CellArray();
+    const terminals = [];
 
     // Fast lookup to avoid duplicates in terminals array
     const dict = new Dictionary<Cell, boolean>();

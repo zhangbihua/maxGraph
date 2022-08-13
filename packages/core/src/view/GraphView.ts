@@ -31,7 +31,6 @@ import ConnectionConstraint from './other/ConnectionConstraint';
 import PopupMenuHandler from './handler/PopupMenuHandler';
 import { getClientX, getClientY, getSource, isConsumed } from '../util/EventUtils';
 import { clone } from '../util/cloneUtils';
-import CellArray from './cell/CellArray';
 import type { Graph } from './Graph';
 import StyleRegistry from './style/StyleRegistry';
 import TooltipHandler from './handler/TooltipHandler';
@@ -335,7 +334,7 @@ export class GraphView extends EventSource {
    *
    * @param cells Array of {@link Cell} whose bounds should be returned.
    */
-  getBounds(cells: CellArray) {
+  getBounds(cells: Cell[]) {
     let result: Rectangle | null = null;
 
     if (cells.length > 0) {
@@ -1962,7 +1961,7 @@ export class GraphView extends EventSource {
    * have less elements than the given array. If no argument is given, then
    * this returns {@link states}.
    */
-  getCellStates(cells: CellArray | null = null) {
+  getCellStates(cells: Cell[] | null = null) {
     if (!cells) {
       return this.states.getValues();
     }

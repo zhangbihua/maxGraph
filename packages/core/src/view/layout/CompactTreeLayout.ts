@@ -15,7 +15,6 @@ import WeightedCellSorter from './util/WeightedCellSorter';
 import Cell from '../cell/Cell';
 import { Graph } from '../Graph';
 import { findTreeRoots } from '../../util/treeTraversal';
-import CellArray from '../cell/CellArray';
 
 export interface _mxCompactTreeLayoutNode {
   cell?: Cell;
@@ -26,11 +25,11 @@ export interface _mxCompactTreeLayoutNode {
   offsetX?: number;
   offsetY?: number;
   contour?: {
-    upperTail?: _mxCompactTreeLayoutLine,
-    upperHead?: _mxCompactTreeLayoutLine,
-    lowerTail?: _mxCompactTreeLayoutLine,
-    lowerHead?: _mxCompactTreeLayoutLine,
-    [key: string]: any,
+    upperTail?: _mxCompactTreeLayoutLine;
+    upperHead?: _mxCompactTreeLayoutLine;
+    lowerTail?: _mxCompactTreeLayoutLine;
+    lowerHead?: _mxCompactTreeLayoutLine;
+    [key: string]: any;
   };
   next?: _mxCompactTreeLayoutNode;
   child?: _mxCompactTreeLayoutNode;
@@ -201,7 +200,7 @@ export class CompactTreeLayout extends GraphLayout {
    * An array of the maximum height of cells (relative to the layout direction)
    * per rank
    */
-  maxRankHeight: CellArray | null = null;
+  maxRankHeight: Cell[] = [];
 
   /**
    * The cell to use as the root of the tree
@@ -221,9 +220,7 @@ export class CompactTreeLayout extends GraphLayout {
    * @param vertex {@link mxCell} whose ignored state should be returned.
    */
   isVertexIgnored(vertex: Cell): boolean {
-    return (
-      super.isVertexIgnored(vertex) || vertex.getConnections().length === 0
-    );
+    return super.isVertexIgnored(vertex) || vertex.getConnections().length === 0;
   }
 
   /**
@@ -309,7 +306,7 @@ export class CompactTreeLayout extends GraphLayout {
         this.node = this.dfs(this.root, parent);
 
         if (this.alignRanks) {
-          this.maxRankHeight = new CellArray();
+          this.maxRankHeight = [];
           this.findRankHeights(this.node, 0);
           this.setCellHeights(this.node, 0);
         }
@@ -399,7 +396,7 @@ export class CompactTreeLayout extends GraphLayout {
   /**
    * Called if {@link sortEdges} is true to sort the array of outgoing edges in place.
    */
-  sortOutgoingEdges(source: Cell, edges: CellArray): void {
+  sortOutgoingEdges(source: Cell, edges: Cell[]): void {
     const lookup = new Dictionary();
 
     edges.sort((e1, e2) => {
@@ -428,7 +425,7 @@ export class CompactTreeLayout extends GraphLayout {
    * direction) of cells in each rank
    */
   findRankHeights(node: any, rank: number): void {
-    const maxRankHeight = <CellArray>this.maxRankHeight;
+    const maxRankHeight = this.maxRankHeight;
     if (maxRankHeight[rank] == null || maxRankHeight[rank] < node.height) {
       maxRankHeight[rank] = node.height;
     }
@@ -445,7 +442,7 @@ export class CompactTreeLayout extends GraphLayout {
    * direction) when the tops of each rank are to be aligned
    */
   setCellHeights(node: any, rank: number): void {
-    const maxRankHeight = <CellArray>this.maxRankHeight;
+    const maxRankHeight = this.maxRankHeight;
     if (maxRankHeight[rank] != null && maxRankHeight[rank] > node.height) {
       node.height = maxRankHeight[rank];
     }
@@ -546,7 +543,12 @@ export class CompactTreeLayout extends GraphLayout {
    * Starts the actual compact tree layout algorithm
    * at the given node.
    */
-  horizontalLayout(node: any, x0: number, y0: number, bounds: Rectangle | null=null): Rectangle | null {
+  horizontalLayout(
+    node: any,
+    x0: number,
+    y0: number,
+    bounds: Rectangle | null = null
+  ): Rectangle | null {
     node.x += x0 + node.offsetX;
     node.y += y0 + node.offsetY;
     bounds = this.apply(node, bounds);
@@ -571,11 +573,11 @@ export class CompactTreeLayout extends GraphLayout {
    * at the given node.
    */
   verticalLayout(
-    node: _mxCompactTreeLayoutNode, 
-    parent: _mxCompactTreeLayoutNode | null, 
-    x0: number, 
-    y0: number, 
-    bounds: Rectangle | null=null
+    node: _mxCompactTreeLayoutNode,
+    parent: _mxCompactTreeLayoutNode | null,
+    x0: number,
+    y0: number,
+    bounds: Rectangle | null = null
   ): Rectangle | null {
     node.x = <number>node.x + x0 + <number>node.offsetY;
     node.y = <number>node.y + y0 + <number>node.offsetX;
@@ -755,11 +757,11 @@ export class CompactTreeLayout extends GraphLayout {
   }
 
   bridge(
-    line1: _mxCompactTreeLayoutLine, 
-    x1: number, 
-    y1: number, 
-    line2: _mxCompactTreeLayoutLine, 
-    x2: number, 
+    line1: _mxCompactTreeLayoutLine,
+    x1: number,
+    y1: number,
+    line2: _mxCompactTreeLayoutLine,
+    x2: number,
     y2: number
   ) {
     const dx = x2 + line2.dx - x1;
@@ -813,7 +815,10 @@ export class CompactTreeLayout extends GraphLayout {
    * Starts the actual compact tree layout algorithm
    * at the given node.
    */
-  apply(node: _mxCompactTreeLayoutNode, bounds: Rectangle | null=null): Rectangle | null {
+  apply(
+    node: _mxCompactTreeLayoutNode,
+    bounds: Rectangle | null = null
+  ): Rectangle | null {
     const model = this.graph.getDataModel();
     const cell = <Cell>node.cell;
     let g: Rectangle = <Rectangle>cell.getGeometry();
@@ -852,11 +857,11 @@ export class CompactTreeLayout extends GraphLayout {
    * Starts the actual compact tree layout algorithm
    * at the given node.
    */
-  createLine(dx: number, dy: number, next: any=null): _mxCompactTreeLayoutLine {
+  createLine(dx: number, dy: number, next: any = null): _mxCompactTreeLayoutLine {
     let line: _mxCompactTreeLayoutLine = {
-      dx, 
-      dy, 
-      next
+      dx,
+      dy,
+      next,
     };
     return line;
   }
@@ -867,7 +872,7 @@ export class CompactTreeLayout extends GraphLayout {
    * a padding.
    */
   adjustParents(): void {
-    const tmp = new CellArray();
+    const tmp = [];
 
     for (const id in this.parentsChanged) {
       tmp.push(this.parentsChanged[id]);

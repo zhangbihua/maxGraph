@@ -14,7 +14,6 @@ import MinimumCycleRemover from './hierarchical/MinimumCycleRemover';
 import MedianHybridCrossingReduction from './hierarchical/MedianHybridCrossingReduction';
 import CoordinateAssignment from './hierarchical/CoordinateAssignment';
 import { Graph } from '../../view/Graph';
-import CellArray from '../../view/cell/CellArray';
 import Cell from '../../view/cell/Cell';
 import GraphHierarchyNode from './datatypes/GraphHierarchyNode';
 
@@ -36,8 +35,8 @@ import GraphHierarchyNode from './datatypes/GraphHierarchyNode';
 class HierarchicalLayout extends GraphLayout {
   constructor(
     graph: Graph,
-    orientation: DIRECTION=DIRECTION.NORTH,
-    deterministic: boolean=true
+    orientation: DIRECTION = DIRECTION.NORTH,
+    deterministic: boolean = true
   ) {
     super(graph);
     this.orientation = orientation;
@@ -51,7 +50,7 @@ class HierarchicalLayout extends GraphLayout {
   /**
    * Holds the array of <Cell> that this layout contains.
    */
-  roots: CellArray | null = null;
+  roots: Cell[] | null = null;
 
   /**
    * Specifies if the parent should be resized after the layout so that it
@@ -112,7 +111,7 @@ class HierarchicalLayout extends GraphLayout {
   fineTuning: boolean = true;
 
   /**
-     * Whether or not to tighten the assigned ranks of vertices up towards
+   * Whether or not to tighten the assigned ranks of vertices up towards
    * the source cells. Default is true.
    */
   tightenToSource: boolean = true;
@@ -139,7 +138,7 @@ class HierarchicalLayout extends GraphLayout {
   /**
    * A cache of edges whose source terminal is the key
    */
-  edgesCache: Dictionary<Cell, CellArray> = new Dictionary();
+  edgesCache: Dictionary<Cell, Cell[]> = new Dictionary();
 
   /**
    * A cache of edges whose source terminal is the key
@@ -170,7 +169,7 @@ class HierarchicalLayout extends GraphLayout {
    * @param parent Parent <Cell> that contains the children to be laid out.
    * @param roots Optional starting roots of the layout.
    */
-  execute(parent: Cell, roots: CellArray | null=null): void {
+  execute(parent: Cell, roots: Cell[] | Cell | null = null): void {
     this.parent = parent;
     const { model } = this.graph;
     this.edgesCache = new Dictionary();
@@ -178,7 +177,7 @@ class HierarchicalLayout extends GraphLayout {
     this.edgesTargetTermCache = new Dictionary();
 
     if (roots != null && !(roots instanceof Array)) {
-      roots = new CellArray(roots);
+      roots = [roots];
     }
 
     // If the roots are set and the parent is set, only
@@ -211,7 +210,7 @@ class HierarchicalLayout extends GraphLayout {
     }
 
     if (roots != null) {
-      const rootsCopy = new CellArray();
+      const rootsCopy = [];
 
       for (let i = 0; i < roots.length; i += 1) {
         const ancestor = parent != null ? parent.isAncestor(roots[i]) : true;
@@ -228,7 +227,7 @@ class HierarchicalLayout extends GraphLayout {
       this.run(parent);
 
       if (this.resizeParent && !parent.isCollapsed()) {
-        this.graph.updateGroupBounds(new CellArray(parent), this.parentBorder, this.moveParent);
+        this.graph.updateGroupBounds([parent], this.parentBorder, this.moveParent);
       }
 
       // Maintaining parent location
@@ -257,8 +256,8 @@ class HierarchicalLayout extends GraphLayout {
    * @param parent <Cell> whose children should be checked.
    * @param vertices array of vertices to limit search to
    */
-  findRoots(parent: Cell, vertices: CellArray): CellArray {
-    const roots = new CellArray();
+  findRoots(parent: Cell, vertices: Cell[]): Cell[] {
+    const roots = [];
 
     if (parent != null && vertices != null) {
       const { model } = this.graph;
@@ -308,14 +307,14 @@ class HierarchicalLayout extends GraphLayout {
    *
    * @param cell <Cell> whose edges should be returned.
    */
-  getEdges(cell: Cell): CellArray {
+  getEdges(cell: Cell) {
     const cachedEdges = this.edgesCache.get(cell);
     if (cachedEdges != null) {
       return cachedEdges;
     }
 
     const { model } = this.graph;
-    let edges = new CellArray();
+    let edges: Cell[] = [];
     const isCollapsed = cell.isCollapsed();
     const childCount = cell.getChildCount();
 
@@ -330,7 +329,7 @@ class HierarchicalLayout extends GraphLayout {
     }
 
     edges = edges.concat(cell.getEdges(true, true));
-    const result = new CellArray();
+    const result = [];
 
     for (let i = 0; i < edges.length; i += 1) {
       const source = this.getVisibleTerminal(edges[i], true);
@@ -411,7 +410,7 @@ class HierarchicalLayout extends GraphLayout {
       const filledVertexSet = Object();
       this.filterDescendants(parent, filledVertexSet);
 
-      this.roots = new CellArray();
+      this.roots = [];
       let filledVertexSetEmpty = true;
 
       // Poor man's isSetEmpty
@@ -460,7 +459,7 @@ class HierarchicalLayout extends GraphLayout {
       }
     } else {
       // Find vertex set as directed traversal from roots
-      const roots = <CellArray>this.roots;
+      const roots = this.roots as Cell[]; // NEED CHECK - roots cannot be null
 
       for (let i = 0; i < roots.length; i += 1) {
         const vertexSet = Object();
@@ -486,7 +485,7 @@ class HierarchicalLayout extends GraphLayout {
 
     for (let i = 0; i < hierarchyVertices.length; i += 1) {
       const vertexSet = hierarchyVertices[i];
-      const tmp = new CellArray();
+      const tmp = [];
 
       for (var key in vertexSet) {
         tmp.push(vertexSet[key]);
@@ -495,7 +494,7 @@ class HierarchicalLayout extends GraphLayout {
       this.model = new GraphHierarchyModel(
         this,
         tmp,
-        <CellArray>this.roots,
+        this.roots as Cell[],
         parent,
         this.tightenToSource
       );
@@ -554,10 +553,10 @@ class HierarchicalLayout extends GraphLayout {
    * target -
    * directed -
    */
-  getEdgesBetween(source: Cell, target: Cell, directed: boolean): CellArray {
+  getEdgesBetween(source: Cell, target: Cell, directed: boolean): Cell[] {
     directed = directed != null ? directed : false;
     const edges = this.getEdges(source);
-    const result = new CellArray();
+    const result = [];
 
     // Checks if the edge is connected to the correct
     // cell and returns the first match
@@ -592,12 +591,12 @@ class HierarchicalLayout extends GraphLayout {
   // @ts-ignore
   traverse(
     vertex: Cell,
-    directed: boolean=false,
-    edge: Cell | null=null,
-    allVertices: { [key: string]: Cell } | null=null,
-    currentComp: { [key: string]: (Cell | null) },
+    directed: boolean = false,
+    edge: Cell | null = null,
+    allVertices: { [key: string]: Cell } | null = null,
+    currentComp: { [key: string]: Cell | null },
     hierarchyVertices: GraphHierarchyNode[],
-    filledVertexSet: { [key: string]: Cell } | null=null
+    filledVertexSet: { [key: string]: Cell } | null = null
   ) {
     if (vertex != null && allVertices != null) {
       // Has this vertex been seen before in any traversal

@@ -7,7 +7,6 @@ import { DIRECTION } from '../../util/Constants';
 import { mixInto } from '../../util/Utils';
 import { getRotatedPoint, toRadians } from '../../util/mathUtils';
 import Cell from '../cell/Cell';
-import CellArray from '../cell/CellArray';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
 import Dictionary from '../../util/Dictionary';
@@ -58,8 +57,8 @@ declare module '../Graph' {
       source: boolean,
       constraint?: ConnectionConstraint | null
     ) => void;
-    disconnectGraph: (cells: CellArray) => void;
-    getConnections: (cell: Cell, parent?: Cell | null) => CellArray;
+    disconnectGraph: (cells: Cell[]) => void;
+    getConnections: (cell: Cell, parent?: Cell | null) => Cell[];
     isConstrainChild: (cell: Cell) => boolean;
     isConstrainChildren: () => boolean;
     setConstrainChildren: (value: boolean) => void;
@@ -292,50 +291,22 @@ const ConnectionsMixin: PartialType = {
     if (constraint) {
       this.batchUpdate(() => {
         if (!constraint || !constraint.point) {
-          this.setCellStyles(source ? 'exitX' : 'entryX', null, new CellArray(edge));
-          this.setCellStyles(source ? 'exitY' : 'entryY', null, new CellArray(edge));
-          this.setCellStyles(source ? 'exitDx' : 'entryDx', null, new CellArray(edge));
-          this.setCellStyles(source ? 'exitDy' : 'entryDy', null, new CellArray(edge));
-          this.setCellStyles(
-            source ? 'exitPerimeter' : 'entryPerimeter',
-            null,
-            new CellArray(edge)
-          );
+          this.setCellStyles(source ? 'exitX' : 'entryX', null, [edge]);
+          this.setCellStyles(source ? 'exitY' : 'entryY', null, [edge]);
+          this.setCellStyles(source ? 'exitDx' : 'entryDx', null, [edge]);
+          this.setCellStyles(source ? 'exitDy' : 'entryDy', null, [edge]);
+          this.setCellStyles(source ? 'exitPerimeter' : 'entryPerimeter', null, [edge]);
         } else if (constraint.point) {
-          this.setCellStyles(
-            source ? 'exitX' : 'entryX',
-            constraint.point.x,
-            new CellArray(edge)
-          );
-          this.setCellStyles(
-            source ? 'exitY' : 'entryY',
-            constraint.point.y,
-            new CellArray(edge)
-          );
-          this.setCellStyles(
-            source ? 'exitDx' : 'entryDx',
-            constraint.dx,
-            new CellArray(edge)
-          );
-          this.setCellStyles(
-            source ? 'exitDy' : 'entryDy',
-            constraint.dy,
-            new CellArray(edge)
-          );
+          this.setCellStyles(source ? 'exitX' : 'entryX', constraint.point.x, [edge]);
+          this.setCellStyles(source ? 'exitY' : 'entryY', constraint.point.y, [edge]);
+          this.setCellStyles(source ? 'exitDx' : 'entryDx', constraint.dx, [edge]);
+          this.setCellStyles(source ? 'exitDy' : 'entryDy', constraint.dy, [edge]);
 
           // Only writes 0 since 1 is default
           if (!constraint.perimeter) {
-            this.setCellStyles(
-              source ? 'exitPerimeter' : 'entryPerimeter',
-              '0',
-              new CellArray(edge)
-            );
+            this.setCellStyles(source ? 'exitPerimeter' : 'entryPerimeter', '0', [edge]);
           } else {
-            this.setCellStyles(
-              source ? 'exitPerimeter' : 'entryPerimeter',
-              null,
-              new CellArray(edge)
-            );
+            this.setCellStyles(source ? 'exitPerimeter' : 'entryPerimeter', null, [edge]);
           }
         }
       });
@@ -503,7 +474,7 @@ const ConnectionsMixin: PartialType = {
 
         // Sets or resets all previous information for connecting to a child port
         const key = source ? 'sourcePort' : 'targetPort';
-        this.setCellStyles(key, id, new CellArray(edge));
+        this.setCellStyles(key, id, [edge]);
       }
 
       this.getDataModel().setTerminal(edge, terminal, source);

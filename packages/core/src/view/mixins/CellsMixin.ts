@@ -1,5 +1,4 @@
 import Cell from '../cell/Cell';
-import CellArray from '../cell/CellArray';
 import { mixInto } from '../../util/Utils';
 import {
   contains,
@@ -50,12 +49,12 @@ declare module '../Graph' {
     extendParentsOnAdd: boolean;
     extendParentsOnMove: boolean;
 
-    getBoundingBox: (cells: CellArray) => Rectangle | null;
+    getBoundingBox: (cells: Cell[]) => Rectangle | null;
     removeStateForCell: (cell: Cell) => void;
     getCurrentCellStyle: (cell: Cell, ignoreState?: boolean) => CellStateStyle;
     getCellStyle: (cell: Cell) => CellStateStyle;
     postProcessCellStyle: (style: CellStateStyle) => CellStateStyle;
-    setCellStyle: (style: CellStyle, cells: CellArray) => void;
+    setCellStyle: (style: CellStyle, cells: Cell[]) => void;
     toggleCellStyle: (
       key: keyof CellStateStyle,
       defaultValue: boolean,
@@ -64,25 +63,25 @@ declare module '../Graph' {
     toggleCellStyles: (
       key: keyof CellStateStyle,
       defaultValue: boolean,
-      cells: CellArray
+      cells: Cell[]
     ) => boolean | null;
     setCellStyles: (
       key: keyof CellStateStyle,
       value: CellStateStyle[keyof CellStateStyle],
-      cells?: CellArray
+      cells?: Cell[]
     ) => void;
     toggleCellStyleFlags: (
       key: NumericCellStateStyleKeys,
       flag: number,
-      cells?: CellArray | null
+      cells?: Cell[] | null
     ) => void;
     setCellStyleFlags: (
       key: NumericCellStateStyleKeys,
       flag: number,
       value?: boolean | null,
-      cells?: CellArray | null
+      cells?: Cell[] | null
     ) => void;
-    alignCells: (align: string, cells?: CellArray, param?: number | null) => void;
+    alignCells: (align: string, cells?: Cell[], param?: number | null) => void;
     cloneCell: (
       cell: Cell,
       allowInvalidEdges?: boolean,
@@ -90,11 +89,11 @@ declare module '../Graph' {
       keepPosition?: boolean
     ) => Cell;
     cloneCells: (
-      cells: CellArray,
+      cells: Cell[],
       allowInvalidEdges: boolean,
       mapping: any,
       keepPosition?: boolean
-    ) => CellArray;
+    ) => Cell[];
     addCell: (
       cell: Cell,
       parent: Cell | null,
@@ -103,15 +102,15 @@ declare module '../Graph' {
       target?: Cell | null
     ) => Cell;
     addCells: (
-      cells: CellArray,
+      cells: Cell[],
       parent: Cell | null,
       index: number | null,
       source: Cell | null,
       target: Cell | null,
       absolute?: boolean
-    ) => CellArray;
+    ) => Cell[];
     cellsAdded: (
-      cells: CellArray,
+      cells: Cell[],
       parent: Cell,
       index: number,
       source: Cell | null,
@@ -121,16 +120,16 @@ declare module '../Graph' {
       extend?: boolean
     ) => void;
     autoSizeCell: (cell: Cell, recurse?: boolean) => void;
-    removeCells: (cells?: CellArray | null, includeEdges?: boolean | null) => CellArray;
-    cellsRemoved: (cells: CellArray) => void;
-    toggleCells: (show: boolean, cells: CellArray, includeEdges: boolean) => CellArray;
-    cellsToggled: (cells: CellArray, show: boolean) => void;
+    removeCells: (cells?: Cell[] | null, includeEdges?: boolean | null) => Cell[];
+    cellsRemoved: (cells: Cell[]) => void;
+    toggleCells: (show: boolean, cells: Cell[], includeEdges: boolean) => Cell[];
+    cellsToggled: (cells: Cell[], show: boolean) => void;
     updateCellSize: (cell: Cell, ignoreChildren?: boolean) => Cell;
     cellSizeUpdated: (cell: Cell, ignoreChildren: boolean) => void;
     getPreferredSizeForCell: (cell: Cell, textWidth?: number | null) => Rectangle | null;
     resizeCell: (cell: Cell, bounds: Rectangle, recurse?: boolean) => Cell;
-    resizeCells: (cells: CellArray, bounds: Rectangle[], recurse: boolean) => CellArray;
-    cellsResized: (cells: CellArray, bounds: Rectangle[], recurse: boolean) => void;
+    resizeCells: (cells: Cell[], bounds: Rectangle[], recurse: boolean) => Cell[];
+    cellsResized: (cells: Cell[], bounds: Rectangle[], recurse: boolean) => void;
     cellResized: (
       cell: Cell,
       bounds: Rectangle,
@@ -142,24 +141,24 @@ declare module '../Graph' {
     scaleCell: (cell: Cell, dx: number, dy: number, recurse: boolean) => void;
     extendParent: (cell: Cell) => void;
     importCells: (
-      cells: CellArray,
+      cells: Cell[],
       dx: number,
       dy: number,
       target: Cell | null,
       evt: MouseEvent | null,
       mapping: any
-    ) => CellArray;
+    ) => Cell[];
     moveCells: (
-      cells: CellArray,
+      cells: Cell[],
       dx: number,
       dy: number,
       clone?: boolean,
       target?: Cell | null,
       evt?: MouseEvent | null,
       mapping?: any
-    ) => CellArray;
+    ) => Cell[];
     cellsMoved: (
-      cells: CellArray,
+      cells: Cell[],
       dx: number,
       dy: number,
       disconnect: boolean,
@@ -169,11 +168,7 @@ declare module '../Graph' {
     translateCell: (cell: Cell, dx: number, dy: number) => void;
     getCellContainmentArea: (cell: Cell) => Rectangle | null;
     constrainChild: (cell: Cell, sizeFirst?: boolean) => void;
-    getChildCells: (
-      parent?: Cell | null,
-      vertices?: boolean,
-      edges?: boolean
-    ) => CellArray;
+    getChildCells: (parent?: Cell | null, vertices?: boolean, edges?: boolean) => Cell[];
     getCellAt: (
       x: number,
       y: number,
@@ -188,40 +183,40 @@ declare module '../Graph' {
       width: number,
       height: number,
       parent?: Cell | null,
-      result?: CellArray,
+      result?: Cell[],
       intersection?: Rectangle | null,
       ignoreFn?: Function | null,
       includeDescendants?: boolean
-    ) => CellArray;
+    ) => Cell[];
     getCellsBeyond: (
       x0: number,
       y0: number,
       parent: Cell | null,
       rightHalfpane: boolean,
       bottomHalfpane: boolean
-    ) => CellArray;
+    ) => Cell[];
     intersects: (state: CellState, x: number, y: number) => boolean;
     isValidAncestor: (cell: Cell, parent: Cell, recurse: boolean) => boolean;
     isCellLocked: (cell: Cell) => boolean;
     isCellsLocked: () => boolean;
     setCellsLocked: (value: boolean) => void;
-    getCloneableCells: (cells: CellArray) => CellArray;
+    getCloneableCells: (cells: Cell[]) => Cell[];
     isCellCloneable: (cell: Cell) => boolean;
     isCellsCloneable: () => boolean;
     setCellsCloneable: (value: boolean) => void;
-    getExportableCells: (cells: CellArray) => CellArray;
+    getExportableCells: (cells: Cell[]) => Cell[];
     canExportCell: (cell: Cell | null) => boolean;
-    getImportableCells: (cells: CellArray) => CellArray;
+    getImportableCells: (cells: Cell[]) => Cell[];
     canImportCell: (cell: Cell | null) => boolean;
     isCellSelectable: (cell: Cell) => boolean;
     isCellsSelectable: () => boolean;
     setCellsSelectable: (value: boolean) => void;
-    getDeletableCells: (cells: CellArray) => CellArray;
+    getDeletableCells: (cells: Cell[]) => Cell[];
     isCellDeletable: (cell: Cell) => boolean;
     isCellsDeletable: () => boolean;
     setCellsDeletable: (value: boolean) => void;
     isCellRotatable: (cell: Cell) => boolean;
-    getMovableCells: (cells: CellArray) => CellArray;
+    getMovableCells: (cells: Cell[]) => Cell[];
     isCellMovable: (cell: Cell) => boolean;
     isCellsMovable: () => boolean;
     setCellsMovable: (value: boolean) => void;
@@ -248,7 +243,7 @@ declare module '../Graph' {
       includeDescendants?: boolean
     ) => Rectangle | null;
     getBoundingBoxFromGeometry: (
-      cells: CellArray,
+      cells: Cell[],
       includeEdges?: boolean
     ) => Rectangle | null;
   }
@@ -644,7 +639,7 @@ export const CellsMixin: PartialType = {
    */
   toggleCellStyle(key, defaultValue = false, cell?) {
     cell = cell ?? this.getSelectionCell();
-    return this.toggleCellStyles(key, defaultValue, new CellArray(cell));
+    return this.toggleCellStyles(key, defaultValue, [cell]);
   },
 
   /**
@@ -791,14 +786,14 @@ export const CellsMixin: PartialType = {
         this.batchUpdate(() => {
           const p = param as number;
 
-          for (const cell of <CellArray>cells) {
+          for (const cell of cells as Cell[]) {
             const state = this.getView().getState(cell);
 
             if (state != null) {
               let geo = cell.getGeometry();
 
               if (geo != null && !cell.isEdge()) {
-                geo = <Geometry>geo.clone();
+                geo = geo.clone();
 
                 if (align === ALIGN.CENTER) {
                   geo.x += (p - state.x - state.width / 2) / s;
@@ -843,12 +838,7 @@ export const CellsMixin: PartialType = {
    */
   // cloneCell(cell: mxCell, allowInvalidEdges?: boolean, mapping?: any, keepPosition?: boolean): mxCellArray;
   cloneCell(cell, allowInvalidEdges = false, mapping = null, keepPosition = false) {
-    return this.cloneCells(
-      new CellArray(cell),
-      allowInvalidEdges,
-      mapping,
-      keepPosition
-    )[0];
+    return this.cloneCells([cell], allowInvalidEdges, mapping, keepPosition)[0];
   },
 
   /**
@@ -866,7 +856,7 @@ export const CellsMixin: PartialType = {
    */
   // cloneCells(cells: mxCellArray, allowInvalidEdges?: boolean, mapping?: any, keepPosition?: boolean): mxCellArray;
   cloneCells(cells, allowInvalidEdges = true, mapping = {}, keepPosition = false) {
-    let clones;
+    let clones: Cell[];
 
     // Creates a dictionary for fast lookups
     const dict = new Dictionary<Cell, boolean>();
@@ -880,7 +870,7 @@ export const CellsMixin: PartialType = {
     if (tmp.length > 0) {
       const { scale } = this.getView();
       const trans = this.getView().translate;
-      const out: CellArray = new CellArray();
+      const out: Cell[] = [];
       clones = cells.cloneCells(true, mapping);
 
       for (let i = 0; i < cells.length; i += 1) {
@@ -960,7 +950,7 @@ export const CellsMixin: PartialType = {
       }
       clones = out;
     } else {
-      clones = new CellArray();
+      clones = [];
     }
     return clones;
   },
@@ -978,7 +968,7 @@ export const CellsMixin: PartialType = {
    * @param target Optional {@link Cell} that represents the target terminal.
    */
   addCell(cell, parent = null, index = null, source = null, target = null) {
-    return this.addCells(new CellArray(cell), parent, index, source, target)[0];
+    return this.addCells([cell], parent, index, source, target)[0];
   },
 
   /**
@@ -1180,13 +1170,13 @@ export const CellsMixin: PartialType = {
     }
 
     this.batchUpdate(() => {
-      this.cellsRemoved(<CellArray>cells);
+      this.cellsRemoved(cells as Cell[]);
       this.fireEvent(
         new EventObject(InternalEvent.REMOVE_CELLS, { cells, includeEdges })
       );
     });
 
-    return cells ?? new CellArray();
+    return cells ?? [];
   },
 
   /**
@@ -1210,7 +1200,7 @@ export const CellsMixin: PartialType = {
 
         for (const cell of cells) {
           // Disconnects edges which are not being removed
-          const edges = this.getAllEdges(new CellArray(cell));
+          const edges = this.getAllEdges([cell]);
 
           const disconnectTerminal = (edge: Cell, source: boolean) => {
             let geo = edge.getGeometry();
@@ -1431,7 +1421,7 @@ export const CellsMixin: PartialType = {
           }
         }
 
-        this.cellsResized(new CellArray(cell), [geo], false);
+        this.cellsResized([cell], [geo], false);
       }
     });
   },
@@ -1551,7 +1541,7 @@ export const CellsMixin: PartialType = {
    * @param bounds {@link mxRectangle} that represents the new bounds.
    */
   resizeCell(cell, bounds, recurse = false) {
-    return this.resizeCells(new CellArray(cell), [bounds], recurse)[0];
+    return this.resizeCells([cell], [bounds], recurse)[0];
   },
 
   /**
@@ -1562,7 +1552,7 @@ export const CellsMixin: PartialType = {
    * @param cells Array of {@link Cell} whose bounds should be changed.
    * @param bounds Array of {@link mxRectangles} that represent the new bounds.
    */
-  resizeCells(cells, bounds, recurse): CellArray {
+  resizeCells(cells, bounds, recurse): Cell[] {
     recurse = recurse ?? this.isRecursiveResize();
 
     this.batchUpdate(() => {
@@ -1805,7 +1795,7 @@ export const CellsMixin: PartialType = {
         p.width = Math.max(p.width, geo.x + geo.width);
         p.height = Math.max(p.height, geo.y + geo.height);
 
-        this.cellsResized(new CellArray(parent), [p], false);
+        this.cellsResized([parent], [p], false);
       }
     }
   },
@@ -1885,7 +1875,7 @@ export const CellsMixin: PartialType = {
         };
 
         // Removes relative edge labels with selected terminals
-        const checked = new CellArray();
+        const checked = [];
 
         for (const cell of cells) {
           const geo = cell.getGeometry();
@@ -2121,7 +2111,7 @@ export const CellsMixin: PartialType = {
 
       // Finds parent offset
       if (max && parent) {
-        const off = this.getBoundingBoxFromGeometry(new CellArray(parent), false);
+        const off = this.getBoundingBoxFromGeometry([parent], false);
 
         if (off) {
           max = Rectangle.fromRectangle(max);
@@ -2157,7 +2147,7 @@ export const CellsMixin: PartialType = {
       }
 
       if (max) {
-        const cells = new CellArray(cell);
+        const cells = [cell];
 
         if (!cell.isCollapsed()) {
           const desc = cell.getDescendants();
@@ -2244,7 +2234,7 @@ export const CellsMixin: PartialType = {
     parent = parent ?? this.getDefaultParent();
 
     const cells = parent.getChildCells(vertices, edges);
-    const result = new CellArray();
+    const result = [];
 
     // Filters out the non-visible child cells
     for (const cell of cells) {
@@ -2332,7 +2322,7 @@ export const CellsMixin: PartialType = {
     width,
     height,
     parent = null,
-    result = new CellArray(),
+    result = [],
     intersection = null,
     ignoreFn = null,
     includeDescendants = false
@@ -2428,7 +2418,7 @@ export const CellsMixin: PartialType = {
         }
       }
     }
-    return new CellArray(...result);
+    return result;
   },
 
   /**
@@ -2921,7 +2911,7 @@ export const CellsMixin: PartialType = {
    * of all descendants should be included. Default is `false`.
    */
   getCellBounds(cell, includeEdges = false, includeDescendants = false) {
-    let cells = new CellArray(cell);
+    let cells = [cell];
 
     // Includes all connected edges
     if (includeEdges) {
@@ -3023,7 +3013,7 @@ export const CellsMixin: PartialType = {
 
             if (geo.relative && parent) {
               if (parent.isVertex() && parent !== this.getView().currentRoot) {
-                tmp = this.getBoundingBoxFromGeometry(new CellArray(parent), false);
+                tmp = this.getBoundingBoxFromGeometry([parent], false);
 
                 if (tmp) {
                   bbox = new Rectangle(
@@ -3043,7 +3033,7 @@ export const CellsMixin: PartialType = {
               bbox = Rectangle.fromRectangle(geo);
 
               if (parent && parent.isVertex() && cells.indexOf(parent) >= 0) {
-                tmp = this.getBoundingBoxFromGeometry(new CellArray(parent), false);
+                tmp = this.getBoundingBoxFromGeometry([parent], false);
 
                 if (tmp) {
                   bbox.x += tmp.x;

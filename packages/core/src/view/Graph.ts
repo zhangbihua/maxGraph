@@ -46,9 +46,10 @@ import ObjectCodec from '../serialization/ObjectCodec';
 
 import type { GraphPlugin, GraphPluginConstructor, MouseListenerSet } from '../types';
 import Multiplicity from './other/Multiplicity';
-import CellArray from './cell/CellArray';
 import ImageBundle from './image/ImageBundle';
 import GraphSelectionModel from './GraphSelectionModel';
+
+import './cell/CellArray';
 
 export const defaultPlugins: GraphPluginConstructor[] = [
   CellEditorHandler,
@@ -91,7 +92,7 @@ class Graph extends EventSource {
    * Group: Variables (that maybe should be in the mixins, but need to be created for each new class instance)
    *****************************************************************************/
 
-  cells = new CellArray();
+  cells: Cell[] = [];
 
   imageBundles: ImageBundle[] = [];
 

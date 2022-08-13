@@ -9,7 +9,6 @@ import Dictionary from '../../../util/Dictionary';
 import GraphHierarchyNode from '../datatypes/GraphHierarchyNode';
 import GraphHierarchyEdge from '../datatypes/GraphHierarchyEdge';
 import Cell from '../../cell/Cell';
-import CellArray from '../../cell/CellArray';
 import HierarchicalLayout from '../HierarchicalLayout';
 import GraphAbstractHierarchyCell from '../datatypes/GraphAbstractHierarchyCell';
 
@@ -38,8 +37,8 @@ import GraphAbstractHierarchyCell from '../datatypes/GraphAbstractHierarchyCell'
 class GraphHierarchyModel {
   constructor(
     layout: HierarchicalLayout,
-    vertices: CellArray,
-    roots: CellArray,
+    vertices: Cell[],
+    roots: Cell[],
     parent: Cell,
     tightenToSource: boolean
   ) {
@@ -135,7 +134,7 @@ class GraphHierarchyModel {
    * Store of roots of this hierarchy model, these are real graph cells, not
    * internal cells
    */
-  roots: CellArray | null = null;
+  roots: Cell[] | null = null;
 
   /**
    * The parent cell whose children are being laid out
@@ -169,7 +168,7 @@ class GraphHierarchyModel {
    */
   createInternalCells(
     layout: HierarchicalLayout,
-    vertices: CellArray,
+    vertices: Cell[],
     internalVertices: { [key: number]: GraphHierarchyNode }
   ) {
     const graph = layout.getGraph();
@@ -263,7 +262,7 @@ class GraphHierarchyModel {
     }
 
     const internalNodes = this.vertexMapper.getValues();
-    
+
     for (let i = 0; i < internalNodes.length; i += 1) {
       // Mark the node as not having had a layer assigned
       internalNodes[i].temp[0] = -1;
@@ -407,7 +406,13 @@ class GraphHierarchyModel {
     }
 
     this.visit(
-      (parent: GraphHierarchyNode, node: GraphHierarchyNode, edge: GraphHierarchyNode, layer: number, seen: number) => {
+      (
+        parent: GraphHierarchyNode,
+        node: GraphHierarchyNode,
+        edge: GraphHierarchyNode,
+        layer: number,
+        seen: number
+      ) => {
         if (seen == 0 && node.maxRank < 0 && node.minRank < 0) {
           rankList[node.temp[0]].push(node);
           node.maxRank = node.temp[0];
@@ -504,11 +509,11 @@ class GraphHierarchyModel {
    * @param layer the layer on the dfs tree ( not the same as the model ranks )
    */
   dfs(
-    parent: GraphHierarchyNode | null, 
-    root: GraphHierarchyNode | null, 
-    connectingEdge: GraphHierarchyEdge | null, 
-    visitor: Function, 
-    seen: { [key: string]: GraphHierarchyNode | null }, 
+    parent: GraphHierarchyNode | null,
+    root: GraphHierarchyNode | null,
+    connectingEdge: GraphHierarchyEdge | null,
+    visitor: Function,
+    seen: { [key: string]: GraphHierarchyNode | null },
     layer: number
   ): void {
     if (root != null) {
@@ -553,13 +558,13 @@ class GraphHierarchyModel {
    * @param layer the layer on the dfs tree ( not the same as the model ranks )
    */
   extendedDfs(
-    parent: GraphHierarchyNode | null, 
-    root: GraphHierarchyNode, 
-    connectingEdge: GraphHierarchyEdge | null, 
-    visitor: Function, 
-    seen: { [key: string]: GraphHierarchyNode }, 
-    ancestors: any, 
-    childHash: string | number, 
+    parent: GraphHierarchyNode | null,
+    root: GraphHierarchyNode,
+    connectingEdge: GraphHierarchyEdge | null,
+    visitor: Function,
+    seen: { [key: string]: GraphHierarchyNode },
+    ancestors: any,
+    childHash: string | number,
     layer: number
   ) {
     // Explanation of custom hash set. Previously, the ancestors variable

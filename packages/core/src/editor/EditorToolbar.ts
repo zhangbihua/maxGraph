@@ -14,7 +14,6 @@ import { getClientX, getClientY } from '../util/EventUtils';
 import { makeDraggable } from '../util/gestureUtils';
 import Editor from './Editor';
 import Cell from '../view/cell/Cell';
-import CellArray from '../view/cell/CellArray';
 import { Graph } from '../view/Graph';
 import EventObject from '../view/event/EventObject';
 import ObjectCodec from '../serialization/ObjectCodec';
@@ -51,7 +50,7 @@ import type { DropHandler } from '../view/other/DragSource';
  * description of the configuration format.
  */
 export class EditorToolbar {
-  constructor(container: HTMLElement | null=null, editor: Editor | null=null) {
+  constructor(container: HTMLElement | null = null, editor: Editor | null = null) {
     this.editor = editor;
 
     if (container != null && editor != null) {
@@ -97,18 +96,21 @@ export class EditorToolbar {
 
       // Installs the insert function in the editor if an item is
       // selected in the toolbar
-      this.toolbar.addListener(InternalEvent.SELECT, (sender: Element, evt: EventObject) => {
-        const funct = evt.getProperty('function');
+      this.toolbar.addListener(
+        InternalEvent.SELECT,
+        (sender: Element, evt: EventObject) => {
+          const funct = evt.getProperty('function');
 
-        if (funct != null) {
-          (<Editor>this.editor).insertFunction = () => {
-            funct.apply(this, [container]);
-            (<MaxToolbar>this.toolbar).resetMode();
-          };
-        } else {
-          (<Editor>this.editor).insertFunction = null;
+          if (funct != null) {
+            (<Editor>this.editor).insertFunction = () => {
+              funct.apply(this, [container]);
+              (<MaxToolbar>this.toolbar).resetMode();
+            };
+          } else {
+            (<Editor>this.editor).insertFunction = null;
+          }
         }
-      });
+      );
 
       // Resets the selected tool after a doubleclick or escape keystroke
       this.resetHandler = () => {
@@ -117,7 +119,10 @@ export class EditorToolbar {
         }
       };
 
-      (<Editor>this.editor).graph.addListener(InternalEvent.DOUBLE_CLICK, this.resetHandler);
+      (<Editor>this.editor).graph.addListener(
+        InternalEvent.DOUBLE_CLICK,
+        this.resetHandler
+      );
       (<Editor>this.editor).addListener(InternalEvent.ESCAPE, this.resetHandler);
     }
   }
@@ -189,7 +194,11 @@ export class EditorToolbar {
    * @param title - String that represents the title of the combo.
    * @param value - Object that represents the value of the option.
    */
-  addOption(combo: HTMLSelectElement, title: string, value: string | ((evt: any) => void) | null): HTMLElement {
+  addOption(
+    combo: HTMLSelectElement,
+    title: string,
+    value: string | ((evt: any) => void) | null
+  ): HTMLElement {
     return (<MaxToolbar>this.toolbar).addOption(combo, title, value);
   }
 
@@ -207,14 +216,14 @@ export class EditorToolbar {
     title: string,
     icon: string,
     mode: string,
-    pressed: string | null=null,
-    funct: Function | null=null
+    pressed: string | null = null,
+    funct: Function | null = null
   ): any {
     const clickHandler = () => {
       (<Editor>this.editor).setMode(mode);
 
       if (funct != null) {
-        funct((<Editor>this.editor));
+        funct(<Editor>this.editor);
       }
     };
     return (<MaxToolbar>this.toolbar).addSwitchMode(title, icon, clickHandler, pressed);
@@ -242,8 +251,13 @@ export class EditorToolbar {
     icon: string,
     ptype: Function | Cell,
     pressed: string,
-    insert: (editor: Editor, cell: Cell, me: MouseEvent, cellUnderMousePointer?: Cell | null) => void,
-    toggle: boolean=true
+    insert: (
+      editor: Editor,
+      cell: Cell,
+      me: MouseEvent,
+      cellUnderMousePointer?: Cell | null
+    ) => void,
+    toggle: boolean = true
   ): HTMLImageElement | HTMLButtonElement {
     // Creates a wrapper function that is in charge of constructing
     // the new cell instance to be inserted into the graph
@@ -261,7 +275,7 @@ export class EditorToolbar {
     // after this item has been selected in the toolbar
     const clickHandler = (evt: MouseEvent, cell: Cell | null) => {
       if (typeof insert === 'function') {
-        insert((<Editor>this.editor), factory(), evt, cell);
+        insert(<Editor>this.editor, factory(), evt, cell);
       } else {
         this.drop(factory(), evt, cell);
       }
@@ -270,11 +284,22 @@ export class EditorToolbar {
       InternalEvent.consume(evt);
     };
 
-    const img = (<MaxToolbar>this.toolbar).addMode(title, icon, clickHandler, pressed, null, toggle);
+    const img = (<MaxToolbar>this.toolbar).addMode(
+      title,
+      icon,
+      clickHandler,
+      pressed,
+      null,
+      toggle
+    );
 
     // Creates a wrapper function that calls the click handler without
     // the graph argument
-    const dropHandler: DropHandler = (graph: Graph, evt: MouseEvent, cell: Cell | null) => {
+    const dropHandler: DropHandler = (
+      graph: Graph,
+      evt: MouseEvent,
+      cell: Cell | null
+    ) => {
       clickHandler(evt, cell);
     };
 
@@ -291,8 +316,8 @@ export class EditorToolbar {
    * @param evt - Mouse event that represents the drop.
    * @param target - Optional {@link Cell} that represents the drop target.
    */
-  drop(vertex: Cell, evt: MouseEvent, target: Cell | null=null): void {
-    const { graph } = (<Editor>this.editor);
+  drop(vertex: Cell, evt: MouseEvent, target: Cell | null = null): void {
+    const { graph } = <Editor>this.editor;
     const model = graph.getDataModel();
 
     if (
@@ -301,7 +326,7 @@ export class EditorToolbar {
       !this.connectOnDrop ||
       !target.isConnectable()
     ) {
-      while (target != null && !graph.isValidDropTarget(target, new CellArray(vertex), evt)) {
+      while (target != null && !graph.isValidDropTarget(target, [vertex], evt)) {
         target = target.getParent();
       }
       this.insert(vertex, evt, target);
@@ -318,8 +343,8 @@ export class EditorToolbar {
    * @param evt - Mouse event that represents the drop.
    * @param target - Optional {@link Cell} that represents the parent.
    */
-  insert(vertex: Cell, evt: MouseEvent, target: Cell | null=null): any {
-    const { graph } = (<Editor>this.editor);
+  insert(vertex: Cell, evt: MouseEvent, target: Cell | null = null): any {
+    const { graph } = <Editor>this.editor;
 
     if (graph.canImportCell(vertex)) {
       const x = getClientX(evt);
@@ -327,8 +352,12 @@ export class EditorToolbar {
       const pt = convertPoint(graph.container, x, y);
 
       // Splits the target edge or inserts into target group
-      if (target && graph.isSplitEnabled() && graph.isSplitTarget(target, new CellArray(vertex), evt)) {
-        return graph.splitEdge(target, new CellArray(vertex), null, pt.x, pt.y);
+      if (
+        target &&
+        graph.isSplitEnabled() &&
+        graph.isSplitTarget(target, [vertex], evt)
+      ) {
+        return graph.splitEdge(target, [vertex], null, pt.x, pt.y);
       }
       return (<Editor>this.editor).addVertex(target, vertex, pt.x, pt.y);
     }
@@ -342,7 +371,7 @@ export class EditorToolbar {
    * @param evt - Mouse event that represents the drop.
    * @param source - Optional {@link Cell} that represents the source terminal.
    */
-  connect(vertex: Cell, evt: MouseEvent, source: Cell | null=null): void {
+  connect(vertex: Cell, evt: MouseEvent, source: Cell | null = null): void {
     const { graph } = <Editor>this.editor;
     const model = graph.getDataModel();
 
@@ -396,7 +425,7 @@ export class EditorToolbar {
         model.endUpdate();
       }
 
-      graph.setSelectionCells(new CellArray(vertex, edge));
+      graph.setSelectionCells([vertex, edge]);
       graph.scrollCellToVisible(vertex);
     }
   }
@@ -575,21 +604,16 @@ export class EditorToolbarCodec extends ObjectCodec {
               const mode = node.getAttribute('mode');
               const template = node.getAttribute('template');
               const toggle = node.getAttribute('toggle') != '0';
-              const text = getTextContent(<Text><unknown>node);
+              const text = getTextContent(<Text>(<unknown>node));
               let elt = null;
               let funct: any;
 
               if (action != null) {
                 elt = into.addItem(as, icon, action, pressedIcon);
               } else if (mode != null) {
-                funct = EditorToolbarCodec.allowEval
-                  ? eval(text)
-                  : null;
+                funct = EditorToolbarCodec.allowEval ? eval(text) : null;
                 elt = into.addMode(as, icon, mode, pressedIcon, funct);
-              } else if (
-                template != null ||
-                (text != null && text.length > 0)
-              ) {
+              } else if (template != null || (text != null && text.length > 0)) {
                 let cell = template ? editor.templates[template] : null;
                 const style = node.getAttribute('style');
 
@@ -600,11 +624,7 @@ export class EditorToolbarCodec extends ObjectCodec {
 
                 let insertFunction = null;
 
-                if (
-                  text != null &&
-                  text.length > 0 &&
-                  EditorToolbarCodec.allowEval
-                ) {
+                if (text != null && text.length > 0 && EditorToolbarCodec.allowEval) {
                   insertFunction = eval(text);
                 }
 
@@ -656,14 +676,7 @@ export class EditorToolbarCodec extends ObjectCodec {
                       return null;
                     };
 
-                    const img = into.addPrototype(
-                      as,
-                      icon,
-                      create,
-                      null,
-                      null,
-                      toggle
-                    );
+                    const img = into.addPrototype(as, icon, create, null, null, toggle);
                     select = into.addCombo();
 
                     // Selects the toolbar icon if a selection change
@@ -691,11 +704,7 @@ export class EditorToolbarCodec extends ObjectCodec {
                       } else if (child.nodeName === 'add') {
                         const lab = child.getAttribute('as');
                         const tmp = child.getAttribute('template');
-                        const option = into.addOption(
-                          select,
-                          lab,
-                          tmp || template
-                        );
+                        const option = into.addOption(select, lab, tmp || template);
                         option.cellStyle = child.getAttribute('style');
                       }
                     }

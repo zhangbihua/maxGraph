@@ -12,7 +12,6 @@ import GraphView from '../GraphView';
 import Cell from './Cell';
 import CellState from './CellState';
 import Shape from '../geometry/Shape';
-import CellArray from './CellArray';
 import { Graph } from '../Graph';
 
 class TemporaryCellStates {
@@ -40,7 +39,7 @@ class TemporaryCellStates {
   constructor(
     view: GraphView,
     scale: number = 1,
-    cells: CellArray,
+    cells: Cell[],
     isCellVisibleFn: Function | null = null,
     getLinkForCellState: Function | null = null
   ) {
@@ -72,7 +71,9 @@ class TemporaryCellStates {
           }
         };
 
-        (<Function>self.oldDoRedrawShape).apply((<Graph>view.graph).cellRenderer, [state]);
+        (<Function>self.oldDoRedrawShape).apply((<Graph>view.graph).cellRenderer, [
+          state,
+        ]);
         shape.paint = oldPaint;
       };
     }

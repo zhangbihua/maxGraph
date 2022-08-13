@@ -2,7 +2,6 @@ import Image from '../image/ImageBox';
 import Client from '../../Client';
 import CellState from '../cell/CellState';
 import Cell from '../cell/Cell';
-import CellArray from '../cell/CellArray';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
 import Geometry from '../geometry/Geometry';
@@ -18,18 +17,18 @@ declare module '../Graph' {
 
     getCollapseExpandResource: () => string;
     isFoldingEnabled: () => boolean;
-    getFoldableCells: (cells: CellArray, collapse: boolean) => CellArray | null;
+    getFoldableCells: (cells: Cell[], collapse: boolean) => Cell[] | null;
     isCellFoldable: (cell: Cell, collapse: boolean) => boolean;
     getFoldingImage: (state: CellState) => Image | null;
     foldCells: (
       collapse: boolean,
       recurse?: boolean,
-      cells?: CellArray | null,
+      cells?: Cell[] | null,
       checkFoldable?: boolean,
       evt?: Event | null
-    ) => CellArray | null;
+    ) => Cell[] | null;
     cellsFolded: (
-      cells: CellArray | null,
+      cells: Cell[] | null,
       collapse: boolean,
       recurse: boolean,
       checkFoldable?: boolean
@@ -119,7 +118,7 @@ const FoldingMixin: PartialType = {
   },
 
   /**
-     * @default true
+   * @default true
    */
 
   /**

@@ -8,7 +8,6 @@ import ObjectIdentity from '../../util/ObjectIdentity';
 import GraphLayout from './GraphLayout';
 import { Graph } from '../Graph';
 import Cell from '../cell/Cell';
-import CellArray from '../cell/CellArray';
 
 /**
  * Extends {@link GraphLayout} to implement a fast organic layout algorithm.
@@ -95,7 +94,7 @@ class MxFastOrganicLayout extends GraphLayout {
   /**
    * An array of all vertices to be laid out.
    */
-  vertexArray: CellArray = new CellArray();
+  vertexArray: Cell[] = [];
 
   /**
    * An array of locally stored X co-ordinate displacements for the vertices.
@@ -161,7 +160,7 @@ class MxFastOrganicLayout extends GraphLayout {
    */
   execute(parent: Cell) {
     const model = this.graph.getDataModel();
-    this.vertexArray = new CellArray();
+    this.vertexArray = [];
     let cells = this.graph.getChildVertices(parent);
 
     for (let i = 0; i < cells.length; i += 1) {

@@ -11,7 +11,6 @@ import Rectangle from '../geometry/Rectangle';
 import { Graph } from '../Graph';
 import EventObject from '../event/EventObject';
 import Cell from '../cell/Cell';
-import CellArray from '../cell/CellArray';
 
 /**
  * @class SwimlaneManager
@@ -200,7 +199,7 @@ class SwimlaneManager extends EventSource {
    *
    * @param cell Array of {@link Cell} that have been added.
    */
-  cellsAdded(cells: CellArray) {
+  cellsAdded(cells: Cell[]) {
     if (cells.length > 0) {
       const model = this.graph.getDataModel();
 
@@ -253,7 +252,7 @@ class SwimlaneManager extends EventSource {
    *
    * @param cells Array of {@link Cell} whose size was changed.
    */
-  cellsResized(cells: CellArray) {
+  cellsResized(cells: Cell[]) {
     if (cells.length > 0) {
       const model = this.getGraph().getDataModel();
 

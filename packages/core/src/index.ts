@@ -42,7 +42,10 @@ export { default as GeometryChange } from './view/undoable_changes/GeometryChang
 export { RootChange, RootChangeCodec } from './view/undoable_changes/RootChange';
 export { default as SelectionChange } from './view/undoable_changes/SelectionChange';
 export { default as StyleChange } from './view/undoable_changes/StyleChange';
-export { TerminalChange, TerminalChangeCodec } from './view/undoable_changes/TerminalChange';
+export {
+  TerminalChange,
+  TerminalChangeCodec,
+} from './view/undoable_changes/TerminalChange';
 export { default as ValueChange } from './view/undoable_changes/ValueChange';
 export { default as VisibleChange } from './view/undoable_changes/VisibleChange';
 
@@ -204,7 +207,6 @@ export { default as CellPath } from './view/cell/CellPath';
 export { default as CellRenderer } from './view/cell/CellRenderer';
 export { default as CellState } from './view/cell/CellState';
 export { default as CellStatePreview } from './view/cell/CellStatePreview';
-export { default as CellArray } from './view/cell/CellArray';
 export { default as TemporaryCellStates } from './view/cell/TemporaryCellStates';
 export { default as ConnectionConstraint } from './view/other/ConnectionConstraint';
 export { default as Multiplicity } from './view/other/Multiplicity';

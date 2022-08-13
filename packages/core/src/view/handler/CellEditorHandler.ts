@@ -6,10 +6,7 @@
  */
 
 import { getValue } from '../../util/Utils';
-import {
-  getAlignmentAsPoint,
-  setPrefixedStyle,
-} from '../../util/styleUtils';
+import { getAlignmentAsPoint, setPrefixedStyle } from '../../util/styleUtils';
 import Rectangle from '../geometry/Rectangle';
 import InternalEvent from '../event/InternalEvent';
 import Client from '../../Client';
@@ -31,7 +28,11 @@ import InternalMouseEvent from '../event/InternalMouseEvent';
 import CellState from '../cell/CellState';
 import Shape from '../geometry/Shape';
 import { clearSelection, extractTextWithWhitespace, isNode } from '../../util/domUtils';
-import { getStringValue, htmlEntities, replaceTrailingNewlines } from '../../util/StringUtils';
+import {
+  getStringValue,
+  htmlEntities,
+  replaceTrailingNewlines,
+} from '../../util/StringUtils';
 import {
   getSource,
   isConsumed,
@@ -43,7 +44,6 @@ import EventSource from '../event/EventSource';
 
 import type { Graph } from '../Graph';
 import type { GraphPlugin } from '../../types';
-import CellArray from '../cell/CellArray';
 import TooltipHandler from './TooltipHandler';
 
 /**
@@ -878,7 +878,7 @@ class CellEditorHandler implements GraphPlugin {
           }
 
           if (this.align !== null) {
-            this.graph.setCellStyles('align', this.align, new CellArray(state.cell));
+            this.graph.setCellStyles('align', this.align, [state.cell]);
           }
         });
       }

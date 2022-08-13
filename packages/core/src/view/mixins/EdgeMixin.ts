@@ -1,5 +1,4 @@
 import Cell from '../cell/Cell';
-import CellArray from '../cell/CellArray';
 import { mixInto } from '../../util/Utils';
 import { removeDuplicates } from '../../util/arrayUtils';
 import { findNearestSegment } from '../../util/mathUtils';
@@ -36,7 +35,7 @@ declare module '../Graph' {
     flipEdge: (edge: Cell) => Cell;
     splitEdge: (
       edge: Cell,
-      cells: CellArray,
+      cells: Cell[],
       newEdge: Cell | null,
       dx?: number,
       dy?: number,
@@ -60,10 +59,10 @@ declare module '../Graph' {
       target: Cell | null,
       index?: number | null
     ) => Cell;
-    addAllEdges: (cells: CellArray) => CellArray;
-    getAllEdges: (cells: CellArray | null) => CellArray;
-    getIncomingEdges: (cell: Cell, parent: Cell | null) => CellArray;
-    getOutgoingEdges: (cell: Cell, parent: Cell | null) => CellArray;
+    addAllEdges: (cells: Cell[]) => Cell[];
+    getAllEdges: (cells: Cell[] | null) => Cell[];
+    getIncomingEdges: (cell: Cell, parent: Cell | null) => Cell[];
+    getOutgoingEdges: (cell: Cell, parent: Cell | null) => Cell[];
     getEdges: (
       cell: Cell,
       parent?: Cell | null,
@@ -71,10 +70,10 @@ declare module '../Graph' {
       outgoing?: boolean,
       includeLoops?: boolean,
       recurse?: boolean
-    ) => CellArray;
-    getChildEdges: (parent: Cell) => CellArray;
-    getEdgesBetween: (source: Cell, target: Cell, directed?: boolean) => CellArray;
-    resetEdges: (cells: CellArray) => void;
+    ) => Cell[];
+    getChildEdges: (parent: Cell) => Cell[];
+    getEdgesBetween: (source: Cell, target: Cell, directed?: boolean) => Cell[];
+    resetEdges: (cells: Cell[]) => void;
     resetEdge: (edge: Cell) => Cell;
   }
 }
@@ -369,7 +368,7 @@ const EdgeMixin: PartialType = {
         true
       );
       this.cellsAdded(
-        new CellArray(newEdge),
+        [newEdge],
         parent as Cell,
         parent ? parent.getChildCount() : 0,
         source,
@@ -476,14 +475,14 @@ const EdgeMixin: PartialType = {
    */
   addAllEdges(cells) {
     const allCells = cells.slice();
-    return new CellArray(...removeDuplicates(allCells.concat(this.getAllEdges(cells))));
+    return removeDuplicates(allCells.concat(this.getAllEdges(cells)));
   },
 
   /**
    * Returns all edges connected to the given cells or its descendants.
    */
   getAllEdges(cells) {
-    let edges: CellArray = new CellArray();
+    let edges: Cell[] = [];
 
     if (cells) {
       for (let i = 0; i < cells.length; i += 1) {
@@ -555,7 +554,7 @@ const EdgeMixin: PartialType = {
     includeLoops = true,
     recurse = false
   ) {
-    let edges: CellArray = new CellArray();
+    let edges: Cell[] = [];
     const isCollapsed = cell.isCollapsed();
     const childCount = cell.getChildCount();
 
@@ -568,7 +567,7 @@ const EdgeMixin: PartialType = {
     }
 
     edges = edges.concat(cell.getEdges(incoming, outgoing));
-    const result = new CellArray();
+    const result = [];
 
     for (let i = 0; i < edges.length; i += 1) {
       const state = this.getView().getState(edges[i]);
@@ -620,7 +619,7 @@ const EdgeMixin: PartialType = {
    */
   getEdgesBetween(source, target, directed = false) {
     const edges = this.getEdges(source);
-    const result = new CellArray();
+    const result = [];
 
     // Checks if the edge is connected to the correct
     // cell and returns the first match

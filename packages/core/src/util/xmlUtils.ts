@@ -1,4 +1,3 @@
-
 /**
  * Copyright (c) 2006-2015, JGraph Ltd
  * Copyright (c) 2006-2015, Gaudenz Alder
@@ -8,7 +7,6 @@
 import { DIALECT, NODETYPE, NS_SVG } from './Constants';
 import Point from '../view/geometry/Point';
 import Cell from '../view/cell/Cell';
-import CellArray from '../view/cell/CellArray';
 import { Graph } from '../view/Graph';
 import { htmlEntities, trim } from './StringUtils';
 import TemporaryCellStates from '../view/cell/TemporaryCellStates';
@@ -26,19 +24,18 @@ export const createXmlDocument = () => {
 
 export const parseXml = (xmlString: string): HTMLElement => {
   return new DOMParser().parseFromString(xmlString, 'text/xml').documentElement;
-}
+};
 
 export const getViewXml = (
   graph: Graph,
-  scale: number=1,
-  cells: CellArray | null=null,
-  x0: number=0,
-  y0: number=0
+  scale: number = 1,
+  cells: Cell[] | null = null,
+  x0: number = 0,
+  y0: number = 0
 ) => {
-
   if (cells == null) {
     const model = graph.getDataModel();
-    cells = new CellArray(<Cell>model.getRoot());
+    cells = [<Cell>model.getRoot()];
   }
 
   const view = graph.getView();
@@ -102,7 +99,7 @@ export const getViewXml = (
  * @param linefeed Optional string that linefeeds are converted into. Default is
  * &#xa;
  */
-export const getXml = (node: Element, linefeed: string='&#xa;'): string => {
+export const getXml = (node: Element, linefeed: string = '&#xa;'): string => {
   const xmlSerializer = new XMLSerializer();
   let xml = xmlSerializer.serializeToString(node);
 
@@ -124,7 +121,13 @@ export const getXml = (node: Element, linefeed: string='&#xa;'): string => {
  * Default is an empty string.
  * @param newline Option string that represents a linefeed. Default is '\n'.
  */
-export const getPrettyXml = (node: Element, tab: string, indent: string, newline: string, ns: string): string => {
+export const getPrettyXml = (
+  node: Element,
+  tab: string,
+  indent: string,
+  newline: string,
+  ns: string
+): string => {
   const result = [];
 
   if (node != null) {
@@ -142,7 +145,13 @@ export const getPrettyXml = (node: Element, tab: string, indent: string, newline
 
     if (node.nodeType === NODETYPE.DOCUMENT) {
       result.push(
-        getPrettyXml((<Document><unknown>node).documentElement, tab, indent, newline, ns)
+        getPrettyXml(
+          (<Document>(<unknown>node)).documentElement,
+          tab,
+          indent,
+          newline,
+          ns
+        )
       );
     } else if (node.nodeType === NODETYPE.DOCUMENT_FRAGMENT) {
       let tmp = node.firstChild;
@@ -154,19 +163,19 @@ export const getPrettyXml = (node: Element, tab: string, indent: string, newline
         }
       }
     } else if (node.nodeType === NODETYPE.COMMENT) {
-      const value = getTextContent(<Text><unknown>node);
+      const value = getTextContent(<Text>(<unknown>node));
 
       if (value.length > 0) {
         result.push(`${indent}<!--${value}-->${newline}`);
       }
     } else if (node.nodeType === NODETYPE.TEXT) {
-      const value = trim(getTextContent(<Text><unknown>node));
+      const value = trim(getTextContent(<Text>(<unknown>node)));
 
       if (value && value.length > 0) {
         result.push(indent + htmlEntities(value, false) + newline);
       }
     } else if (node.nodeType === NODETYPE.CDATA) {
-      const value = getTextContent(<Text><unknown>node);
+      const value = getTextContent(<Text>(<unknown>node));
 
       if (value.length > 0) {
         result.push(`${indent}<![CDATA[${value}]]${newline}`);
@@ -193,9 +202,7 @@ export const getPrettyXml = (node: Element, tab: string, indent: string, newline
         result.push(`>${newline}`);
 
         while (tmp != null) {
-          result.push(
-            getPrettyXml(<Element>tmp, tab, indent + tab, newline, ns)
-          );
+          result.push(getPrettyXml(<Element>tmp, tab, indent + tab, newline, ns));
           tmp = tmp.nextSibling;
         }
 
@@ -212,7 +219,7 @@ export const getPrettyXml = (node: Element, tab: string, indent: string, newline
  * Returns the first node where attr equals value.
  * This implementation does not use XPath.
  */
- export const findNode = (
+export const findNode = (
   node: Element,
   attr: string,
   value: StyleValue

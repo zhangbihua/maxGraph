@@ -5,8 +5,8 @@
  * Type definitions from the typed-mxgraph project
  */
 
+import Cell from '../view/cell/Cell';
 import { Graph } from '../view/Graph';
-import CellArray from '../view/cell/CellArray';
 
 /**
  * @class
@@ -93,12 +93,12 @@ class Clipboard {
   /**
    * Holds the array of {@link mxCell} currently in the clipboard.
    */
-  static cells: CellArray;
+  static cells: Cell[];
 
   /**
    * Sets the cells in the clipboard. Fires a {@link mxEvent.CHANGE} event.
    */
-  static setCells(cells: CellArray) {
+  static setCells(cells: Cell[]) {
     Clipboard.cells = cells;
   }
 
@@ -124,7 +124,7 @@ class Clipboard {
    * @param graph - {@link graph} that contains the cells to be cut.
    * @param cells - Optional array of {@link mxCell} to be cut.
    */
-  static cut(graph: Graph, cells?: CellArray) {
+  static cut(graph: Graph, cells: Cell[] = []) {
     cells = Clipboard.copy(graph, cells);
     Clipboard.insertCount = 0;
     Clipboard.removeCells(graph, cells);
@@ -139,7 +139,7 @@ class Clipboard {
    * @param graph - {@link graph} that contains the cells to be cut.
    * @param cells - Array of {@link mxCell} to be cut.
    */
-  static removeCells(graph: Graph, cells: CellArray) {
+  static removeCells(graph: Graph, cells: Cell[]) {
     // @ts-ignore
     graph.removeCells(cells);
   }
@@ -152,7 +152,7 @@ class Clipboard {
    * @param graph - {@link graph} that contains the cells to be copied.
    * @param cells - Optional array of {@link mxCell} to be copied.
    */
-  static copy(graph: Graph, cells?: CellArray) {
+  static copy(graph: Graph, cells?: Cell[]) {
     cells = cells || graph.getSelectionCells();
     const result = graph.getExportableCells(cells).getTopmostCells();
     Clipboard.insertCount = 1;
@@ -184,7 +184,7 @@ class Clipboard {
 
       // Increments the counter and selects the inserted cells
       Clipboard.insertCount++;
-      graph.setSelectionCells(<CellArray>cells);
+      graph.setSelectionCells(cells);
     }
 
     return cells;

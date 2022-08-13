@@ -18,7 +18,7 @@ import CellPath from '../view/cell/CellPath';
 import Rectangle from '../view/geometry/Rectangle';
 import Cell from '../view/cell/Cell';
 import GraphDataModel from '../view/GraphDataModel';
-import CellArray from '../view/cell/CellArray';
+
 import type { CellStateStyle, CellStyle, NumericCellStateStyleKeys } from '../types';
 
 /**
@@ -426,7 +426,7 @@ export const removeAllStylenames = (style: string) => {
  */
 export const setCellStyles = (
   model: GraphDataModel,
-  cells: CellArray,
+  cells: Cell[],
   key: keyof CellStateStyle,
   value: any
 ) => {
@@ -522,7 +522,7 @@ export const setStyle = (style: string | null, key: string, value: any) => {
  */
 export const setCellStyleFlags = (
   model: GraphDataModel,
-  cells: CellArray,
+  cells: Cell[],
   key: NumericCellStateStyleKeys,
   flag: number,
   value: boolean
@@ -673,7 +673,7 @@ export const getSizeForString = (
  * Sorts the given cells according to the order in the cell hierarchy.
  * Ascending is optional and defaults to true.
  */
-export const sortCells = (cells: CellArray, ascending = true): CellArray => {
+export const sortCells = (cells: Cell[], ascending = true): Cell[] => {
   const lookup = new Dictionary<Cell, string[]>();
 
   cells.sort((o1, o2) => {

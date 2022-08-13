@@ -33,7 +33,6 @@ import Cell from '../cell/Cell';
 import { CellHandle, Listenable } from '../../types';
 import Shape from '../geometry/Shape';
 import InternalMouseEvent from '../event/InternalMouseEvent';
-import CellArray from '../cell/CellArray';
 import EdgeHandler from './EdgeHandler';
 import EventSource from '../event/EventSource';
 import SelectionHandler from './SelectionHandler';
@@ -202,7 +201,7 @@ class VertexHandler {
 
   constructor(state: CellState) {
     this.state = state;
-    this.graph = (<Graph>this.state.view.graph);
+    this.graph = <Graph>this.state.view.graph;
     this.selectionBounds = this.getSelectionBounds(this.state);
     this.bounds = new Rectangle(
       this.selectionBounds.x,
@@ -647,7 +646,7 @@ class VertexHandler {
       this.ghostPreview = this.createGhostPreview();
     } else {
       // Saves reference to parent state
-      const { model } = (<Graph>this.state.view.graph);
+      const { model } = <Graph>this.state.view.graph;
       const parent = this.state.cell.getParent();
 
       if (
@@ -1287,7 +1286,7 @@ class VertexHandler {
         if (!cell.isEdge()) {
           const style = this.graph.getCurrentCellStyle(cell);
           const total = (style.rotation || 0) + angle;
-          this.graph.setCellStyles('rotation', total, new CellArray(cell));
+          this.graph.setCellStyles('rotation', total, [cell]);
         }
 
         let geo = cell.getGeometry();
@@ -1865,7 +1864,9 @@ class VertexHandler {
 
         // Hides rotation handle during text editing
         this.rotationShape.node.style.visibility =
-          (<Graph>this.state.view.graph).isEditing() || !this.handlesVisible ? 'hidden' : '';
+          (<Graph>this.state.view.graph).isEditing() || !this.handlesVisible
+            ? 'hidden'
+            : '';
       }
     }
 
@@ -1884,7 +1885,9 @@ class VertexHandler {
    * Returns true if the given custom handle is visible.
    */
   isCustomHandleVisible(handle: CellHandle) {
-    return !this.graph.isEditing() && (<Graph>this.state.view.graph).getSelectionCount() === 1;
+    return (
+      !this.graph.isEditing() && (<Graph>this.state.view.graph).getSelectionCount() === 1
+    );
   }
 
   /**

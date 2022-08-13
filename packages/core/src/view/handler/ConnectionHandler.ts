@@ -42,7 +42,6 @@ import { Graph } from '../Graph';
 import ConnectionConstraint from '../other/ConnectionConstraint';
 import Shape from '../geometry/Shape';
 import { CellStyle, GraphPlugin, Listenable } from '../../types';
-import CellArray from '../cell/CellArray';
 
 type FactoryMethod = (
   source: Cell | null,
@@ -1735,7 +1734,7 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
           target = this.createTargetVertex(evt, source);
 
           if (target) {
-            dropTarget = this.graph.getDropTarget(new CellArray(target), evt, dropTarget);
+            dropTarget = this.graph.getDropTarget([target], evt, dropTarget);
             terminalInserted = true;
 
             // Disables edges as drop targets if the target cell was created
