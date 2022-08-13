@@ -26,7 +26,6 @@ import { DIALECT } from '../../util/Constants';
 import { addLinkToHead, write } from '../../util/domUtils';
 import { Graph } from '../Graph';
 import CellState from '../cell/CellState';
-import CellArray from '../cell/CellArray';
 import Cell from '../cell/Cell';
 
 /**
@@ -178,14 +177,14 @@ import Cell from '../cell/Cell';
 class PrintPreview {
   constructor(
     graph: Graph,
-    scale: number | null=null,
-    pageFormat: Rectangle | null=null,
-    border: number | null=null,
-    x0: number=0,
-    y0: number=0,
-    borderColor: string | null=null,
-    title: string='Printer-friendly version',
-    pageSelector: boolean | null=null
+    scale: number | null = null,
+    pageFormat: Rectangle | null = null,
+    border: number | null = null,
+    x0: number = 0,
+    y0: number = 0,
+    borderColor: string | null = null,
+    title: string = 'Printer-friendly version',
+    pageSelector: boolean | null = null
   ) {
     this.graph = graph;
     this.scale = scale != null ? scale : 1 / graph.pageScale;
@@ -340,7 +339,14 @@ class PrintPreview {
    * @param targetWindow Optional window that should be used for rendering. If
    * this is specified then no HEAD tag, CSS and BODY tag will be written.
    */
-  appendGraph(graph: Graph, scale: number, x0: number, y0: number, forcePageBreaks: boolean, keepOpen: boolean) {
+  appendGraph(
+    graph: Graph,
+    scale: number,
+    x0: number,
+    y0: number,
+    forcePageBreaks: boolean,
+    keepOpen: boolean
+  ) {
     this.graph = graph;
     this.scale = scale != null ? scale : 1 / graph.pageScale;
     this.x0 = x0;
@@ -357,10 +363,10 @@ class PrintPreview {
    * this is specified then no HEAD tag, CSS and BODY tag will be written.
    */
   open(
-    css: string | null=null,
-    targetWindow: Window | null=null,
-    forcePageBreaks: boolean=false,
-    keepOpen: boolean=false
+    css: string | null = null,
+    targetWindow: Window | null = null,
+    forcePageBreaks: boolean = false,
+    keepOpen: boolean = false
   ): Window | null {
     // Closing the window while the page is being rendered may cause an
     // exception in IE. This and any other exceptions are simply ignored.
@@ -398,7 +404,7 @@ class PrintPreview {
       }
 
       if (!this.wnd) {
-        throw new Error("Create new window not allowed");
+        throw new Error('Create new window not allowed');
       }
       const doc = this.wnd.document;
 
@@ -666,7 +672,7 @@ class PrintPreview {
    */
   createPageSelector(vpages: number, hpages: number): HTMLTableElement {
     if (!this.wnd) {
-      throw new Error("Popup window not created");
+      throw new Error('Popup window not created');
     }
     const doc = this.wnd.document;
     const table = doc.createElement('table');
@@ -713,7 +719,14 @@ class PrintPreview {
    * Takes the inner div as the argument.
    * @param pageNumber Integer representing the page number.
    */
-  renderPage(w: number, h: number, dx: number, dy: number, content: (div: HTMLDivElement) => void, pageNumber?: number): HTMLDivElement{
+  renderPage(
+    w: number,
+    h: number,
+    dx: number,
+    dy: number,
+    content: (div: HTMLDivElement) => void,
+    pageNumber?: number
+  ): HTMLDivElement {
     let div: HTMLDivElement | null = document.createElement('div');
     let arg = null;
 
@@ -805,7 +818,14 @@ class PrintPreview {
    * @param div Div that contains the output.
    * @param clip Contains the clipping rectangle as an {@link Rectangle}.
    */
-  addGraphFragment(dx: number, dy: number, scale: number, pageNumber: number, div: HTMLDivElement, clip: Rectangle) {
+  addGraphFragment(
+    dx: number,
+    dy: number,
+    scale: number,
+    pageNumber: number,
+    div: HTMLDivElement,
+    clip: Rectangle
+  ) {
     const view = this.graph.getView();
     const previousContainer = this.graph.container;
     this.graph.container = div;
@@ -895,7 +915,7 @@ class PrintPreview {
     try {
       // Creates the temporary cell states in the view and
       // draws them onto the temporary DOM nodes in the view
-      const cells = new CellArray(<Cell>this.getRoot());
+      const cells = [<Cell>this.getRoot()];
       temp = new TemporaryCellStates(view, scale, cells, null, (state: CellState) => {
         return this.getLinkForCellState(state);
       });

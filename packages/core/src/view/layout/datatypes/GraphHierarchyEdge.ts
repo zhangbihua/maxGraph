@@ -18,7 +18,6 @@ limitations under the License.
 
 import GraphAbstractHierarchyCell from './GraphAbstractHierarchyCell';
 import ObjectIdentity from '../../../util/ObjectIdentity';
-import CellArray from '../../cell/CellArray';
 import Cell from '../../cell/Cell';
 import GraphHierarchyNode from './GraphHierarchyNode';
 
@@ -27,7 +26,7 @@ class GraphHierarchyEdge extends GraphAbstractHierarchyCell {
    * The graph edge(s) this object represents. Parallel edges are all grouped
    * together within one hierarchy edge.
    */
-  edges: CellArray;
+  edges: Cell[];
 
   /**
    * The object identities of the wrapped cells
@@ -63,7 +62,7 @@ class GraphHierarchyEdge extends GraphAbstractHierarchyCell {
    *
    * edges - a list of real graph edges this abstraction represents
    */
-  constructor(edges: CellArray) {
+  constructor(edges: Cell[]) {
     super();
     this.edges = edges;
     this.ids = [];
@@ -114,7 +113,9 @@ class GraphHierarchyEdge extends GraphAbstractHierarchyCell {
         this.previousLayerConnectedCells[i] = [];
 
         if (i === 0) {
-          this.previousLayerConnectedCells[i].push(this.target as GraphAbstractHierarchyCell);
+          this.previousLayerConnectedCells[i].push(
+            this.target as GraphAbstractHierarchyCell
+          );
         } else {
           this.previousLayerConnectedCells[i].push(this);
         }

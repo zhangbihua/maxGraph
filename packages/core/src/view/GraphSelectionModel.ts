@@ -16,15 +16,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import Client from "../Client";
-import CellArray from "./cell/CellArray"
+import Client from '../Client';
 import EventSource from '../view/event/EventSource';
-import { Graph } from "./Graph"
-import Cell from "./cell/Cell";
-import SelectionChange from "./undoable_changes/SelectionChange";
-import UndoableEdit from "./undoable_changes/UndoableEdit";
-import EventObject from "./event/EventObject";
-import InternalEvent from "./event/InternalEvent";
+import { Graph } from './Graph';
+import Cell from './cell/Cell';
+import SelectionChange from './undoable_changes/SelectionChange';
+import UndoableEdit from './undoable_changes/UndoableEdit';
+import EventObject from './event/EventObject';
+import InternalEvent from './event/InternalEvent';
 
 /**
  * Class: mxGraphSelectionModel
@@ -69,11 +68,11 @@ class GraphSelectionModel extends EventSource {
   constructor(graph: Graph) {
     super();
     this.graph = graph;
-    this.cells = new CellArray();
+    this.cells = [];
   }
 
   graph: Graph;
-  cells: CellArray;
+  cells: Cell[];
 
   /**
    * Specifies the resource key for the status message after a long operation.
@@ -83,16 +82,16 @@ class GraphSelectionModel extends EventSource {
   doneResource = Client.language !== 'none' ? 'done' : '';
 
   /**
-    * Specifies the resource key for the status message while the selection is
-    * being updated. If the resource for this key does not exist then the
-    * value is used as the status message. Default is 'updatingSelection'.
-    */
+   * Specifies the resource key for the status message while the selection is
+   * being updated. If the resource for this key does not exist then the
+   * value is used as the status message. Default is 'updatingSelection'.
+   */
   updatingSelectionResource = Client.language !== 'none' ? 'updatingSelection' : '';
 
   /**
-    * Specifies if only one selected item at a time is allowed.
-    * Default is false.
-    */
+   * Specifies if only one selected item at a time is allowed.
+   * Default is false.
+   */
   singleSelection = false;
 
   /**
@@ -140,7 +139,7 @@ class GraphSelectionModel extends EventSource {
    * @param cell {@link mxCell} to be selected.
    */
   setCell(cell: Cell) {
-    this.setCells(cell ? new CellArray(cell) : new CellArray());
+    this.setCells(cell ? [cell] : []);
   }
 
   /**
@@ -148,12 +147,12 @@ class GraphSelectionModel extends EventSource {
    *
    * @param cells Array of {@link Cell} to be selected.
    */
-  setCells(cells: CellArray) {
+  setCells(cells: Cell[]) {
     if (this.singleSelection) {
-      cells = new CellArray(<Cell>this.getFirstSelectableCell(cells));
+      cells = [<Cell>this.getFirstSelectableCell(cells)];
     }
 
-    const tmp = new CellArray();
+    const tmp = [];
     for (let i = 0; i < cells.length; i += 1) {
       if (this.graph.isCellSelectable(cells[i])) {
         tmp.push(cells[i]);
@@ -165,7 +164,7 @@ class GraphSelectionModel extends EventSource {
   /**
    * Returns the first selectable cell in the given array of cells.
    */
-  getFirstSelectableCell(cells: CellArray) {
+  getFirstSelectableCell(cells: Cell[]) {
     for (let i = 0; i < cells.length; i += 1) {
       if (this.graph.isCellSelectable(cells[i])) {
         return cells[i];
@@ -180,7 +179,7 @@ class GraphSelectionModel extends EventSource {
    * @param cell {@link mxCell} to add to the selection.
    */
   addCell(cell: Cell) {
-    this.addCells(new CellArray(cell));
+    this.addCells([cell]);
   }
 
   /**
@@ -189,16 +188,16 @@ class GraphSelectionModel extends EventSource {
    *
    * @param cells Array of {@link Cell} to add to the selection.
    */
-  addCells(cells: CellArray) {
+  addCells(cells: Cell[]) {
     let remove = null;
     if (this.singleSelection) {
       remove = this.cells;
 
       const selectableCell = this.getFirstSelectableCell(cells);
-      cells = selectableCell ? new CellArray(selectableCell) : new CellArray();
+      cells = selectableCell ? [selectableCell] : [];
     }
 
-    const tmp = new CellArray();
+    const tmp = [];
     for (let i = 0; i < cells.length; i += 1) {
       if (!this.isSelected(cells[i]) && this.graph.isCellSelectable(cells[i])) {
         tmp.push(cells[i]);
@@ -215,7 +214,7 @@ class GraphSelectionModel extends EventSource {
    * @param cell {@link mxCell} to remove from the selection.
    */
   removeCell(cell: Cell) {
-    this.removeCells(new CellArray(cell));
+    this.removeCells([cell]);
   }
 
   /**
@@ -224,8 +223,8 @@ class GraphSelectionModel extends EventSource {
    *
    * @param cells {@link mxCell}s to remove from the selection.
    */
-  removeCells(cells: CellArray) {
-    const tmp = new CellArray();
+  removeCells(cells: Cell[]) {
+    const tmp = [];
 
     for (let i = 0; i < cells.length; i += 1) {
       if (this.isSelected(cells[i])) {
@@ -241,16 +240,12 @@ class GraphSelectionModel extends EventSource {
    * @param added Array of {@link Cell} to add to the selection.
    * @param remove Array of {@link Cell} to remove from the selection.
    */
-  changeSelection(added: CellArray | null=null, removed: CellArray | null=null) {
+  changeSelection(added: Cell[] | null = null, removed: Cell[] | null = null) {
     if (
       (added && added.length > 0 && added[0]) ||
       (removed && removed.length > 0 && removed[0])
     ) {
-      const change = new SelectionChange(
-        this.graph,
-        added || new CellArray(),
-        removed || new CellArray()
-      );
+      const change = new SelectionChange(this.graph, added || [], removed || []);
       change.execute();
       const edit = new UndoableEdit(this.graph, false);
       edit.add(change);

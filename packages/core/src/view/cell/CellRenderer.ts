@@ -61,7 +61,6 @@ import CellOverlay from './CellOverlay';
 import { getClientX, getClientY, getSource } from '../../util/EventUtils';
 import { isNode } from '../../util/domUtils';
 import { CellStateStyle } from '../../types';
-import CellArray from './CellArray';
 import SelectionCellsHandler from '../handler/SelectionCellsHandler';
 import { Graph } from '../Graph';
 
@@ -612,7 +611,7 @@ class CellRenderer {
     return (evt: Event) => {
       if (this.forceControlClickHandler || graph.isEnabled()) {
         const collapse = !state.cell.isCollapsed();
-        graph.foldCells(collapse, false, new CellArray(state.cell), false, evt);
+        graph.foldCells(collapse, false, [state.cell], false, evt);
         InternalEvent.consume(evt);
       }
     };

@@ -22,7 +22,6 @@ import Animation from './Animation';
 import CellState from '../cell/CellState';
 import Cell from '../cell/Cell';
 import { Graph } from '../Graph';
-import CellArray from '../cell/CellArray';
 
 /**
  * Implements animation for morphing cells. Here is an example of
@@ -57,7 +56,7 @@ import CellArray from '../cell/CellArray';
  * @param delay Optional delay between the animation steps. Passed to <Animation>.
  */
 class Morphing extends Animation {
-  constructor(graph: Graph, steps: number=6, ease: number=1.5, delay: number) {
+  constructor(graph: Graph, steps: number = 6, ease: number = 1.5, delay: number) {
     super(delay);
     this.graph = graph;
     this.steps = steps;
@@ -90,7 +89,7 @@ class Morphing extends Animation {
    * then all cells are checked and animated if they have been moved
    * in the current transaction.
    */
-  cells: CellArray | null = null;
+  cells: Cell[] | null = null;
 
   /**
    * Animation step.
@@ -127,7 +126,7 @@ class Morphing extends Animation {
   /**
    * Animates the given cell state using <CellStatePreview.moveState>.
    */
-  animateCell(cell: Cell, move: CellStatePreview, recurse: boolean=false) {
+  animateCell(cell: Cell, move: CellStatePreview, recurse: boolean = false) {
     const state = this.graph.getView().getState(cell);
     let delta = null;
 
@@ -136,10 +135,7 @@ class Morphing extends Animation {
       // change by subtracting the given delta vector from that location
       delta = this.getDelta(state);
 
-      if (
-        cell.isVertex() &&
-        (delta.x != 0 || delta.y != 0)
-      ) {
+      if (cell.isVertex() && (delta.x != 0 || delta.y != 0)) {
         const translate = this.graph.view.getTranslate();
         const scale = this.graph.view.getScale();
 
@@ -154,11 +150,7 @@ class Morphing extends Animation {
       const childCount = cell.getChildCount();
 
       for (let i = 0; i < childCount; i += 1) {
-        this.animateCell(
-          cell.getChildAt(i),
-          move,
-          recurse
-        );
+        this.animateCell(cell.getChildAt(i), move, recurse);
       }
     }
   }
@@ -167,7 +159,7 @@ class Morphing extends Animation {
    * Returns true if the animation should not recursively find more
    * deltas for children if the given parent state has been animated.
    */
-  stopRecursion(state: CellState | null=null, delta: Point | null=null) {
+  stopRecursion(state: CellState | null = null, delta: Point | null = null) {
     return delta != null && (delta.x != 0 || delta.y != 0);
   }
 
@@ -190,7 +182,7 @@ class Morphing extends Animation {
    * by using caching inside this method as the result per cell never changes
    * during the lifecycle of this object.
    */
-  getOriginForCell(cell: Cell | null=null): Point | null {
+  getOriginForCell(cell: Cell | null = null): Point | null {
     let result = null;
 
     if (cell != null) {

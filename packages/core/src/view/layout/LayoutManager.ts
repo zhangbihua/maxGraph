@@ -29,7 +29,6 @@ import EventObject from '../event/EventObject';
 import Cell from '../cell/Cell';
 import Rectangle from '../geometry/Rectangle';
 import { getClientX, getClientY } from '../../util/EventUtils';
-import CellArray from '../cell/CellArray';
 import { Graph } from '../Graph';
 import GraphLayout from './GraphLayout';
 import UndoableEdit from '../undoable_changes/UndoableEdit';
@@ -225,7 +224,7 @@ class LayoutManager extends EventSource {
    * @param cell Array of {@link Cell} that have been moved.
    * @param evt Mouse event that represents the mousedown.
    */
-  cellsMoved(cells: CellArray, evt: MouseEvent) {
+  cellsMoved(cells: Cell[], evt: MouseEvent) {
     if (cells.length > 0 && evt) {
       const point = convertPoint(
         this.getGraph().container,
@@ -250,9 +249,9 @@ class LayoutManager extends EventSource {
    * @param bounds {@link mxRectangle} taht represents the new bounds.
    */
   cellsResized(
-    cells: CellArray | null = null,
+    cells: Cell[] | null = null,
     bounds: Rectangle[] | null = null,
-    prev: CellArray | null = null
+    prev: Cell[] | null = null
   ) {
     if (cells && bounds) {
       for (let i = 0; i < cells.length; i += 1) {
@@ -267,11 +266,11 @@ class LayoutManager extends EventSource {
   /**
    * Returns the cells for which a layout should be executed.
    */
-  getCellsForChanges(changes: any[]): CellArray {
-    let result: CellArray = new CellArray();
+  getCellsForChanges(changes: any[]): Cell[] {
+    let result: Cell[] = [];
     for (const change of changes) {
       if (change instanceof RootChange) {
-        return new CellArray();
+        return [];
       }
       result = result.concat(this.getCellsForChange(change));
     }
@@ -283,7 +282,7 @@ class LayoutManager extends EventSource {
    * changes.
    * @param change  mxChildChange|mxTerminalChange|mxVisibleChange|...
    */
-  getCellsForChange(change: any): CellArray {
+  getCellsForChange(change: any): Cell[] {
     if (change instanceof ChildChange) {
       return this.addCellsWithLayout(
         change.child,
@@ -299,23 +298,20 @@ class LayoutManager extends EventSource {
       return this.addCellsWithLayout(change.cell);
     }
 
-    return new CellArray();
+    return [];
   }
 
   /**
    * Adds all ancestors of the given cell that have a layout.
    */
-  addCellsWithLayout(cell: Cell | null, result: CellArray = new CellArray()) {
+  addCellsWithLayout(cell: Cell | null, result: Cell[] = []) {
     return this.addDescendantsWithLayout(cell, this.addAncestorsWithLayout(cell, result));
   }
 
   /**
    * Adds all ancestors of the given cell that have a layout.
    */
-  addAncestorsWithLayout(
-    cell: Cell | null,
-    result: CellArray = new CellArray()
-  ): CellArray {
+  addAncestorsWithLayout(cell: Cell | null, result: Cell[] = []): Cell[] {
     if (cell) {
       const layout = this.hasLayout(cell);
 
@@ -333,7 +329,7 @@ class LayoutManager extends EventSource {
   /**
    * Adds all descendants of the given cell that have a layout.
    */
-  addDescendantsWithLayout(cell: Cell | null, result: CellArray = new CellArray()) {
+  addDescendantsWithLayout(cell: Cell | null, result: Cell[] = []) {
     if (cell && this.hasLayout(cell)) {
       for (let i = 0; i < cell.getChildCount(); i += 1) {
         const child = <Cell>cell.getChildAt(i);
@@ -351,16 +347,16 @@ class LayoutManager extends EventSource {
   /**
    * Executes the given layout on the given parent.
    */
-  executeLayoutForCells(cells: CellArray) {
+  executeLayoutForCells(cells: Cell[]) {
     const sorted = sortCells(cells, false);
     this.layoutCells(sorted, true);
-    this.layoutCells(new CellArray(...sorted.reverse()), false);
+    this.layoutCells(sorted.reverse(), false);
   }
 
   /**
    * Executes all layouts which have been scheduled during the changes.
    */
-  layoutCells(cells: CellArray, bubble: boolean = false) {
+  layoutCells(cells: Cell[], bubble: boolean = false) {
     if (cells.length > 0) {
       // Invokes the layouts while removing duplicates
       const model = this.getGraph().getDataModel();

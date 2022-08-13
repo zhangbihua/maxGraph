@@ -16,14 +16,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import GraphHierarchyNode from "../datatypes/GraphHierarchyNode";
-import GraphHierarchyEdge from "../datatypes/GraphHierarchyEdge";
-import CellPath from "../../cell/CellPath";
-import Dictionary from "../../../util/Dictionary";
-import CellArray from "../../cell/CellArray";
-import Cell from "../../cell/Cell";
-import { clone } from "../../../util/cloneUtils";
-import SwimlaneLayout from "../SwimlaneLayout";
+import GraphHierarchyNode from '../datatypes/GraphHierarchyNode';
+import GraphHierarchyEdge from '../datatypes/GraphHierarchyEdge';
+import CellPath from '../../cell/CellPath';
+import Dictionary from '../../../util/Dictionary';
+import CellArray from '../../cell/CellArray';
+import Cell from '../../cell/Cell';
+import { clone } from '../../../util/cloneUtils';
+import SwimlaneLayout from '../SwimlaneLayout';
 
 /**
  * Internal model of a hierarchical graph. This model stores nodes and edges
@@ -50,8 +50,8 @@ import SwimlaneLayout from "../SwimlaneLayout";
 class SwimlaneModel {
   constructor(
     layout: SwimlaneLayout,
-    vertices: CellArray,
-    roots: CellArray,
+    vertices: Cell[],
+    roots: Cell[],
     parent: Cell,
     tightenToSource: boolean
   ) {
@@ -103,10 +103,7 @@ class SwimlaneModel {
             internalTargetCell = <GraphHierarchyNode>this.vertexMapper.get(targetCell);
           }
 
-          if (
-            internalTargetCell != null &&
-            internalVertices[i] !== internalTargetCell
-          ) {
+          if (internalTargetCell != null && internalVertices[i] !== internalTargetCell) {
             internalEdge.target = internalTargetCell;
 
             if (internalTargetCell.connectsAsTarget.length == 0) {
@@ -150,7 +147,7 @@ class SwimlaneModel {
    * Store of roots of this hierarchy model, these are real graph cells, not
    * internal cells
    */
-  roots: CellArray;
+  roots: Cell[];
 
   /**
    * The parent cell whose children are being laid out
@@ -189,11 +186,11 @@ class SwimlaneModel {
    */
   createInternalCells(
     layout: SwimlaneLayout,
-    vertices: CellArray,
+    vertices: Cell[],
     internalVertices: GraphHierarchyNode[]
   ): void {
     const graph = layout.getGraph();
-    const swimlanes = <CellArray>layout.swimlanes;
+    const swimlanes = layout.swimlanes as Cell[];
 
     // Create internal edges
     for (let i = 0; i < vertices.length; i += 1) {
@@ -220,11 +217,7 @@ class SwimlaneModel {
         const cell = <Cell>layout.getVisibleTerminal(conns[j], false);
 
         // Looking for outgoing edges only
-        if (
-          cell !== vertices[i] &&
-          cell.isVertex() &&
-          !layout.isVertexIgnored(cell)
-        ) {
+        if (cell !== vertices[i] && cell.isVertex() && !layout.isVertexIgnored(cell)) {
           // We process all edge between this source and its targets
           // If there are edges going both ways, we need to collect
           // them all into one internal edges to avoid looping problems
@@ -238,11 +231,7 @@ class SwimlaneModel {
           // are the same. All the graph edges will have been assigned to
           // an internal edge going the other way, so we don't want to
           // process them again
-          const undirectedEdges = layout.getEdgesBetween(
-            vertices[i],
-            cell,
-            false
-          );
+          const undirectedEdges = layout.getEdgesBetween(vertices[i], cell, false);
           const directedEdges = layout.getEdgesBetween(vertices[i], cell, true);
 
           if (
@@ -269,9 +258,7 @@ class SwimlaneModel {
 
             internalEdge.source = internalVertices[i];
 
-            if (
-              internalVertices[i].connectsAsSource.indexOf(internalEdge) < 0
-            ) {
+            if (internalVertices[i].connectsAsSource.indexOf(internalEdge) < 0) {
               internalVertices[i].connectsAsSource.push(internalEdge);
             }
           }
@@ -468,10 +455,7 @@ class SwimlaneModel {
         const slIndex = <number>root.swimlaneIndex;
         const ranksPerGroup = <{ [key: number]: number }>this.ranksPerGroup;
 
-        if (
-          ranksPerGroup[slIndex] == null ||
-          ranksPerGroup[slIndex] < chainCount
-        ) {
+        if (ranksPerGroup[slIndex] == null || ranksPerGroup[slIndex] < chainCount) {
           ranksPerGroup[slIndex] = chainCount;
         }
 
@@ -486,13 +470,7 @@ class SwimlaneModel {
           // Only navigate in source->target direction within the same
           // swimlane, or from a lower index swimlane to a higher one
           if (<number>root.swimlaneIndex < <number>targetNode.swimlaneIndex) {
-            this.maxChainDfs(
-              root,
-              targetNode,
-              internalEdge,
-              clone(seen, null, true),
-              0
-            );
+            this.maxChainDfs(root, targetNode, internalEdge, clone(seen, null, true), 0);
           } else if (root.swimlaneIndex === targetNode.swimlaneIndex) {
             this.maxChainDfs(
               root,
@@ -537,7 +515,13 @@ class SwimlaneModel {
     }
 
     this.visit(
-      (parent: GraphHierarchyNode, node: GraphHierarchyNode, edge: GraphHierarchyNode, layer: number, seen: number) => {
+      (
+        parent: GraphHierarchyNode,
+        node: GraphHierarchyNode,
+        edge: GraphHierarchyNode,
+        layer: number,
+        seen: number
+      ) => {
         if (seen === 0 && node.maxRank < 0 && node.minRank < 0) {
           rankList[node.temp[0]].push(node);
           node.maxRank = node.temp[0];

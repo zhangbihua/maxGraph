@@ -32,7 +32,6 @@ import TerminalChange from './undoable_changes/TerminalChange';
 import ValueChange from './undoable_changes/ValueChange';
 import VisibleChange from './undoable_changes/VisibleChange';
 import Geometry from './geometry/Geometry';
-import CellArray from './cell/CellArray';
 import ObjectCodec from '../serialization/ObjectCodec';
 import CodecRegistry from '../serialization/CodecRegistry';
 
@@ -338,8 +337,8 @@ export class GraphDataModel extends EventSource {
     return this.cells ? this.cells[id] : null;
   }
 
-  filterCells(cells: CellArray, filter: FilterFunction) {
-    return new CellArray(...cells).filterCells(filter);
+  filterCells(cells: Cell[], filter: FilterFunction) {
+    return cells.filterCells(filter);
   }
 
   getRoot(cell: Cell | null = null) {
@@ -759,7 +758,7 @@ export class GraphDataModel extends EventSource {
    * @param directed  Optional boolean that specifies if the direction of the
    * edge should be taken into account. Default is false.
    */
-  getEdgesBetween(source: Cell, target: Cell, directed: boolean = false): CellArray {
+  getEdgesBetween(source: Cell, target: Cell, directed: boolean = false): Cell[] {
     const tmp1 = source.getEdgeCount();
     const tmp2 = target.getEdgeCount();
 
@@ -774,7 +773,7 @@ export class GraphDataModel extends EventSource {
       terminal = target;
     }
 
-    const result = new CellArray();
+    const result = [];
 
     // Checks if the edge is connected to the correct
     // cell and returns the first match
@@ -1169,7 +1168,7 @@ export class GraphDataModel extends EventSource {
    */
   cloneCell(cell: Cell | null = null, includeChildren: boolean = true): Cell | null {
     if (cell != null) {
-      return new CellArray(cell).cloneCells(includeChildren)[0];
+      return [cell].cloneCells(includeChildren)[0];
     }
     return null;
   }

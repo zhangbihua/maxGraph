@@ -20,7 +20,6 @@ import Point from '../geometry/Point';
 import GraphLayout from './GraphLayout';
 import ObjectIdentity from '../../util/ObjectIdentity';
 import { Graph } from '../Graph';
-import CellArray from '../cell/CellArray';
 import Cell from '../cell/Cell';
 import Geometry from '../geometry/Geometry';
 
@@ -84,7 +83,7 @@ class ParallelEdgeLayout extends GraphLayout {
   /**
    * Implements {@link GraphLayout#execute}.
    */
-  execute(parent: Cell, cells: CellArray | null=null): void {
+  execute(parent: Cell, cells: Cell[] | null = null): void {
     const lookup = this.findParallels(parent, cells);
 
     this.graph.model.beginUpdate();
@@ -104,7 +103,7 @@ class ParallelEdgeLayout extends GraphLayout {
   /**
    * Finds the parallel edges in the given parent.
    */
-  findParallels(parent: Cell, cells: CellArray | null=null) {
+  findParallels(parent: Cell, cells: Cell[] | null = null) {
     const lookup: any = [];
 
     const addCell = (cell: Cell) => {
@@ -178,7 +177,7 @@ class ParallelEdgeLayout extends GraphLayout {
   /**
    * Lays out the parallel edges in the given array.
    */
-  layout(parallels: CellArray) {
+  layout(parallels: Cell[]) {
     const edge = parallels[0];
     const view = this.graph.getView();
     const model = this.graph.getDataModel();

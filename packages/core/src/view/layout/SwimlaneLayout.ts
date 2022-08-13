@@ -28,7 +28,6 @@ import MedianHybridCrossingReduction from './hierarchical/MedianHybridCrossingRe
 import CoordinateAssignment from './hierarchical/CoordinateAssignment';
 import { Graph } from '../Graph';
 import Cell from '../cell/Cell';
-import CellArray from '../cell/CellArray';
 import Geometry from '../../view/geometry/Geometry';
 import GraphHierarchyNode from './datatypes/GraphHierarchyNode';
 
@@ -48,7 +47,11 @@ import GraphHierarchyNode from './datatypes/GraphHierarchyNode';
  * deterministic. Default is true.
  */
 class SwimlaneLayout extends GraphLayout {
-  constructor(graph: Graph, orientation: DIRECTION | null, deterministic: boolean = true) {
+  constructor(
+    graph: Graph,
+    orientation: DIRECTION | null,
+    deterministic: boolean = true
+  ) {
     super(graph);
     this.orientation = orientation != null ? orientation : DIRECTION.NORTH;
     this.deterministic = deterministic != null ? deterministic : true;
@@ -61,12 +64,12 @@ class SwimlaneLayout extends GraphLayout {
   /**
    * Holds the array of <Cell> that this layout contains.
    */
-  roots: CellArray | null = null;
+  roots: Cell[] | null = null;
 
   /**
    * Holds the array of <Cell> of the ordered swimlanes to lay out
    */
-  swimlanes: CellArray | null = null;
+  swimlanes: Cell[] | null = null;
 
   /**
    * The cell width of any dummy vertices inserted
@@ -159,7 +162,7 @@ class SwimlaneLayout extends GraphLayout {
   /**
    * A cache of edges whose source terminal is the key
    */
-  edgesCache: Dictionary<Cell, CellArray> = new Dictionary();
+  edgesCache: Dictionary<Cell, Cell[]> = new Dictionary();
 
   /**
    * A cache of edges whose source terminal is the key
@@ -190,7 +193,7 @@ class SwimlaneLayout extends GraphLayout {
    * @param parent Parent <Cell> that contains the children to be laid out.
    * @param swimlanes Ordered array of swimlanes to be laid out
    */
-  execute(parent: Cell, swimlanes: CellArray | null=null): void {
+  execute(parent: Cell, swimlanes: Cell[] | null = null): void {
     this.parent = parent;
     const { model } = this.graph;
     this.edgesCache = new Dictionary();
@@ -231,7 +234,7 @@ class SwimlaneLayout extends GraphLayout {
     }
 
     this.swimlanes = swimlanes;
-    const dummyVertices = new CellArray();
+    const dummyVertices = [];
 
     // Check the swimlanes all have vertices
     // in them
@@ -257,7 +260,7 @@ class SwimlaneLayout extends GraphLayout {
       this.run(parent);
 
       if (this.resizeParent && !parent.isCollapsed()) {
-        this.graph.updateGroupBounds(new CellArray(parent), this.parentBorder, this.moveParent);
+        this.graph.updateGroupBounds([parent], this.parentBorder, this.moveParent);
       }
 
       // Maintaining parent location
@@ -285,7 +288,7 @@ class SwimlaneLayout extends GraphLayout {
    */
   updateGroupBounds(): void {
     // Get all vertices and edge in the layout
-    const cells = new CellArray();
+    const cells = [];
     const model = <SwimlaneModel>this.model;
 
     for (const key in model.edgeMapper) {
@@ -299,7 +302,7 @@ class SwimlaneLayout extends GraphLayout {
 
     let layoutBounds = this.graph.getBoundingBoxFromGeometry(cells, true);
     const childBounds = [];
-    const swimlanes = <CellArray>this.swimlanes;
+    const swimlanes = this.swimlanes as Cell[];
 
     for (let i = 0; i < swimlanes.length; i += 1) {
       const lane = swimlanes[i];
@@ -350,7 +353,8 @@ class SwimlaneLayout extends GraphLayout {
         newGeo.y = y;
 
         newGeo.width = childBounds[i].width + w + this.interRankCellSpacing / 2;
-        newGeo.height = (<Rectangle>layoutBounds).height + size.height + 2 * this.parentBorder;
+        newGeo.height =
+          (<Rectangle>layoutBounds).height + size.height + 2 * this.parentBorder;
 
         this.graph.model.setGeometry(lane, newGeo);
         this.graph.moveCells(children, -x, geo.y - y);
@@ -368,8 +372,8 @@ class SwimlaneLayout extends GraphLayout {
    * @param parent <Cell> whose children should be checked.
    * @param vertices array of vertices to limit search to
    */
-  findRoots(parent: Cell, vertices: { [key: string]: Cell }): CellArray {
-    const roots = new CellArray();
+  findRoots(parent: Cell, vertices: { [key: string]: Cell }): Cell[] {
+    const roots = [];
 
     if (parent != null && vertices != null) {
       const { model } = this.graph;
@@ -429,14 +433,14 @@ class SwimlaneLayout extends GraphLayout {
    *
    * @param cell <Cell> whose edges should be returned.
    */
-  getEdges(cell: Cell): CellArray {
+  getEdges(cell: Cell): Cell[] {
     const cachedEdges = this.edgesCache.get(cell);
 
     if (cachedEdges != null) {
       return cachedEdges;
     }
 
-    let edges = new CellArray();
+    let edges: Cell[] = [];
     const isCollapsed = cell.isCollapsed();
     const childCount = cell.getChildCount();
 
@@ -451,7 +455,7 @@ class SwimlaneLayout extends GraphLayout {
     }
 
     edges = edges.concat(cell.getEdges(true, true));
-    const result = new CellArray();
+    const result = [];
 
     for (let i = 0; i < edges.length; i += 1) {
       const source = this.getVisibleTerminal(edges[i], true);
@@ -462,7 +466,11 @@ class SwimlaneLayout extends GraphLayout {
         (source !== target &&
           ((target === cell &&
             (this.parent == null ||
-              this.graph.isValidAncestor(<Cell>source, this.parent, this.traverseAncestors))) ||
+              this.graph.isValidAncestor(
+                <Cell>source,
+                this.parent,
+                this.traverseAncestors
+              ))) ||
             (source === cell &&
               (this.parent == null ||
                 this.graph.isValidAncestor(
@@ -539,7 +547,7 @@ class SwimlaneLayout extends GraphLayout {
         this.filterDescendants(this.swimlanes[i], filledVertexSet);
       }
 
-      this.roots = new CellArray();
+      this.roots = [];
       let filledVertexSetEmpty = true;
 
       // Poor man's isSetEmpty
@@ -599,21 +607,36 @@ class SwimlaneLayout extends GraphLayout {
       }
     } else {
       // Find vertex set as directed traversal from roots
-      const roots = <CellArray>this.roots;
+      const roots = this.roots as Cell[];
 
       for (let i = 0; i < roots.length; i += 1) {
         const vertexSet = Object();
         hierarchyVertices.push(vertexSet);
-        this.traverse(roots[i], true, null, allVertexSet, vertexSet, hierarchyVertices, null, i);  // CHECK THIS PARAM!! ====================
+        this.traverse(
+          roots[i],
+          true,
+          null,
+          allVertexSet,
+          vertexSet,
+          hierarchyVertices,
+          null,
+          i
+        ); // CHECK THIS PARAM!! ====================
       }
     }
 
-    const tmp = new CellArray();
+    const tmp = [];
     for (var key in allVertexSet) {
       tmp.push(allVertexSet[key]);
     }
 
-    this.model = new SwimlaneModel(this, tmp, <CellArray>this.roots, parent, this.tightenToSource);
+    this.model = new SwimlaneModel(
+      this,
+      tmp,
+      this.roots as Cell[],
+      parent,
+      this.tightenToSource
+    );
 
     this.cycleStage(parent);
     this.layeringStage();
@@ -675,7 +698,7 @@ class SwimlaneLayout extends GraphLayout {
    */
   getEdgesBetween(source: Cell, target: Cell, directed: boolean = false) {
     const edges = this.getEdges(source);
-    const result = new CellArray();
+    const result = [];
 
     // Checks if the edge is connected to the correct
     // cell and returns the first match
@@ -710,13 +733,13 @@ class SwimlaneLayout extends GraphLayout {
    */
   // @ts-ignore
   traverse(
-    vertex: Cell | null=null,
+    vertex: Cell | null = null,
     directed: boolean,
     edge: Cell | null,
-    allVertices: { [key: string]: Cell } | null=null,
+    allVertices: { [key: string]: Cell } | null = null,
     currentComp: { [key: string]: Cell },
     hierarchyVertices: GraphHierarchyNode[],
-    filledVertexSet: { [key: string]: Cell } | null=null,
+    filledVertexSet: { [key: string]: Cell } | null = null,
     swimlaneIndex: number
   ) {
     if (vertex != null && allVertices != null) {
@@ -752,7 +775,7 @@ class SwimlaneLayout extends GraphLayout {
           }
 
           let otherIndex = 0;
-          const swimlanes = <CellArray>this.swimlanes;
+          const swimlanes = this.swimlanes as Cell[];
 
           // Get the swimlane index of the other terminal
           for (otherIndex = 0; otherIndex < swimlanes.length; otherIndex++) {
