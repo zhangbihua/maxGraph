@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import CellArray from '../cell/CellArray';
 import { mixInto } from '../../util/Utils';
 import { sortCells } from '../../util/styleUtils';
 import EventObject from '../event/EventObject';
