@@ -15,7 +15,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Graph, RubberBandHandler, SelectionHandler, PopupMenuHandler } from '@maxgraph/core';
+import {
+  Graph,
+  RubberBandHandler,
+  SelectionHandler,
+  PopupMenuHandler,
+} from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -58,8 +63,9 @@ const Template = ({ label, ...args }) => {
   const graphHandlerGetInitialCellForEvent =
     SelectionHandler.prototype.getInitialCellForEvent;
   SelectionHandler.prototype.getInitialCellForEvent = function (me) {
-    const model = this.graph.getDataModel();
-    const psel = this.graph.getSelectionCell().getParent();
+    const psel = this.graph.getSelectionCell()
+      ? this.graph.getSelectionCell().getParent()
+      : null;
     let cell = graphHandlerGetInitialCellForEvent.apply(this, arguments);
     let parent = cell.getParent();
 
@@ -82,8 +88,9 @@ const Template = ({ label, ...args }) => {
   const graphHandlerIsDelayedSelection = SelectionHandler.prototype.isDelayedSelection;
   SelectionHandler.prototype.isDelayedSelection = function (cell) {
     let result = graphHandlerIsDelayedSelection.apply(this, arguments);
-    const model = this.graph.getDataModel();
-    const psel = this.graph.getSelectionCell().getParent();
+    const psel = this.graph.getSelectionCell()
+      ? this.graph.getSelectionCell().getParent()
+      : null;
     const parent = cell.getParent();
 
     if (psel == null || (psel != cell && psel != parent)) {

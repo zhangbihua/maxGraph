@@ -60,8 +60,6 @@ import Multiplicity from './other/Multiplicity';
 import ImageBundle from './image/ImageBundle';
 import GraphSelectionModel from './GraphSelectionModel';
 
-import './cell/CellArray';
-
 export const defaultPlugins: GraphPluginConstructor[] = [
   CellEditorHandler,
   TooltipHandler,

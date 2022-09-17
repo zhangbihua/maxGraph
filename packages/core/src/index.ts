@@ -161,6 +161,7 @@ export * as stringUtils from './util/StringUtils';
 export * as xmlUtils from './util/xmlUtils';
 export * as styleUtils from './util/styleUtils';
 export * as mathUtils from './util/mathUtils';
+export * as cellArrayUtils from './util/cellArrayUtils';
 
 export { default as Animation } from './view/animate/Animation';
 export { default as Effects } from './view/animate/Effects';

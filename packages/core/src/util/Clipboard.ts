@@ -18,6 +18,7 @@ limitations under the License.
 
 import Cell from '../view/cell/Cell';
 import { Graph } from '../view/Graph';
+import { getTopmostCells } from './cellArrayUtils';
 
 /**
  * @class
@@ -151,7 +152,6 @@ class Clipboard {
    * @param cells - Array of {@link mxCell} to be cut.
    */
   static removeCells(graph: Graph, cells: Cell[]) {
-    // @ts-ignore
     graph.removeCells(cells);
   }
 
@@ -165,9 +165,9 @@ class Clipboard {
    */
   static copy(graph: Graph, cells?: Cell[]) {
     cells = cells || graph.getSelectionCells();
-    const result = graph.getExportableCells(cells).getTopmostCells();
+    const result = getTopmostCells(graph.getExportableCells(cells));
     Clipboard.insertCount = 1;
-    // @ts-ignore
+
     Clipboard.setCells(graph.cloneCells(result));
     return result;
   }
@@ -190,7 +190,7 @@ class Clipboard {
       cells = graph.getImportableCells(Clipboard.getCells());
       const delta = Clipboard.insertCount * Clipboard.STEPSIZE;
       const parent = graph.getDefaultParent();
-      // @ts-ignore
+
       cells = graph.importCells(cells, delta, delta, parent);
 
       // Increments the counter and selects the inserted cells

@@ -391,7 +391,7 @@ class GraphHierarchyModel {
    * to create dummy nodes for edges that cross layers.
    */
   fixRanks(): void {
-    // TODO: Should this be a CellArray?
+    // TODO: Should this be a Cell[]?
     const rankList: { [key: number]: GraphAbstractHierarchyCell[] } = {};
     this.ranks = [];
 
