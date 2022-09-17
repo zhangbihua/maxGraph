@@ -22,6 +22,7 @@ import VisibleChange from './undoable_changes/VisibleChange';
 import Geometry from './geometry/Geometry';
 import ObjectCodec from '../serialization/ObjectCodec';
 import CodecRegistry from '../serialization/CodecRegistry';
+import { cloneCells, filterCells } from '../util/cellArrayUtils';
 
 import type { CellStyle, FilterFunction } from '../types';
 
@@ -326,7 +327,7 @@ export class GraphDataModel extends EventSource {
   }
 
   filterCells(cells: Cell[], filter: FilterFunction) {
-    return cells.filterCells(filter);
+    return filterCells(filter)(cells);
   }
 
   getRoot(cell: Cell | null = null) {
@@ -1156,7 +1157,7 @@ export class GraphDataModel extends EventSource {
    */
   cloneCell(cell: Cell | null = null, includeChildren: boolean = true): Cell | null {
     if (cell != null) {
-      return [cell].cloneCells(includeChildren)[0];
+      return cloneCells(includeChildren)([cell])[0];
     }
     return null;
   }

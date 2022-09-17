@@ -30,6 +30,7 @@ import Point from '../geometry/Point';
 import { htmlEntities } from '../../util/StringUtils';
 import CellState from '../cell/CellState';
 import { Graph } from '../Graph';
+import { cloneCells, getTopmostCells } from '../../util/cellArrayUtils';
 
 import type { CellStateStyle, CellStyle, NumericCellStateStyleKeys } from '../../types';
 
@@ -90,8 +91,8 @@ declare module '../Graph' {
     ) => Cell;
     cloneCells: (
       cells: Cell[],
-      allowInvalidEdges: boolean,
-      mapping: any,
+      allowInvalidEdges?: boolean,
+      mapping?: any,
       keepPosition?: boolean
     ) => Cell[];
     addCell: (
@@ -144,9 +145,9 @@ declare module '../Graph' {
       cells: Cell[],
       dx: number,
       dy: number,
-      target: Cell | null,
-      evt: MouseEvent | null,
-      mapping: any
+      target?: Cell | null,
+      evt?: MouseEvent | null,
+      mapping?: any
     ) => Cell[];
     moveCells: (
       cells: Cell[],
@@ -836,7 +837,6 @@ export const CellsMixin: PartialType = {
    * @param keepPosition Optional boolean indicating if the position of the cells should
    * be updated to reflect the lost parent cell. Default is `false`.
    */
-  // cloneCell(cell: mxCell, allowInvalidEdges?: boolean, mapping?: any, keepPosition?: boolean): mxCellArray;
   cloneCell(cell, allowInvalidEdges = false, mapping = null, keepPosition = false) {
     return this.cloneCells([cell], allowInvalidEdges, mapping, keepPosition)[0];
   },
@@ -854,7 +854,6 @@ export const CellsMixin: PartialType = {
    * @param keepPosition Optional boolean indicating if the position of the cells should
    * be updated to reflect the lost parent cell. Default is `false`.
    */
-  // cloneCells(cells: mxCellArray, allowInvalidEdges?: boolean, mapping?: any, keepPosition?: boolean): mxCellArray;
   cloneCells(cells, allowInvalidEdges = true, mapping = {}, keepPosition = false) {
     let clones: Cell[];
 
@@ -871,7 +870,7 @@ export const CellsMixin: PartialType = {
       const { scale } = this.getView();
       const trans = this.getView().translate;
       const out: Cell[] = [];
-      clones = cells.cloneCells(true, mapping);
+      clones = cloneCells(true, mapping)(cells);
 
       for (let i = 0; i < cells.length; i += 1) {
         const cell = cells[i];
@@ -1852,7 +1851,7 @@ export const CellsMixin: PartialType = {
   ) {
     if (dx !== 0 || dy !== 0 || clone || target) {
       // Removes descendants with ancestors in cells to avoid multiple moving
-      cells = cells.getTopmostCells();
+      cells = getTopmostCells(cells);
       const origCells = cells;
 
       this.batchUpdate(() => {
