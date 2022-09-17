@@ -66,6 +66,14 @@ You will see something like in the following _maxGraph panning_ demo:
 For more details, have a look at the [storybook stories](packages/html/stories).
 
 
+## TypeScript
+
+maxGraph is written in TypeScript and provides type definitions so maxGraph can be easily integrated into TypeScript projects.
+
+**WARN**: some definitions are currently buggy, so please set `skipLibCheck` to `true` in the `tsconfig.json` file of your project.
+For more details, see issues [#96](https://github.com/maxGraph/maxGraph/issues/96) and [#105](https://github.com/maxGraph/maxGraph/issues/105#issuecomment-1240640369).
+
+
 ## Support
 
 For usage question, please open a new [discussion](https://github.com/maxGraph/maxGraph/discussions/categories/q-a) on GitHub. You can also use
@@ -164,4 +172,4 @@ Run
 
 The `packages/core` folder or the generated `packages/core/maxgraph-core-***.tgz` file are now ready for use in an external project, using [npm link](https://docs.npmjs.com/cli/v8/commands/npm-link) or `npm install`.
 
-Examples of use can be found in this [repository].(https://github.com/tbouffard/maxgraph-integration-examples).
+Examples of use can be found in this [repository](https://github.com/tbouffard/maxgraph-integration-examples).
