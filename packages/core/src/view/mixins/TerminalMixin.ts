@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import CellArray from '../cell/CellArray';
 import Cell from '../cell/Cell';
 import Dictionary from '../../util/Dictionary';
 import { Graph } from '../Graph';
