@@ -109,14 +109,16 @@ class GraphHierarchyNode extends GraphAbstractHierarchyCell {
   getPreviousLayerConnectedCells(layer: number): GraphAbstractHierarchyCell[] {
     if (this.previousLayerConnectedCells == null) {
       this.previousLayerConnectedCells = [];
-      this.previousLayerConnectedCells[0] = []; // new CellArray()??
+      this.previousLayerConnectedCells[0] = [];
 
       for (let i = 0; i < this.connectsAsSource.length; i += 1) {
         const edge = this.connectsAsSource[i];
 
         if (edge.minRank === -1 || edge.minRank === layer - 1) {
           // No dummy nodes in edge, add node of other side of edge
-          this.previousLayerConnectedCells[0].push(<GraphAbstractHierarchyCell>edge.target);
+          this.previousLayerConnectedCells[0].push(
+            <GraphAbstractHierarchyCell>edge.target
+          );
         } else {
           // Edge spans at least two layers, add edge
           this.previousLayerConnectedCells[0].push(edge);

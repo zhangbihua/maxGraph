@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 import Cell from '../cell/Cell';
-import CellArray from '../cell/CellArray';
 import Rectangle from '../geometry/Rectangle';
 import Dictionary from '../../util/Dictionary';
 import RootChange from '../undoable_changes/RootChange';
@@ -26,7 +25,7 @@ import GraphSelectionModel from '../GraphSelectionModel';
 
 declare module '../Graph' {
   interface Graph {
-    cells: CellArray;
+    cells: Cell[];
     doneResource: string;
     updatingSelectionResource: string;
     singleSelection: boolean;
@@ -39,14 +38,14 @@ declare module '../Graph' {
     clearSelection: () => void;
     getSelectionCount: () => number;
     getSelectionCell: () => Cell;
-    getSelectionCells: () => CellArray;
+    getSelectionCells: () => Cell[];
     setSelectionCell: (cell: Cell | null) => void;
-    setSelectionCells: (cells: CellArray) => void;
+    setSelectionCells: (cells: Cell[]) => void;
     addSelectionCell: (cell: Cell) => void;
-    addSelectionCells: (cells: CellArray) => void;
+    addSelectionCells: (cells: Cell[]) => void;
     removeSelectionCell: (cell: Cell) => void;
-    removeSelectionCells: (cells: CellArray) => void;
-    selectRegion: (rect: Rectangle, evt: MouseEvent) => CellArray;
+    removeSelectionCells: (cells: Cell[]) => void;
+    selectRegion: (rect: Rectangle, evt: MouseEvent) => Cell[];
     selectNextCell: () => void;
     selectPreviousCell: () => void;
     selectParentCell: () => void;
@@ -62,9 +61,9 @@ declare module '../Graph' {
       selectGroups?: boolean
     ) => void;
     selectCellForEvent: (cell: Cell, evt: MouseEvent) => void;
-    selectCellsForEvent: (cells: CellArray, evt: MouseEvent) => void;
+    selectCellsForEvent: (cells: Cell[], evt: MouseEvent) => void;
     isSiblingSelected: (cell: Cell) => boolean;
-    getSelectionCellsForChanges: (changes: any[], ignoreFn?: Function | null) => CellArray;
+    getSelectionCellsForChanges: (changes: any[], ignoreFn?: Function | null) => Cell[];
     updateSelection: () => void;
   }
 }
@@ -287,7 +286,8 @@ const SelectionMixin: PartialType = {
    * @param isChild Boolean indicating if the first child cell should be selected.
    */
   selectCell(isNext = false, isParent = false, isChild = false) {
-    const cell = this.selectionModel.cells.length > 0 ? this.selectionModel.cells[0] : null;
+    const cell =
+      this.selectionModel.cells.length > 0 ? this.selectionModel.cells[0] : null;
 
     if (this.selectionModel.cells.length > 1) {
       this.selectionModel.clear();
@@ -468,7 +468,7 @@ const SelectionMixin: PartialType = {
    */
   getSelectionCellsForChanges(changes, ignoreFn = null) {
     const dict = new Dictionary();
-    const cells: CellArray = new CellArray();
+    const cells: Cell[] = [];
 
     const addCell = (cell: Cell) => {
       if (!dict.get(cell) && this.getDataModel().contains(cell)) {
@@ -510,7 +510,7 @@ const SelectionMixin: PartialType = {
    */
   updateSelection() {
     const cells = this.getSelectionCells();
-    const removed = new CellArray();
+    const removed = [];
 
     for (const cell of cells) {
       if (!this.getDataModel().contains(cell) || !cell.isVisible()) {

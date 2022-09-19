@@ -21,7 +21,6 @@ import {
   RubberBandHandler,
   ImageBox,
   Rectangle,
-  CellArray,
   mathUtils,
   domUtils,
   ConnectionHandler,
@@ -73,7 +72,7 @@ const Template = ({ label, ...args }) => {
 
       InternalEvent.addGestureListeners(img, (evt) => {
         const s = graph.gridSize;
-        graph.setSelectionCells(graph.moveCells(new CellArray(state.cell), s, s, true));
+        graph.setSelectionCells(graph.moveCells([state.cell], s, s, true));
         InternalEvent.consume(evt);
         this.destroy();
       });
@@ -99,7 +98,7 @@ const Template = ({ label, ...args }) => {
       });
 
       InternalEvent.addListener(img, 'click', (evt) => {
-        graph.removeCells(new CellArray(state.cell));
+        graph.removeCells([state.cell]);
         InternalEvent.consume(evt);
         this.destroy();
       });

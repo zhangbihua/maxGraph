@@ -22,7 +22,6 @@ import CellOverlay from './CellOverlay';
 import { clone } from '../../util/cloneUtils';
 import Point from '../geometry/Point';
 import CellPath from './CellPath';
-import CellArray from './CellArray';
 import { isNotNullish } from '../../util/Utils';
 import ObjectCodec from '../../serialization/ObjectCodec';
 import CodecRegistry from '../../serialization/CodecRegistry';
@@ -91,8 +90,8 @@ export class Cell {
   }
 
   // TODO: Document me!!!
-  getChildren(): CellArray {
-    return this.children || new CellArray();
+  getChildren(): Cell[] {
+    return this.children || [];
   }
 
   // TODO: Document me!
@@ -168,12 +167,12 @@ export class Cell {
   /**
    * Holds the child cells.
    */
-  children: CellArray = new CellArray();
+  children: Cell[] = [];
 
   /**
    * Holds the edges.
    */
-  edges: CellArray = new CellArray();
+  edges: Cell[] = [];
 
   /**
    * List of members that should not be cloned inside <clone>. This field is
@@ -684,14 +683,14 @@ export class Cell {
   /**
    * Returns the child vertices of the given parent.
    */
-  getChildVertices(): CellArray {
+  getChildVertices() {
     return this.getChildCells(true, false);
   }
 
   /**
    * Returns the child edges of the given parent.
    */
-  getChildEdges(): CellArray {
+  getChildEdges() {
     return this.getChildCells(false, true);
   }
 
@@ -704,9 +703,9 @@ export class Cell {
    * @param edges  Boolean indicating if child edges should be returned.
    * Default is false.
    */
-  getChildCells(vertices: boolean = false, edges: boolean = false): CellArray {
+  getChildCells(vertices: boolean = false, edges: boolean = false) {
     const childCount = this.getChildCount();
-    const result = new CellArray();
+    const result = [];
 
     for (let i = 0; i < childCount; i += 1) {
       const child = this.getChildAt(i);
@@ -748,21 +747,21 @@ export class Cell {
   /**
    * Returns all edges of the given cell without loops.
    */
-  getConnections(): CellArray {
+  getConnections() {
     return this.getEdges(true, true, false);
   }
 
   /**
    * Returns the incoming edges of the given cell without loops.
    */
-  getIncomingEdges(): CellArray {
+  getIncomingEdges() {
     return this.getEdges(true, false, false);
   }
 
   /**
    * Returns the outgoing edges of the given cell without loops.
    */
-  getOutgoingEdges(): CellArray {
+  getOutgoingEdges() {
     return this.getEdges(false, true, false);
   }
 
@@ -783,9 +782,9 @@ export class Cell {
     incoming: boolean = true,
     outgoing: boolean = true,
     includeLoops: boolean = true
-  ): CellArray {
+  ) {
     const edgeCount = this.getEdgeCount();
-    const result = new CellArray();
+    const result = [];
 
     for (let i = 0; i < edgeCount; i += 1) {
       const edge = this.getEdgeAt(i);
@@ -831,7 +830,7 @@ export class Cell {
   /**
    * Returns all descendants of the given cell and the cell itself in an array.
    */
-  getDescendants(): CellArray {
+  getDescendants() {
     return this.filterDescendants(null);
   }
 
@@ -854,9 +853,9 @@ export class Cell {
    * @param filter  JavaScript function that takes an {@link Cell} as an argument
    * and returns a boolean.
    */
-  filterDescendants(filter: FilterFunction | null): CellArray {
+  filterDescendants(filter: FilterFunction | null): Cell[] {
     // Creates a new array for storing the result
-    let result = new CellArray();
+    let result: Cell[] = [];
 
     // Checks if the filter returns true for the cell
     // and adds it to the result array
@@ -868,7 +867,7 @@ export class Cell {
     const childCount = this.getChildCount();
     for (let i = 0; i < childCount; i += 1) {
       const child = this.getChildAt(i);
-      result = new CellArray(...result.concat(child.filterDescendants(filter)));
+      result = result.concat(child.filterDescendants(filter));
     }
 
     return result;

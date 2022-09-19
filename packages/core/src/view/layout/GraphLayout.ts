@@ -22,7 +22,6 @@ import Geometry from '../geometry/Geometry';
 import Point from '../geometry/Point';
 import { Graph } from '../Graph';
 import Cell from '../cell/Cell';
-import CellArray from '../cell/CellArray';
 
 /**
  * @class GraphLayout
@@ -241,14 +240,14 @@ class GraphLayout {
    * Disables or enables the edge style of the given edge.
    */
   setEdgeStyleEnabled(edge: Cell, value: any): void {
-    this.graph.setCellStyles('noEdgeStyle', value ? '0' : '1', new CellArray(edge));
+    this.graph.setCellStyles('noEdgeStyle', value ? '0' : '1', [edge]);
   }
 
   /**
    * Disables or enables orthogonal end segments of the given edge.
    */
   setOrthogonalEdge(edge: Cell, value: any): void {
-    this.graph.setCellStyles('orthogonal', value ? '1' : '0', new CellArray(edge));
+    this.graph.setCellStyles('orthogonal', value ? '1' : '0', [edge]);
   }
 
   /**
@@ -419,7 +418,7 @@ class GraphLayout {
    * Shortcut to {@link Graph#updateGroupBounds} with moveGroup set to true.
    */
   arrangeGroups(
-    cells: CellArray,
+    cells: Cell[],
     border: number,
     topBorder: number,
     rightBorder: number,

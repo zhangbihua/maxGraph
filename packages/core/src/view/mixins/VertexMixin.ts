@@ -17,7 +17,6 @@ limitations under the License.
 import Cell from '../cell/Cell';
 import Geometry from '../geometry/Geometry';
 import { Graph } from '../Graph';
-import CellArray from '../cell/CellArray';
 import { mixInto } from '../../util/Utils';
 import type { CellStyle } from '../../types';
 
@@ -41,7 +40,7 @@ declare module '../Graph' {
       relative: boolean,
       geometryClass: typeof Geometry
     ) => Cell;
-    getChildVertices: (parent?: Cell | null) => CellArray;
+    getChildVertices: (parent?: Cell | null) => Cell[];
     isVertexLabelsMovable: () => boolean;
     setVertexLabelsMovable: (value: boolean) => void;
   }

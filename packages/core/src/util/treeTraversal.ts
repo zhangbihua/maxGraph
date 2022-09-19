@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 import Cell from '../view/cell/Cell';
-import CellArray from '../view/cell/CellArray';
 import Dictionary from './Dictionary';
 import { Graph } from '../view/Graph';
 
@@ -42,7 +41,7 @@ export function findTreeRoots(
   isolate: boolean = false,
   invert: boolean = false
 ) {
-  const roots: CellArray = new CellArray();
+  const roots: Cell[] = [];
 
   if (parent != null) {
     let best = null;

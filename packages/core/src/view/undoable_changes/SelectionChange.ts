@@ -17,21 +17,17 @@ limitations under the License.
 import EventObject from '../event/EventObject';
 import Translations from '../../util/Translations';
 import InternalEvent from '../event/InternalEvent';
-import CellArray from '../cell/CellArray';
 
 import type { UndoableChange } from '../../types';
 import type { Graph } from '../Graph';
+import Cell from '../cell/Cell';
 
 /**
  * @class SelectionChange
  * Action to change the current root in a view.
  */
 class SelectionChange implements UndoableChange {
-  constructor(
-    graph: Graph,
-    added: CellArray = new CellArray(),
-    removed: CellArray = new CellArray()
-  ) {
+  constructor(graph: Graph, added: Cell[] = [], removed: Cell[] = []) {
     this.graph = graph;
     this.added = added.slice();
     this.removed = removed.slice();
@@ -39,9 +35,9 @@ class SelectionChange implements UndoableChange {
 
   graph: Graph;
 
-  added: CellArray;
+  added: Cell[];
 
-  removed: CellArray;
+  removed: Cell[];
 
   /**
    * Changes the current root of the view.

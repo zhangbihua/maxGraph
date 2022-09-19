@@ -20,7 +20,6 @@ import { mixInto } from '../../util/Utils';
 import { convertPoint } from '../../util/styleUtils';
 import { mod } from '../../util/mathUtils';
 import { DEFAULT_STARTSIZE, DIRECTION, SHAPE } from '../../util/Constants';
-import CellArray from '../cell/CellArray';
 import { getClientX, getClientY } from '../../util/EventUtils';
 import { Graph } from '../Graph';
 
@@ -39,13 +38,9 @@ declare module '../Graph' {
     getSwimlaneDirection: (style: CellStateStyle) => DirectionValue;
     getActualStartSize: (swimlane: Cell, ignoreState: boolean) => Rectangle;
     isSwimlane: (cell: Cell, ignoreState?: boolean) => boolean;
-    isValidDropTarget: (
-      cell: Cell,
-      cells?: CellArray,
-      evt?: MouseEvent | null
-    ) => boolean;
+    isValidDropTarget: (cell: Cell, cells?: Cell[], evt?: MouseEvent | null) => boolean;
     getDropTarget: (
-      cells: CellArray,
+      cells: Cell[],
       evt: MouseEvent,
       cell: Cell | null,
       clone?: boolean

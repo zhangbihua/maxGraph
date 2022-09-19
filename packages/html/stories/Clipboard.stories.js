@@ -27,6 +27,7 @@ import {
   GraphDataModel,
   styleUtils,
   stringUtils,
+  cellArrayUtils,
 } from '@maxgraph/core';
 
 import { globalTypes } from '../.storybook/preview';
@@ -171,7 +172,7 @@ const Template = ({ label, ...args }) => {
     if (graph.isEnabled() && !graph.isSelectionEmpty()) {
       copyCells(
         graph,
-        utils.sortCells(graph.model.getTopmostCells(graph.getSelectionCells()))
+        styleUtils.sortCells(cellArrayUtils.getTopmostCells(graph.getSelectionCells()))
       );
       dx = 0;
       dy = 0;
@@ -194,7 +195,7 @@ const Template = ({ label, ...args }) => {
     let cells = [];
 
     try {
-      const doc = utils.parseXml(xml);
+      const doc = xmlUtils.parseXml(xml);
       const node = doc.documentElement;
 
       if (node != null) {

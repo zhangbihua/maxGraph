@@ -16,8 +16,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import Cell from '../view/cell/Cell';
 import { Graph } from '../view/Graph';
-import CellArray from '../view/cell/CellArray';
+import { getTopmostCells } from './cellArrayUtils';
 
 /**
  * @class
@@ -104,12 +105,12 @@ class Clipboard {
   /**
    * Holds the array of {@link mxCell} currently in the clipboard.
    */
-  static cells: CellArray;
+  static cells: Cell[];
 
   /**
    * Sets the cells in the clipboard. Fires a {@link mxEvent.CHANGE} event.
    */
-  static setCells(cells: CellArray) {
+  static setCells(cells: Cell[]) {
     Clipboard.cells = cells;
   }
 
@@ -135,7 +136,7 @@ class Clipboard {
    * @param graph - {@link graph} that contains the cells to be cut.
    * @param cells - Optional array of {@link mxCell} to be cut.
    */
-  static cut(graph: Graph, cells?: CellArray) {
+  static cut(graph: Graph, cells: Cell[] = []) {
     cells = Clipboard.copy(graph, cells);
     Clipboard.insertCount = 0;
     Clipboard.removeCells(graph, cells);
@@ -150,8 +151,7 @@ class Clipboard {
    * @param graph - {@link graph} that contains the cells to be cut.
    * @param cells - Array of {@link mxCell} to be cut.
    */
-  static removeCells(graph: Graph, cells: CellArray) {
-    // @ts-ignore
+  static removeCells(graph: Graph, cells: Cell[]) {
     graph.removeCells(cells);
   }
 
@@ -163,11 +163,11 @@ class Clipboard {
    * @param graph - {@link graph} that contains the cells to be copied.
    * @param cells - Optional array of {@link mxCell} to be copied.
    */
-  static copy(graph: Graph, cells?: CellArray) {
+  static copy(graph: Graph, cells?: Cell[]) {
     cells = cells || graph.getSelectionCells();
-    const result = graph.getExportableCells(cells).getTopmostCells();
+    const result = getTopmostCells(graph.getExportableCells(cells));
     Clipboard.insertCount = 1;
-    // @ts-ignore
+
     Clipboard.setCells(graph.cloneCells(result));
     return result;
   }
@@ -190,12 +190,12 @@ class Clipboard {
       cells = graph.getImportableCells(Clipboard.getCells());
       const delta = Clipboard.insertCount * Clipboard.STEPSIZE;
       const parent = graph.getDefaultParent();
-      // @ts-ignore
+
       cells = graph.importCells(cells, delta, delta, parent);
 
       // Increments the counter and selects the inserted cells
       Clipboard.insertCount++;
-      graph.setSelectionCells(<CellArray>cells);
+      graph.setSelectionCells(cells);
     }
 
     return cells;

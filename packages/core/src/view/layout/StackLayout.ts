@@ -24,7 +24,6 @@ import { DEFAULT_STARTSIZE } from '../../util/Constants';
 import { Graph } from '../Graph';
 import Cell from '../cell/Cell';
 import Geometry from '../geometry/Geometry';
-import CellArray from '../cell/CellArray';
 
 /**
  * Extends {@link GraphLayout} to create a horizontal or vertical stack of the
@@ -46,11 +45,11 @@ import CellArray from '../cell/CellArray';
 class StackLayout extends GraphLayout {
   constructor(
     graph: Graph,
-    horizontal: boolean | null=null,
-    spacing: number | null=null,
-    x0: number | null=null,
-    y0: number | null=null,
-    border: number | null=null
+    horizontal: boolean | null = null,
+    spacing: number | null = null,
+    x0: number | null = null,
+    y0: number | null = null,
+    border: number | null = null
   ) {
     super(graph);
     this.horizontal = horizontal != null ? horizontal : true;
@@ -231,10 +230,10 @@ class StackLayout extends GraphLayout {
   /**
    * Returns the cells to be layouted.
    */
-  getLayoutCells(parent: Cell): CellArray {
+  getLayoutCells(parent: Cell): Cell[] {
     const model = this.graph.getDataModel();
     const childCount = parent.getChildCount();
-    const cells = new CellArray();
+    const cells = [];
 
     for (let i = 0; i < childCount; i += 1) {
       const child = parent.getChildAt(i);
@@ -252,12 +251,12 @@ class StackLayout extends GraphLayout {
         return this.horizontal
           ? geo1.x === geo2.x
             ? 0
-            : (geo1.x > geo2.x && geo2.x > 0)
+            : geo1.x > geo2.x && geo2.x > 0
             ? 1
             : -1
           : geo1.y === geo2.y
           ? 0
-          : (geo1.y > geo2.y && geo2.y > 0)
+          : geo1.y > geo2.y && geo2.y > 0
           ? 1
           : -1;
       });

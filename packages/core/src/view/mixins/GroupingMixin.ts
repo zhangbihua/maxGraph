@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 import Cell from '../cell/Cell';
-import CellArray from '../cell/CellArray';
 import { mixInto } from '../../util/Utils';
 import { sortCells } from '../../util/styleUtils';
 import Geometry from '../geometry/Geometry';
@@ -27,27 +26,27 @@ import { Graph } from '../Graph';
 
 declare module '../Graph' {
   interface Graph {
-    groupCells: (group: Cell, border: number, cells?: CellArray | null) => Cell;
-    getCellsForGroup: (cells: CellArray) => CellArray;
+    groupCells: (group: Cell, border: number, cells?: Cell[] | null) => Cell;
+    getCellsForGroup: (cells: Cell[]) => Cell[];
     getBoundsForGroup: (
       group: Cell,
-      children: CellArray,
+      children: Cell[],
       border: number | null
     ) => Rectangle | null;
-    createGroupCell: (cells: CellArray) => Cell;
-    ungroupCells: (cells?: CellArray | null) => CellArray;
-    getCellsForUngroup: () => CellArray;
-    removeCellsAfterUngroup: (cells: CellArray) => void;
-    removeCellsFromParent: (cells?: CellArray | null) => CellArray;
+    createGroupCell: (cells: Cell[]) => Cell;
+    ungroupCells: (cells?: Cell[] | null) => Cell[];
+    getCellsForUngroup: () => Cell[];
+    removeCellsAfterUngroup: (cells: Cell[]) => void;
+    removeCellsFromParent: (cells?: Cell[] | null) => Cell[];
     updateGroupBounds: (
-      cells: CellArray,
+      cells: Cell[],
       border?: number,
       moveGroup?: boolean,
       topBorder?: number,
       rightBorder?: number,
       bottomBorder?: number,
       leftBorder?: number
-    ) => CellArray;
+    ) => Cell[];
     enterGroup: (cell: Cell) => void;
     exitGroup: () => void;
   }
@@ -141,24 +140,15 @@ const GroupingMixin: PartialType = {
 
         // Adds the group into the parent
         let index = (<Cell>parent).getChildCount();
-        this.cellsAdded(
-          new CellArray(group),
-          <Cell>parent,
-          index,
-          null,
-          null,
-          false,
-          false,
-          false
-        );
+        this.cellsAdded([group], <Cell>parent, index, null, null, false, false, false);
 
         // Adds the children into the group and moves
         index = group.getChildCount();
-        this.cellsAdded(<CellArray>cells, group, index, null, null, false, false, false);
-        this.cellsMoved(<CellArray>cells, -bounds.x, -bounds.y, false, false, false);
+        this.cellsAdded(<Cell[]>cells, group, index, null, null, false, false, false);
+        this.cellsMoved(<Cell[]>cells, -bounds.x, -bounds.y, false, false, false);
 
         // Resizes the group
-        this.cellsResized(new CellArray(group), [bounds], false);
+        this.cellsResized([group], [bounds], false);
 
         this.fireEvent(
           new EventObject(InternalEvent.GROUP_CELLS, { group, border, cells })
@@ -173,7 +163,7 @@ const GroupingMixin: PartialType = {
    * in the given array.
    */
   getCellsForGroup(cells) {
-    const result = new CellArray();
+    const result = [];
     if (cells != null && cells.length > 0) {
       const parent = cells[0].getParent();
       result.push(cells[0]);
@@ -247,7 +237,7 @@ const GroupingMixin: PartialType = {
    * selection cells are used.
    */
   ungroupCells(cells) {
-    let result: CellArray = new CellArray();
+    let result: Cell[] = [];
 
     if (cells == null) {
       cells = this.getCellsForUngroup();
@@ -255,7 +245,7 @@ const GroupingMixin: PartialType = {
 
     if (cells != null && cells.length > 0) {
       this.batchUpdate(() => {
-        const _cells = <CellArray>cells;
+        const _cells = <Cell[]>cells;
 
         for (let i = 0; i < _cells.length; i += 1) {
           let children = _cells[i].getChildren();
@@ -299,7 +289,7 @@ const GroupingMixin: PartialType = {
     const cells = this.getSelectionCells();
 
     // Finds the cells with children
-    const tmp = new CellArray();
+    const tmp = [];
 
     for (let i = 0; i < cells.length; i += 1) {
       if (cells[i].isVertex() && cells[i].getChildCount() > 0) {
@@ -332,10 +322,8 @@ const GroupingMixin: PartialType = {
       const parent = this.getDefaultParent();
       const index = parent.getChildCount();
 
-      this.cellsAdded(<CellArray>cells, parent, index, null, null, true);
-      this.fireEvent(
-        new EventObject(InternalEvent.REMOVE_CELLS_FROM_PARENT, { cells })
-      );
+      this.cellsAdded(<Cell[]>cells, parent, index, null, null, true);
+      this.fireEvent(new EventObject(InternalEvent.REMOVE_CELLS_FROM_PARENT, { cells }));
     });
     return cells;
   },
@@ -383,7 +371,7 @@ const GroupingMixin: PartialType = {
           continue;
         }
 
-        const children = <CellArray>this.getChildCells(cells[i]);
+        const children = this.getChildCells(cells[i]);
         if (children != null && children.length > 0) {
           const bounds = this.getBoundingBoxFromGeometry(children, true);
 

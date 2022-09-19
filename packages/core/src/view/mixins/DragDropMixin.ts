@@ -16,7 +16,6 @@ limitations under the License.
 
 import { mixInto } from '../../util/Utils';
 import Cell from '../cell/Cell';
-import CellArray from '../cell/CellArray';
 import { Graph } from '../Graph';
 
 declare module '../Graph' {
@@ -32,7 +31,7 @@ declare module '../Graph' {
     setDropEnabled: (value: boolean) => void;
     isSplitEnabled: () => boolean;
     setSplitEnabled: (value: boolean) => void;
-    isSplitTarget: (target: Cell, cells?: CellArray, evt?: MouseEvent | null) => boolean;
+    isSplitTarget: (target: Cell, cells?: Cell[], evt?: MouseEvent | null) => boolean;
   }
 }
 
@@ -149,7 +148,7 @@ const DragDropMixin: PartialType = {
    * @param cells {@link mxCell} that should split the edge.
    * @param evt Mouseevent that triggered the invocation.
    */
-  isSplitTarget(target, cells=new CellArray(), evt) {
+  isSplitTarget(target, cells = [], evt) {
     if (
       target.isEdge() &&
       cells.length === 1 &&

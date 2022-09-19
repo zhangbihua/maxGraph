@@ -14,17 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import CellArray from '../cell/CellArray';
 import { mixInto } from '../../util/Utils';
 import { sortCells } from '../../util/styleUtils';
 import EventObject from '../event/EventObject';
 import InternalEvent from '../event/InternalEvent';
 import { Graph } from '../Graph';
+import Cell from '../cell/Cell';
 
 declare module '../Graph' {
   interface Graph {
-    orderCells: (back: boolean, cells?: CellArray) => CellArray;
-    cellsOrdered: (cells: CellArray, back: boolean) => void;
+    orderCells: (back: boolean, cells?: Cell[]) => Cell[];
+    cellsOrdered: (cells: Cell[], back: boolean) => void;
   }
 }
 
@@ -57,7 +57,7 @@ const OrderMixin: PartialType = {
     }
 
     this.batchUpdate(() => {
-      this.cellsOrdered(<CellArray>cells, back);
+      this.cellsOrdered(<Cell[]>cells, back);
       const event = new EventObject(
         InternalEvent.ORDER_CELLS,
         'back',
@@ -86,13 +86,15 @@ const OrderMixin: PartialType = {
         if (back) {
           this.getDataModel().add(parent, cells[i], i);
         } else {
-          this.getDataModel().add(parent, cells[i], parent ? parent.getChildCount() - 1 : 0);
+          this.getDataModel().add(
+            parent,
+            cells[i],
+            parent ? parent.getChildCount() - 1 : 0
+          );
         }
       }
 
-      this.fireEvent(
-        new EventObject(InternalEvent.CELLS_ORDERED, { back, cells })
-      );
+      this.fireEvent(new EventObject(InternalEvent.CELLS_ORDERED, { back, cells }));
     });
   },
 };
