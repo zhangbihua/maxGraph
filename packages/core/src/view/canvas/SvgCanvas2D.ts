@@ -508,7 +508,6 @@ class SvgCanvas2D extends AbstractCanvas2D {
   /**
    * Private helper function to create SVG elements
    */
-  // createGradientId(start: string, end: string, alpha1: string, alpha2: string, direction: string): string;
   createGradientId(
     start: string,
     end: string,
@@ -756,7 +755,6 @@ class SvgCanvas2D extends AbstractCanvas2D {
   /**
    * Returns the current stroke width (>= 1), ie. max(1, this.format(this.state.strokeWidth * this.state.scale)).
    */
-  // getCurrentStrokeWidth(): number;
   getCurrentStrokeWidth() {
     return Math.max(
       this.minStrokeWidth,
@@ -848,7 +846,6 @@ class SvgCanvas2D extends AbstractCanvas2D {
   /**
    * Creates a hit detection tolerance shape for the given node.
    */
-  // createTolerance(node: Element): Element;
   createTolerance(node: SVGElement) {
     const tol = node.cloneNode(true) as SVGElement;
     const sw = parseFloat(tol.getAttribute('stroke-width') || '1') + this.strokeTolerance;
@@ -969,7 +966,6 @@ class SvgCanvas2D extends AbstractCanvas2D {
   /**
    * Extends superclass to create path.
    */
-  // begin(): void;
   begin() {
     super.begin();
     this.node = this.createElement('path');
@@ -1076,7 +1072,7 @@ class SvgCanvas2D extends AbstractCanvas2D {
         dy = -h - 2 * y;
       }
 
-      // Adds image tansformation to existing transform
+      // Adds image transformation to existing transform
       tr += `scale(${sx},${sy})translate(${dx * s.scale},${dy * s.scale})`;
     }
 
