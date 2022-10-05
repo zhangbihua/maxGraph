@@ -2784,7 +2784,7 @@ export const CellsMixin: PartialType = {
    */
   isCellBendable(cell) {
     const style = this.getCurrentCellStyle(cell);
-    return this.isCellsBendable() && !this.isCellLocked(cell) && !!style.bendable;
+    return this.isCellsBendable() && !this.isCellLocked(cell) && style.bendable != false;
   },
 
   /**

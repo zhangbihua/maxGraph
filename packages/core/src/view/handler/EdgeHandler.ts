@@ -125,7 +125,7 @@ class EdgeHandler {
    */
   bends: Shape[] = [];
 
-  virtualBends: Shape[] = [];
+  virtualBends: Shape[] | undefined;
 
   /**
    * Holds the {@link Shape} that represents the label position.
@@ -255,7 +255,7 @@ class EdgeHandler {
 
   abspoints: (Point | null)[] = [];
 
-  customHandles: CellHandle[] = [];
+  customHandles: CellHandle[] | undefined;
 
   startX = 0;
   startY = 0;
@@ -825,7 +825,7 @@ class EdgeHandler {
       return false;
     }
 
-    if (this.isCustomHandleEvent(me)) {
+    if (this.isCustomHandleEvent(me) && this.customHandles) {
       // Inverse loop order to match display order
       for (let i = this.customHandles.length - 1; i >= 0; i--) {
         if (checkShape(this.customHandles[i].shape)) {
@@ -845,7 +845,7 @@ class EdgeHandler {
       }
     }
 
-    if (this.isAddVirtualBendEvent(me)) {
+    if (this.virtualBends && this.isAddVirtualBendEvent(me)) {
       for (let i = 0; i < this.virtualBends.length; i += 1) {
         if (checkShape(this.virtualBends[i])) {
           result = InternalEvent.VIRTUAL_HANDLE - i;
@@ -900,7 +900,7 @@ class EdgeHandler {
         handle !== InternalEvent.LABEL_HANDLE ||
         (cell && this.graph.isLabelMovable(cell))
       ) {
-        if (handle <= InternalEvent.VIRTUAL_HANDLE) {
+        if (this.virtualBends && handle <= InternalEvent.VIRTUAL_HANDLE) {
           setOpacity(this.virtualBends[InternalEvent.VIRTUAL_HANDLE - handle].node, 100);
         }
         this.start(me.getX(), me.getY(), handle);
@@ -1669,8 +1669,10 @@ class EdgeHandler {
 
     this.constraintHandler.reset();
 
-    for (let i = 0; i < this.customHandles.length; i += 1) {
-      this.customHandles[i].reset();
+    if (this.customHandles) {
+      for (let i = 0; i < this.customHandles.length; i += 1) {
+        this.customHandles[i].reset();
+      }
     }
 
     this.setPreviewColor(EDGE_SELECTION_COLOR);
@@ -2053,7 +2055,7 @@ class EdgeHandler {
       this.redrawInnerBends(p0, pe);
     }
 
-    if (this.virtualBends.length > 0) {
+    if (this.virtualBends && this.virtualBends.length > 0) {
       let last = this.abspoints[0] as Point;
 
       for (let i = 0; i < this.virtualBends.length; i += 1) {
@@ -2084,19 +2086,20 @@ class EdgeHandler {
     }
 
     this.labelShape.redraw();
+    if (this.customHandles) {
+      for (let i = 0; i < this.customHandles.length; i += 1) {
+        const shape = this.customHandles[i].shape;
 
-    for (let i = 0; i < this.customHandles.length; i += 1) {
-      const shape = this.customHandles[i].shape;
+        if (shape) {
+          const temp = shape.node.style.display;
+          this.customHandles[i].redraw();
+          shape.node.style.display = temp;
 
-      if (shape) {
-        const temp = shape.node.style.display;
-        this.customHandles[i].redraw();
-        shape.node.style.display = temp;
-
-        // Hides custom handles during text editing
-        shape.node.style.visibility = this.isCustomHandleVisible(this.customHandles[i])
-          ? ''
-          : 'hidden';
+          // Hides custom handles during text editing
+          shape.node.style.visibility = this.isCustomHandleVisible(this.customHandles[i])
+            ? ''
+            : 'hidden';
+        }
       }
     }
   }
@@ -2116,14 +2119,18 @@ class EdgeHandler {
       this.bends[i].node.style.display = visible ? '' : 'none';
     }
 
-    for (let i = 0; i < this.virtualBends.length; i += 1) {
-      this.virtualBends[i].node.style.display = visible ? '' : 'none';
+    if (this.virtualBends) {
+      for (let i = 0; i < this.virtualBends.length; i += 1) {
+        this.virtualBends[i].node.style.display = visible ? '' : 'none';
+      }
     }
 
     this.labelShape.node.style.display = visible ? '' : 'none';
 
-    for (let i = 0; i < this.customHandles.length; i += 1) {
-      this.customHandles[i].setVisible(visible);
+    if (this.customHandles) {
+      for (let i = 0; i < this.customHandles.length; i += 1) {
+        this.customHandles[i].setVisible(visible);
+      }
     }
   }
 
@@ -2242,11 +2249,15 @@ class EdgeHandler {
       this.destroyBends(this.bends);
       this.bends = this.createBends();
 
-      this.destroyBends(this.virtualBends);
-      this.virtualBends = this.createVirtualBends();
-
-      this.destroyBends(this.customHandles);
-      this.customHandles = this.createCustomHandles();
+      if (this.virtualBends) {
+        this.destroyBends(this.virtualBends);
+        this.virtualBends = this.createVirtualBends();
+      }
+      
+      if (this.customHandles) {
+        this.destroyBends(this.customHandles);
+        this.customHandles = this.createCustomHandles();
+      }
 
       // Puts label node on top of bends
       if (
@@ -2315,11 +2326,15 @@ class EdgeHandler {
     // @ts-expect-error Can be null when destroyed.
     this.constraintHandler = null;
 
-    this.destroyBends(this.virtualBends);
-    this.virtualBends = [];
+    if (this.virtualBends) {
+      this.destroyBends(this.virtualBends);
+      this.virtualBends = [];
+    }
 
-    this.destroyBends(this.customHandles);
-    this.customHandles = [];
+    if (this.customHandles){
+      this.destroyBends(this.customHandles);
+      this.customHandles = [];
+    }
 
     this.destroyBends(this.bends);
     this.bends = [];
