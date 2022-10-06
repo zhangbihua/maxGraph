@@ -21,7 +21,7 @@ import Rectangle from '../geometry/Rectangle';
 import EventSource from '../event/EventSource';
 import ImageBox from '../image/ImageBox';
 import CellState from './CellState';
-import ObjectIdentity from 'src/util/ObjectIdentity';
+import ObjectIdentity from '../../util/ObjectIdentity';
 
 /**
  * Extends {@link EventSource} to implement a graph overlay, represented by an icon

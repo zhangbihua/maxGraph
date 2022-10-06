@@ -16,7 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { IdentityFunction, IdentityObject } from 'src/types';
+import { IdentityFunction, IdentityObject } from '../types';
 import { IDENTITY_FIELD_NAME } from './Constants';
 import { getFunctionName } from './StringUtils';
 
