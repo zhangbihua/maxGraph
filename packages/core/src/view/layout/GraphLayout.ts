@@ -22,7 +22,7 @@ import Geometry from '../geometry/Geometry';
 import Point from '../geometry/Point';
 import { Graph } from '../Graph';
 import Cell from '../cell/Cell';
-import { GraphLayoutTraverseArgs } from '../../types';
+import { GraphLayoutTraverseArgs } from './types';
 
 /**
  * @class GraphLayout
@@ -163,9 +163,9 @@ class GraphLayout {
                 const next = this.graph.view.getVisibleTerminal(e, !isSource);
                 this.traverse({
                   vertex: next,
-                  directed, 
-                  func, 
-                  edge: e, 
+                  directed,
+                  func,
+                  edge: e,
                   visited
                 });
               }

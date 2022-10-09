@@ -29,7 +29,7 @@ import CoordinateAssignment from './hierarchical/CoordinateAssignment';
 import { Graph } from '../Graph';
 import Cell from '../cell/Cell';
 import Geometry from '../../view/geometry/Geometry';
-import { SwimlaneGraphLayoutTraverseArgs } from '../../types';
+import { SwimlaneGraphLayoutTraverseArgs } from './types';
 
 /**
  * A hierarchical layout algorithm.
@@ -806,7 +806,7 @@ class SwimlaneLayout extends GraphLayout {
               swimlaneIndex: otherIndex,
               func: null,
               visited: null
-            }); 
+            });
           }
         }
       } else if (currentComp[vertexID] == null) {

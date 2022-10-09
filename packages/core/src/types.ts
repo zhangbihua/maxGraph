@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 import { DIRECTION } from './util/Constants';
-import Dictionary from './util/Dictionary';
 import type Cell from './view/cell/Cell';
 import type CellState from './view/cell/CellState';
 import EventSource from './view/event/EventSource';
@@ -23,7 +22,6 @@ import type InternalMouseEvent from './view/event/InternalMouseEvent';
 import type Shape from './view/geometry/Shape';
 import type { Graph } from './view/Graph';
 import type ImageBox from './view/image/ImageBox';
-import GraphHierarchyNode from './view/layout/datatypes/GraphHierarchyNode';
 
 export type CellMap = {
   [id: string]: Cell;
@@ -317,25 +315,4 @@ export interface PopupMenuItem extends HTMLElement {
   containsItems: boolean;
   activeRow: PopupMenuItem | null;
   eventReceiver: HTMLElement | null;
-}
-
-// GraphLayout
-
-export interface GraphLayoutTraverseArgs {
-  vertex: Cell | null;
-  directed: boolean | null;
-  func: Function | null;
-  edge: Cell | null;
-  visited: Dictionary<Cell, boolean> | null;
-}
-
-export interface HierarchicalGraphLayoutTraverseArgs extends GraphLayoutTraverseArgs {
-  allVertices: { [key: string]: Cell } | null;
-  currentComp: { [key: string]: Cell | null };
-  hierarchyVertices: GraphHierarchyNode[];
-  filledVertexSet: { [key: string]: Cell } | null;
-}
-
-export interface SwimlaneGraphLayoutTraverseArgs extends HierarchicalGraphLayoutTraverseArgs {
-  swimlaneIndex: number;
 }

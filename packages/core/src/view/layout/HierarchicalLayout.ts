@@ -27,7 +27,7 @@ import MedianHybridCrossingReduction from './hierarchical/MedianHybridCrossingRe
 import CoordinateAssignment from './hierarchical/CoordinateAssignment';
 import { Graph } from '../../view/Graph';
 import Cell from '../../view/cell/Cell';
-import { HierarchicalGraphLayoutTraverseArgs } from '../../types';
+import { HierarchicalGraphLayoutTraverseArgs } from './types';
 
 /**
  * A hierarchical layout algorithm.
@@ -605,11 +605,11 @@ class HierarchicalLayout extends GraphLayout {
    * @param allVertices Array of cell paths for the visited cells.
    */
   traverse({
-    vertex, 
-    directed, 
-    allVertices, 
-    currentComp, 
-    hierarchyVertices, 
+    vertex,
+    directed,
+    allVertices,
+    currentComp,
+    hierarchyVertices,
     filledVertexSet
   }: HierarchicalGraphLayoutTraverseArgs) {
     if (vertex != null && allVertices != null) {
