@@ -329,15 +329,13 @@ export interface GraphLayoutTraverseArgs {
   visited: Dictionary<Cell, boolean> | null;
 }
 
-export interface HierarchicalGraphLayoutTraverseArgs 
-  extends GraphLayoutTraverseArgs{   
-    allVertices: { [key: string]: Cell } | null,
-    currentComp: { [key: string]: Cell | null },
-    hierarchyVertices: GraphHierarchyNode[],
-    filledVertexSet: { [key: string]: Cell } | null
+export interface HierarchicalGraphLayoutTraverseArgs extends GraphLayoutTraverseArgs {
+  allVertices: { [key: string]: Cell } | null;
+  currentComp: { [key: string]: Cell | null };
+  hierarchyVertices: GraphHierarchyNode[];
+  filledVertexSet: { [key: string]: Cell } | null;
 }
 
-export interface SwimlaneGraphLayoutTraverseArgs 
-  extends HierarchicalGraphLayoutTraverseArgs{   
-    swimlaneIndex: number
+export interface SwimlaneGraphLayoutTraverseArgs extends HierarchicalGraphLayoutTraverseArgs {
+  swimlaneIndex: number;
 }
