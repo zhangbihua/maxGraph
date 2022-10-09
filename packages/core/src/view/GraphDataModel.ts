@@ -230,7 +230,7 @@ export class GraphDataModel extends EventSource {
   /**
    * Maps from Ids to cells.
    */
-  cells: any = {};
+  cells: {[key: string]: Cell} | null = {};
 
   /**
    * Specifies if edges should automatically be moved into the nearest common
