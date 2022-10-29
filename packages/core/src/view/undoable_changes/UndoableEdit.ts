@@ -93,7 +93,7 @@ class UndoableEdit {
    */
   redone = false;
 
-  constructor(source: EventSource, significant: boolean = true) {
+  constructor(source: EventSource, significant = true) {
     this.source = source;
     this.changes = [];
     this.significant = significant;

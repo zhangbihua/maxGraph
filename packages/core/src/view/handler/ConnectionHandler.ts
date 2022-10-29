@@ -1412,7 +1412,7 @@ class ConnectionHandler extends EventSource implements GraphPlugin {
     }
 
     // Scales and translates the waypoints to the model
-    let realPoints = [];
+    const realPoints = [];
 
     for (let i = 0; i < this.waypoints.length; i += 1) {
       const pt = this.waypoints[i].clone();

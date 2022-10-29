@@ -89,14 +89,14 @@ export class EditorToolbar {
    *
    * @Default is 4
    */
-  spacing: number = 4;
+  spacing = 4;
 
   /**
    * Specifies if elements should be connected if new cells are dropped onto connectable elements.
    *
    * @Default is false.
    */
-  connectOnDrop: boolean = false;
+  connectOnDrop = false;
 
   /**
    * Constructs the {@link toolbar} for the given container and installs a listener that updates the {@link Editor.insertFunction} on {@link editor} if an item is selected in the toolbar.  This assumes that {@link editor} is not null.
@@ -268,7 +268,7 @@ export class EditorToolbar {
       me: MouseEvent,
       cellUnderMousePointer?: Cell | null
     ) => void,
-    toggle: boolean = true
+    toggle = true
   ): HTMLImageElement | HTMLButtonElement {
     // Creates a wrapper function that is in charge of constructing
     // the new cell instance to be inserted into the graph

@@ -43,11 +43,7 @@ import {
   intersects,
   ptSegDistSq,
 } from '../../util/mathUtils';
-import {
-  convertPoint,
-  getOffset,
-  setOpacity,
-} from '../../util/styleUtils';
+import { convertPoint, getOffset, setOpacity } from '../../util/styleUtils';
 import ImageShape from '../geometry/node/ImageShape';
 import RectangleShape from '../geometry/node/RectangleShape';
 import ConnectionConstraint from '../other/ConnectionConstraint';
@@ -241,9 +237,9 @@ class EdgeHandler {
 
   index: number | null = null;
 
-  isSource: boolean = false;
+  isSource = false;
 
-  isTarget: boolean = false;
+  isTarget = false;
 
   label: Point;
 
@@ -970,12 +966,12 @@ class EdgeHandler {
    * Hook for subclassers do show details while the handler is active.
    */
 
-  updateHint(me: InternalMouseEvent, point: Point) { }
+  updateHint(me: InternalMouseEvent, point: Point) {}
 
   /**
    * Hooks for subclassers to hide details when the handler gets inactive.
    */
-  removeHint() { }
+  removeHint() {}
 
   /**
    * Hook for rounding the unscaled width or height. This uses Math.round.
@@ -1515,7 +1511,7 @@ class EdgeHandler {
 
       // Ignores event if mouse has not been moved
       if (me.getX() !== this.startX || me.getY() !== this.startY) {
-        let clone =
+        const clone =
           !this.graph.isIgnoreTerminalEvent(me.getEvent()) &&
           this.graph.isCloneEvent(me.getEvent()) &&
           this.cloneEnabled &&
@@ -2105,7 +2101,9 @@ class EdgeHandler {
    * Returns true if the given custom handle is visible.
    */
   isCustomHandleVisible(handle: CellHandle) {
-    return !this.graph.isEditing() && (<Graph>this.state.view.graph).getSelectionCount() === 1;
+    return (
+      !this.graph.isEditing() && (<Graph>this.state.view.graph).getSelectionCount() === 1
+    );
   }
 
   /**

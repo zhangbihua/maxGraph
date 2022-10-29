@@ -59,7 +59,8 @@ class GraphAbstractHierarchyCell extends Cell {
   /**
    * A cached version of the cells this cell connects to on the next layer down
    */
-  previousLayerConnectedCells: { [key: number]: GraphAbstractHierarchyCell[] } | null = null;
+  previousLayerConnectedCells: { [key: number]: GraphAbstractHierarchyCell[] } | null =
+    null;
 
   /**
    * Temporary variable for general use. Generally, try to avoid

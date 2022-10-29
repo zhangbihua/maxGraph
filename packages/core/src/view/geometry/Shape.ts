@@ -804,11 +804,11 @@ class Shape {
   addPoints(
     c: AbstractCanvas2D,
     pts: Point[],
-    rounded: boolean = false,
+    rounded = false,
     arcSize: number,
-    close: boolean = false,
+    close = false,
     exclude: number[] = [],
-    initialMove: boolean = true
+    initialMove = true
   ) {
     if (pts.length > 0) {
       const pe = pts[pts.length - 1];

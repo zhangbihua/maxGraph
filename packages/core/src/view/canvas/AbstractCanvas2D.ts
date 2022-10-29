@@ -308,7 +308,7 @@ class AbstractCanvas2D {
     h: number,
     direction: DirectionValue,
     alpha1 = 1,
-    alpha2: number = 1
+    alpha2 = 1
   ) {
     const s = this.state;
     s.fillColor = color1;

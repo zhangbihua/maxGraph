@@ -95,7 +95,7 @@ export class Cell implements IdentityObject {
 
   // TODO: Document me!
   // used by invalidate() of mxGraphView
-  invalidating: boolean = false;
+  invalidating = false;
 
   onInit: (() => void) | null = null;
 
@@ -126,27 +126,27 @@ export class Cell implements IdentityObject {
   /**
    * Specifies whether the cell is a vertex. Default is false.
    */
-  vertex: boolean = false;
+  vertex = false;
 
   /**
    * Specifies whether the cell is an edge. Default is false.
    */
-  edge: boolean = false;
+  edge = false;
 
   /**
    * Specifies whether the cell is connectable. Default is true.
    */
-  connectable: boolean = true;
+  connectable = true;
 
   /**
    * Specifies whether the cell is visible. Default is true.
    */
-  visible: boolean = true;
+  visible = true;
 
   /**
    * Specifies whether the cell is collapsed. Default is false.
    */
-  collapsed: boolean = false;
+  collapsed = false;
 
   /**
    * Reference to the parent cell.
@@ -364,7 +364,7 @@ export class Cell implements IdentityObject {
    * @param source Boolean that specifies if the source terminal should be
    * returned.
    */
-  getTerminal(source: boolean = false) {
+  getTerminal(source = false) {
     return source ? this.source : this.target;
   }
 
@@ -502,7 +502,7 @@ export class Cell implements IdentityObject {
    * @param edge              <Cell> to be inserted into the edge array.
    * @param isOutgoing Boolean that specifies if the edge is outgoing.
    */
-  insertEdge(edge: Cell, isOutgoing: boolean = false) {
+  insertEdge(edge: Cell, isOutgoing = false) {
     edge.removeFromTerminal(isOutgoing);
     edge.setTerminal(this, isOutgoing);
 
@@ -524,7 +524,7 @@ export class Cell implements IdentityObject {
    * @param edge<Cell> to be removed from the edge array.
    * @param isOutgoing Boolean that specifies if the edge is outgoing.
    */
-  removeEdge(edge: Cell | null, isOutgoing: boolean = false): Cell | null {
+  removeEdge(edge: Cell | null, isOutgoing = false): Cell | null {
     if (edge != null) {
       if (edge.getTerminal(!isOutgoing) !== this && this.edges != null) {
         const index = this.getEdgeIndex(edge);
@@ -702,7 +702,7 @@ export class Cell implements IdentityObject {
    * @param edges  Boolean indicating if child edges should be returned.
    * Default is false.
    */
-  getChildCells(vertices: boolean = false, edges: boolean = false) {
+  getChildCells(vertices = false, edges = false) {
     const childCount = this.getChildCount();
     const result = [];
 
@@ -777,11 +777,7 @@ export class Cell implements IdentityObject {
    * @param includeLoops  Optional boolean that specifies if loops should be returned.
    * Default is true.
    */
-  getEdges(
-    incoming: boolean = true,
-    outgoing: boolean = true,
-    includeLoops: boolean = true
-  ) {
+  getEdges(incoming = true, outgoing = true, includeLoops = true) {
     const edgeCount = this.getEdgeCount();
     const result = [];
 

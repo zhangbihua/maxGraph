@@ -1017,8 +1017,8 @@ class EdgeStyle {
         EdgeStyle.scalePointArray(<Point[]>state.absolutePoints, state.view.scale)
       ))
     );
-    let source = EdgeStyle.scaleCellState(sourceScaled, state.view.scale);
-    let target = EdgeStyle.scaleCellState(targetScaled, state.view.scale);
+    const source = EdgeStyle.scaleCellState(sourceScaled, state.view.scale);
+    const target = EdgeStyle.scaleCellState(targetScaled, state.view.scale);
 
     const sourceEdge = source == null ? false : source.cell.isEdge();
     const targetEdge = target == null ? false : target.cell.isEdge();

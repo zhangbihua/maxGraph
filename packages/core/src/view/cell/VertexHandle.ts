@@ -67,7 +67,7 @@ class VertexHandle implements CellHandle {
 
   constructor(
     state: CellState,
-    cursor: string = 'default',
+    cursor = 'default',
     image: ImageBox | null = null,
     shape: Shape | null = null
   ) {

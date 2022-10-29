@@ -40,10 +40,10 @@ export const parseXml = (xmlString: string): Document => {
 
 export const getViewXml = (
   graph: Graph,
-  scale: number = 1,
+  scale = 1,
   cells: Cell[] | null = null,
-  x0: number = 0,
-  y0: number = 0
+  x0 = 0,
+  y0 = 0
 ) => {
   if (cells == null) {
     const model = graph.getDataModel();
@@ -111,7 +111,7 @@ export const getViewXml = (
  * @param linefeed Optional string that linefeeds are converted into. Default is
  * &#xa;
  */
-export const getXml = (node: Element, linefeed: string = '&#xa;'): string => {
+export const getXml = (node: Element, linefeed = '&#xa;'): string => {
   const xmlSerializer = new XMLSerializer();
   let xml = xmlSerializer.serializeToString(node);
 

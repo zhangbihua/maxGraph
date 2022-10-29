@@ -72,13 +72,13 @@ class mxXmlCanvas2D extends AbstractCanvas2D {
    * Specifies if text output should be enabled.
    * @default true
    */
-  textEnabled: boolean = true;
+  textEnabled = true;
 
   /**
    * Specifies if the output should be compressed by removing redundant calls.
    * @default true
    */
-  compressed: boolean = true;
+  compressed = true;
 
   /**
    * Writes the rendering defaults to {@link root}:
@@ -257,7 +257,7 @@ class mxXmlCanvas2D extends AbstractCanvas2D {
    *
    * @param value Hexadecimal representation of the color or 'none'.
    */
-  setFillColor(value: string | null=null): void {
+  setFillColor(value: string | null = null): void {
     if (value === NONE) {
       value = null;
     }
@@ -298,8 +298,8 @@ class mxXmlCanvas2D extends AbstractCanvas2D {
     w: number,
     h: number,
     direction: DirectionValue,
-    alpha1: number=1.0,
-    alpha2: number=1.0
+    alpha1 = 1.0,
+    alpha2 = 1.0
   ) {
     if (color1 != null && color2 != null) {
       super.setGradient(color1, color2, x, y, w, h, direction, alpha1, alpha2);
@@ -334,7 +334,7 @@ class mxXmlCanvas2D extends AbstractCanvas2D {
    *
    * @param value Hexadecimal representation of the color or 'none'.
    */
-  setStrokeColor(value: string | null=null): void {
+  setStrokeColor(value: string | null = null): void {
     if (value === NONE) {
       value = null;
     }
@@ -482,7 +482,7 @@ class mxXmlCanvas2D extends AbstractCanvas2D {
    *
    * @param value Hexadecimal representation of the color or 'none'.
    */
-  setFontColor(value: string | null=null): void {
+  setFontColor(value: string | null = null): void {
     if (this.textEnabled) {
       if (value === NONE) {
         value = null;
@@ -506,7 +506,7 @@ class mxXmlCanvas2D extends AbstractCanvas2D {
    *
    * @param value Hexadecimal representation of the color or 'none'.
    */
-  setFontBackgroundColor(value: string | null=null): void {
+  setFontBackgroundColor(value: string | null = null): void {
     if (this.textEnabled) {
       if (value === NONE) {
         value = null;
@@ -530,7 +530,7 @@ class mxXmlCanvas2D extends AbstractCanvas2D {
    *
    * @param value Hexadecimal representation of the color or 'none'.
    */
-  setFontBorderColor(value: string | null=null): void {
+  setFontBorderColor(value: string | null = null): void {
     if (this.textEnabled) {
       if (value === NONE) {
         value = null;
@@ -598,7 +598,7 @@ class mxXmlCanvas2D extends AbstractCanvas2D {
    * @param value Numeric representation of the font family. This is the sum of the
    * font styles from {@link mxConstants}.
    */
-  setFontStyle(value: number | null=0): void {
+  setFontStyle(value: number | null = 0): void {
     if (this.textEnabled) {
       if (value == null) {
         value = 0;
@@ -641,7 +641,7 @@ class mxXmlCanvas2D extends AbstractCanvas2D {
    *
    * @param value Hexadecimal representation of the color or 'none'.
    */
-  setShadowColor(value: string | null=null): void {
+  setShadowColor(value: string | null = null): void {
     if (this.compressed) {
       if (value === NONE) {
         value = null;
@@ -904,14 +904,14 @@ class mxXmlCanvas2D extends AbstractCanvas2D {
     w: number,
     h: number,
     str: string | HTMLElement,
-    align: string | null=null,
-    valign: string | null=null,
-    wrap: boolean | null=null,
-    format: string | null=null,
-    overflow: string | null=null,
-    clip: boolean | null=null,
-    rotation: number | null=null,
-    dir: TextDirectionValue | null=null
+    align: string | null = null,
+    valign: string | null = null,
+    wrap: boolean | null = null,
+    format: string | null = null,
+    overflow: string | null = null,
+    clip: boolean | null = null,
+    rotation: number | null = null,
+    dir: TextDirectionValue | null = null
   ): void {
     if (this.textEnabled && str != null) {
       if (isNode(str)) {

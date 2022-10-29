@@ -51,7 +51,7 @@ class GraphLayout {
    * Boolean indicating if the bounding box of the label should be used if
    * its available. Default is true.
    */
-  useBoundingBox: boolean = true;
+  useBoundingBox = true;
 
   /**
    * The parent cell of the layout, if any
@@ -142,7 +142,7 @@ class GraphLayout {
    * null for the first step of the traversal.
    * @param visited Optional {@link Dictionary} of cell paths for the visited cells.
    */
-  traverse({vertex, directed, func, edge, visited}: GraphLayoutTraverseArgs): void {
+  traverse({ vertex, directed, func, edge, visited }: GraphLayoutTraverseArgs): void {
     if (func != null && vertex != null) {
       directed = directed != null ? directed : true;
       visited = visited || new Dictionary();
@@ -166,7 +166,7 @@ class GraphLayout {
                   directed,
                   func,
                   edge: e,
-                  visited
+                  visited,
                 });
               }
             }
