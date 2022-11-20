@@ -547,7 +547,7 @@ class SwimlaneLayout extends GraphLayout {
       let filledVertexSetEmpty = true;
 
       // Poor man's isSetEmpty
-      for (var key in filledVertexSet) {
+      for (const key in filledVertexSet) {
         if (filledVertexSet[key] != null) {
           filledVertexSetEmpty = false;
           break;
@@ -596,7 +596,7 @@ class SwimlaneLayout extends GraphLayout {
         filledVertexSetEmpty = true;
 
         // Poor man's isSetEmpty
-        for (var key in filledVertexSet) {
+        for (const key in filledVertexSet) {
           if (filledVertexSet[key] != null) {
             filledVertexSetEmpty = false;
             break;
@@ -626,7 +626,7 @@ class SwimlaneLayout extends GraphLayout {
     }
 
     const tmp = [];
-    for (var key in allVertexSet) {
+    for (const key in allVertexSet) {
       tmp.push(allVertexSet[key]);
     }
 

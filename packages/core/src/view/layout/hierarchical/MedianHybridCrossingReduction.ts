@@ -465,21 +465,11 @@ class MedianHybridCrossingReduction extends HierarchicalLayoutStage {
       // sweeps
       // TODO re-implement some kind of nudge
       // medianValues[i].nudge = !downwardSweep;
-      var nextLevelConnectedCells;
+      const nextLevelConnectedCells = downwardSweep
+        ? cell.getNextLayerConnectedCells(rankValue)
+        : cell.getPreviousLayerConnectedCells(rankValue);
 
-      if (downwardSweep) {
-        nextLevelConnectedCells = cell.getNextLayerConnectedCells(rankValue);
-      } else {
-        nextLevelConnectedCells = cell.getPreviousLayerConnectedCells(rankValue);
-      }
-
-      var nextRankValue;
-
-      if (downwardSweep) {
-        nextRankValue = rankValue + 1;
-      } else {
-        nextRankValue = rankValue - 1;
-      }
+      const nextRankValue = downwardSweep ? rankValue + 1 : rankValue - 1;
 
       if (nextLevelConnectedCells != null && nextLevelConnectedCells.length !== 0) {
         sorterEntry.medianValue = this.medianValue(

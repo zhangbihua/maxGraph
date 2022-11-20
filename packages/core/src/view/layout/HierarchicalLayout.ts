@@ -426,7 +426,7 @@ class HierarchicalLayout extends GraphLayout {
       let filledVertexSetEmpty = true;
 
       // Poor man's isSetEmpty
-      for (var key in filledVertexSet) {
+      for (const key in filledVertexSet) {
         if (filledVertexSet[key] != null) {
           filledVertexSetEmpty = false;
           break;
@@ -464,7 +464,7 @@ class HierarchicalLayout extends GraphLayout {
         filledVertexSetEmpty = true;
 
         // Poor man's isSetEmpty
-        for (var key in filledVertexSet) {
+        for (const key in filledVertexSet) {
           if (filledVertexSet[key] != null) {
             filledVertexSetEmpty = false;
             break;
@@ -503,7 +503,7 @@ class HierarchicalLayout extends GraphLayout {
       const vertexSet = hierarchyVertices[i];
       const tmp = [];
 
-      for (var key in vertexSet) {
+      for (const key in vertexSet) {
         tmp.push(vertexSet[key]);
       }
 
@@ -652,8 +652,7 @@ class HierarchicalLayout extends GraphLayout {
             let netCount = 1;
 
             for (let j = 0; j < edges.length; j++) {
-              if (j === i) {
-              } else {
+              if (j !== i) {
                 const isSource2 = edgeIsSource[j];
                 const otherTerm = this.getVisibleTerminal(edges[j], !isSource2);
 

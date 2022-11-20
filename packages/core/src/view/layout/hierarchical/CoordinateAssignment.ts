@@ -1118,7 +1118,7 @@ class CoordinateAssignment extends HierarchicalLayoutStage {
               // Calculate width requirements for all connected edges
               for (let j = 0; j < sortedCells.length; j++) {
                 const innerCell = <GraphHierarchyNode>sortedCells[j].cell;
-                var connections;
+                let connections: GraphHierarchyEdge[] | undefined;
 
                 if (innerCell.isVertex()) {
                   // Get the connecting edge

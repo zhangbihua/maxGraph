@@ -193,7 +193,6 @@ class MaxWindow extends EventSource {
     super();
 
     if (content != null) {
-      minimizable = minimizable;
       this.content = content;
       this.init(x, y, width, height, style);
 

@@ -93,11 +93,11 @@ export const equalEntries = (a: Properties | null, b: Properties | null) => {
     return false;
   }
   if (a && b) {
-    for (var key in b) {
+    for (const key in b) {
       count++;
     }
 
-    for (var key in a) {
+    for (const key in a) {
       count--;
 
       if ((!Number.isNaN(a[key]) || !Number.isNaN(b[key])) && a[key] !== b[key]) {

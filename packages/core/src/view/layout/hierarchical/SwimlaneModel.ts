@@ -318,11 +318,8 @@ class SwimlaneModel {
 
     while (startNodes.length > 0) {
       const internalNode = startNodes[0];
-      var layerDeterminingEdges;
-      var edgesToBeMarked;
-
-      layerDeterminingEdges = internalNode.connectsAsTarget;
-      edgesToBeMarked = internalNode.connectsAsSource;
+      const layerDeterminingEdges = internalNode.connectsAsTarget;
+      const edgesToBeMarked = internalNode.connectsAsSource;
 
       // flag to keep track of whether or not all layer determining
       // edges have been scanned

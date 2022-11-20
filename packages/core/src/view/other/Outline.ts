@@ -172,7 +172,7 @@ class Outline {
         outline.fireMouseEvent(InternalEvent.MOUSE_MOVE, new InternalMouseEvent(evt));
       };
 
-      var redirect2 = (evt: MouseEvent) => {
+      const redirect2 = (evt: MouseEvent) => {
         const outline = <Graph>this.outline;
         InternalEvent.removeGestureListeners(<Listenable>t, null, redirect, redirect2);
         outline.fireMouseEvent(InternalEvent.MOUSE_UP, new InternalMouseEvent(evt));

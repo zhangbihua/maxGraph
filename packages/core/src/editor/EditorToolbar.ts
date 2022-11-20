@@ -666,7 +666,7 @@ export class EditorToolbarCodec extends ObjectCodec {
                       }
                     }
                   } else {
-                    let select: HTMLSelectElement;
+                    const select: HTMLSelectElement = into.addCombo();
 
                     const create = () => {
                       const template = editor.templates[select.value];
@@ -688,7 +688,6 @@ export class EditorToolbarCodec extends ObjectCodec {
                     };
 
                     const img = into.addPrototype(as, icon, create, null, null, toggle);
-                    select = into.addCombo();
 
                     // Selects the toolbar icon if a selection change
                     // is made in the corresponding combobox.
