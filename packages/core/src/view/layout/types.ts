@@ -33,6 +33,7 @@ export interface HierarchicalGraphLayoutTraverseArgs extends GraphLayoutTraverse
   filledVertexSet: { [key: string]: Cell } | null;
 }
 
-export interface SwimlaneGraphLayoutTraverseArgs extends HierarchicalGraphLayoutTraverseArgs {
+export interface SwimlaneGraphLayoutTraverseArgs
+  extends HierarchicalGraphLayoutTraverseArgs {
   swimlaneIndex: number;
 }

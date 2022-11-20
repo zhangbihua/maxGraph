@@ -381,6 +381,10 @@ class SvgCanvas2D extends AbstractCanvas2D {
     this.gradients = {};
   }
 
+  end(): void {
+    return;
+  }
+
   /**
    * Creates the optional style section.
    */
@@ -741,7 +745,7 @@ class SvgCanvas2D extends AbstractCanvas2D {
 
         if (this.root?.ownerDocument === document && useAbsoluteIds) {
           // Workaround for no fill with base tag in page (escape brackets)
-          const base = this.getBaseUrl().replace(/([\(\)])/g, '\\$1');
+          const base = this.getBaseUrl().replace(/([()])/g, '\\$1');
           this.node!.setAttribute('fill', `url(${base}#${id})`);
         } else {
           this.node!.setAttribute('fill', `url(#${id})`);
@@ -1586,7 +1590,7 @@ class SvgCanvas2D extends AbstractCanvas2D {
         this.root!.ownerDocument === document
       ) {
         // Workaround for potential base tag
-        const base = this.getBaseUrl().replace(/([\(\)])/g, '\\$1');
+        const base = this.getBaseUrl().replace(/([()])/g, '\\$1');
         node.setAttribute('clip-path', `url(${base}#${c.getAttribute('id')})`);
       } else {
         node.setAttribute('clip-path', `url(#${c.getAttribute('id')})`);

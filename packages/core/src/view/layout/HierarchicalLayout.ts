@@ -48,7 +48,7 @@ class HierarchicalLayout extends GraphLayout {
   constructor(
     graph: Graph,
     orientation: DIRECTION = DIRECTION.NORTH,
-    deterministic: boolean = true
+    deterministic = true
   ) {
     super(graph);
     this.orientation = orientation;
@@ -68,47 +68,47 @@ class HierarchicalLayout extends GraphLayout {
    * Specifies if the parent should be resized after the layout so that it
    * contains all the child cells. Default is false. See also <parentBorder>.
    */
-  resizeParent: boolean = false;
+  resizeParent = false;
 
   /**
    * Specifies if the parent location should be maintained, so that the
    * top, left corner stays the same before and after execution of
    * the layout. Default is false for backwards compatibility.
    */
-  maintainParentLocation: boolean = false;
+  maintainParentLocation = false;
 
   /**
    * Specifies if the parent should be moved if <resizeParent> is enabled.
    * Default is false.
    */
-  moveParent: boolean = false;
+  moveParent = false;
 
   /**
    * The border to be added around the children if the parent is to be
    * resized using <resizeParent>. Default is 0.
    */
-  parentBorder: number = 0;
+  parentBorder = 0;
 
   /**
    * The spacing buffer added between cells on the same layer. Default is 30.
    */
-  intraCellSpacing: number = 30;
+  intraCellSpacing = 30;
 
   /**
    * The spacing buffer added between cell on adjacent layers. Default is 100.
    */
-  interRankCellSpacing: number = 100;
+  interRankCellSpacing = 100;
 
   /**
    * The spacing buffer between unconnected hierarchies. Default is 60.
    */
-  interHierarchySpacing: number = 60;
+  interHierarchySpacing = 60;
 
   /**
    * The distance between each parallel edge on each ranks for long edges.
    * Default is 10.
    */
-  parallelEdgeSpacing: number = 10;
+  parallelEdgeSpacing = 10;
 
   /**
    * The position of the root node(s) relative to the laid out graph in.
@@ -120,19 +120,19 @@ class HierarchicalLayout extends GraphLayout {
    * Whether or not to perform local optimisations and iterate multiple times
    * through the algorithm. Default is true.
    */
-  fineTuning: boolean = true;
+  fineTuning = true;
 
   /**
    * Whether or not to tighten the assigned ranks of vertices up towards
    * the source cells. Default is true.
    */
-  tightenToSource: boolean = true;
+  tightenToSource = true;
 
   /**
    * Specifies if the STYLE_NOEDGESTYLE flag should be set on edges that are
    * modified by the result. Default is true.
    */
-  disableEdgeStyle: boolean = true;
+  disableEdgeStyle = true;
 
   /**
    * Whether or not to drill into child cells and layout in reverse
@@ -140,7 +140,7 @@ class HierarchicalLayout extends GraphLayout {
    * terminal vertices have different parents but are in the same
    * ancestry chain. Default is true.
    */
-  traverseAncestors: boolean = true;
+  traverseAncestors = true;
 
   /**
    * The internal <GraphHierarchyModel> formed of the layout.
@@ -426,7 +426,7 @@ class HierarchicalLayout extends GraphLayout {
       let filledVertexSetEmpty = true;
 
       // Poor man's isSetEmpty
-      for (var key in filledVertexSet) {
+      for (const key in filledVertexSet) {
         if (filledVertexSet[key] != null) {
           filledVertexSetEmpty = false;
           break;
@@ -453,7 +453,7 @@ class HierarchicalLayout extends GraphLayout {
             hierarchyVertices: hierarchyVertices,
             filledVertexSet: filledVertexSet,
             func: null,
-            visited: null
+            visited: null,
           });
         }
 
@@ -464,7 +464,7 @@ class HierarchicalLayout extends GraphLayout {
         filledVertexSetEmpty = true;
 
         // Poor man's isSetEmpty
-        for (var key in filledVertexSet) {
+        for (const key in filledVertexSet) {
           if (filledVertexSet[key] != null) {
             filledVertexSetEmpty = false;
             break;
@@ -488,7 +488,7 @@ class HierarchicalLayout extends GraphLayout {
           hierarchyVertices: hierarchyVertices,
           filledVertexSet: null,
           func: null,
-          visited: null
+          visited: null,
         });
       }
     }
@@ -503,7 +503,7 @@ class HierarchicalLayout extends GraphLayout {
       const vertexSet = hierarchyVertices[i];
       const tmp = [];
 
-      for (var key in vertexSet) {
+      for (const key in vertexSet) {
         tmp.push(vertexSet[key]);
       }
 
@@ -610,7 +610,7 @@ class HierarchicalLayout extends GraphLayout {
     allVertices,
     currentComp,
     hierarchyVertices,
-    filledVertexSet
+    filledVertexSet,
   }: HierarchicalGraphLayoutTraverseArgs) {
     if (vertex != null && allVertices != null) {
       // Has this vertex been seen before in any traversal
@@ -652,8 +652,7 @@ class HierarchicalLayout extends GraphLayout {
             let netCount = 1;
 
             for (let j = 0; j < edges.length; j++) {
-              if (j === i) {
-              } else {
+              if (j !== i) {
                 const isSource2 = edgeIsSource[j];
                 const otherTerm = this.getVisibleTerminal(edges[j], !isSource2);
 
@@ -677,7 +676,7 @@ class HierarchicalLayout extends GraphLayout {
                 hierarchyVertices,
                 filledVertexSet,
                 func: null,
-                visited: null
+                visited: null,
               });
             }
           }
