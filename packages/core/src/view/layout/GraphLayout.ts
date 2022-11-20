@@ -51,7 +51,7 @@ class GraphLayout {
    * Boolean indicating if the bounding box of the label should be used if
    * its available. Default is true.
    */
-  useBoundingBox: boolean = true;
+  useBoundingBox = true;
 
   /**
    * The parent cell of the layout, if any
@@ -70,7 +70,9 @@ class GraphLayout {
    * @param x X-coordinate of the new cell location.
    * @param y Y-coordinate of the new cell location.
    */
-  moveCell(cell: Cell, x: number, y: number): void {}
+  moveCell(cell: Cell, x: number, y: number): void {
+    return;
+  }
 
   /**
    * Notified when a cell is being resized in a parent that has automatic
@@ -81,14 +83,18 @@ class GraphLayout {
    * @param cell <Cell> which has been moved.
    * @param bounds {@link Rectangle} that represents the new cell bounds.
    */
-  resizeCell(cell: Cell, bounds: Rectangle, prev?: Cell) {}
+  resizeCell(cell: Cell, bounds: Rectangle, prev?: Cell) {
+    return;
+  }
 
   /**
    * Executes the layout algorithm for the children of the given parent.
    *
    * @param parent {@link mxCell} whose children should be layed out.
    */
-  execute(parent: Cell): void {}
+  execute(parent: Cell): void {
+    return;
+  }
 
   /**
    * Returns the graph that this layout operates on.
@@ -142,7 +148,7 @@ class GraphLayout {
    * null for the first step of the traversal.
    * @param visited Optional {@link Dictionary} of cell paths for the visited cells.
    */
-  traverse({vertex, directed, func, edge, visited}: GraphLayoutTraverseArgs): void {
+  traverse({ vertex, directed, func, edge, visited }: GraphLayoutTraverseArgs): void {
     if (func != null && vertex != null) {
       directed = directed != null ? directed : true;
       visited = visited || new Dictionary();
@@ -166,7 +172,7 @@ class GraphLayout {
                   directed,
                   func,
                   edge: e,
-                  visited
+                  visited,
                 });
               }
             }

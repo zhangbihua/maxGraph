@@ -415,7 +415,7 @@ const EdgeMixin: PartialType = {
    */
   insertEdge(...args) {
     let parent: Cell;
-    let id: string = '';
+    let id = '';
     let value: any; // note me - can be a string or a class instance!!!
     let source: Cell;
     let target: Cell;

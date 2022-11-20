@@ -128,7 +128,7 @@ const createXmlDocument = () => {
  * @class Codec
  */
 class Codec {
-  constructor(document: XMLDocument=createXmlDocument()) {
+  constructor(document: XMLDocument = createXmlDocument()) {
     this.document = document;
     this.objects = {};
   }
@@ -146,12 +146,12 @@ class Codec {
   /**
    * Lookup table for resolving IDs to elements.
    */
-  elements: any = null;  // { [key: string]: Element } | null
+  elements: any = null; // { [key: string]: Element } | null
 
   /**
    * Specifies if default values should be encoded. Default is false.
    */
-  encodeDefaults: boolean = false;
+  encodeDefaults = false;
 
   /**
    * Assoiates the given object with the given ID and returns the given object.
@@ -329,9 +329,7 @@ class Codec {
       } else if (isNode(obj)) {
         node = importNode(this.document, obj, true);
       } else {
-        MaxLog.warn(
-          `Codec.encode: No codec for ${getFunctionName(obj.constructor)}`
-        );
+        MaxLog.warn(`Codec.encode: No codec for ${getFunctionName(obj.constructor)}`);
       }
     }
     return node;
@@ -355,7 +353,7 @@ class Codec {
 
     if (node != null && node.nodeType === NODETYPE.ELEMENT) {
       const dec = CodecRegistry.getCodecByName(node.nodeName);
-      
+
       if (dec != null) {
         obj = dec.decode(this, node, into);
       } else {

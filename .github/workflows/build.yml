@@ -38,6 +38,8 @@ jobs:
           node-version-file: '.nvmrc'
       - name: Install dependencies
         run: npm install
+      - name: Ensure no lint errors
+        run: npm run lint
       - name: Build @maxgraph/core - umd
         working-directory: packages/core
         run: npm run build

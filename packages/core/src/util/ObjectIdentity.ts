@@ -20,7 +20,6 @@ import { IdentityFunction, IdentityObject } from '../types';
 import { IDENTITY_FIELD_NAME } from './Constants';
 import { getFunctionName } from './StringUtils';
 
-
 /**
  * @class
  *

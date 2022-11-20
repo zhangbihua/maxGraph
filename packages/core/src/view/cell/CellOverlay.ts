@@ -77,10 +77,10 @@ class CellOverlay extends EventSource implements ObjectIdentity {
   constructor(
     image: ImageBox,
     tooltip: string | null = null,
-    align: string = 'right',
-    verticalAlign: string = 'bottom',
+    align = 'right',
+    verticalAlign = 'bottom',
     offset: Point = new Point(),
-    cursor: string = 'help'
+    cursor = 'help'
   ) {
     super();
 

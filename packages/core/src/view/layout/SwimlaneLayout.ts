@@ -47,11 +47,7 @@ import { SwimlaneGraphLayoutTraverseArgs } from './types';
  * deterministic. Default is true.
  */
 class SwimlaneLayout extends GraphLayout {
-  constructor(
-    graph: Graph,
-    orientation: DIRECTION | null,
-    deterministic: boolean = true
-  ) {
+  constructor(graph: Graph, orientation: DIRECTION | null, deterministic = true) {
     super(graph);
     this.orientation = orientation != null ? orientation : DIRECTION.NORTH;
     this.deterministic = deterministic != null ? deterministic : true;
@@ -551,7 +547,7 @@ class SwimlaneLayout extends GraphLayout {
       let filledVertexSetEmpty = true;
 
       // Poor man's isSetEmpty
-      for (var key in filledVertexSet) {
+      for (const key in filledVertexSet) {
         if (filledVertexSet[key] != null) {
           filledVertexSetEmpty = false;
           break;
@@ -589,7 +585,7 @@ class SwimlaneLayout extends GraphLayout {
             filledVertexSet,
             swimlaneIndex: laneCounter,
             func: null,
-            visited: null
+            visited: null,
           });
         }
 
@@ -600,7 +596,7 @@ class SwimlaneLayout extends GraphLayout {
         filledVertexSetEmpty = true;
 
         // Poor man's isSetEmpty
-        for (var key in filledVertexSet) {
+        for (const key in filledVertexSet) {
           if (filledVertexSet[key] != null) {
             filledVertexSetEmpty = false;
             break;
@@ -624,13 +620,13 @@ class SwimlaneLayout extends GraphLayout {
           filledVertexSet: null,
           swimlaneIndex: i,
           func: null,
-          visited: null
+          visited: null,
         }); // CHECK THIS PARAM!! ====================
       }
     }
 
     const tmp = [];
-    for (var key in allVertexSet) {
+    for (const key in allVertexSet) {
       tmp.push(allVertexSet[key]);
     }
 
@@ -700,7 +696,7 @@ class SwimlaneLayout extends GraphLayout {
    * target -
    * directed -
    */
-  getEdgesBetween(source: Cell, target: Cell, directed: boolean = false) {
+  getEdgesBetween(source: Cell, target: Cell, directed = false) {
     const edges = this.getEdges(source);
     const result = [];
 
@@ -742,7 +738,7 @@ class SwimlaneLayout extends GraphLayout {
     currentComp,
     hierarchyVertices,
     filledVertexSet,
-    swimlaneIndex
+    swimlaneIndex,
   }: SwimlaneGraphLayoutTraverseArgs) {
     if (vertex != null && allVertices != null) {
       // Has this vertex been seen before in any traversal
@@ -805,7 +801,7 @@ class SwimlaneLayout extends GraphLayout {
               filledVertexSet,
               swimlaneIndex: otherIndex,
               func: null,
-              visited: null
+              visited: null,
             });
           }
         }
