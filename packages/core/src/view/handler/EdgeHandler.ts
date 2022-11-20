@@ -21,6 +21,8 @@ import Point from '../geometry/Point';
 import {
   CONNECT_HANDLE_FILLCOLOR,
   CURSOR,
+  DEFAULT_HOTSPOT,
+  DEFAULT_INVALID_COLOR,
   DEFAULT_VALID_COLOR,
   DIALECT,
   EDGE_SELECTION_COLOR,
@@ -533,70 +535,7 @@ class EdgeHandler {
    * Creates and returns the {@link CellMarker} used in {@link arker}.
    */
   createMarker() {
-    const self = this; // closure
-
-    class MyMarker extends CellMarker {
-      // Only returns edges if they are connectable and never returns
-      // the edge that is currently being modified
-      getCell = (me: InternalMouseEvent) => {
-        let cell = super.getCell(me);
-
-        // Checks for cell at preview point (with grid)
-        if ((cell === self.state.cell || !cell) && self.currentPoint) {
-          cell = self.graph.getCellAt(self.currentPoint.x, self.currentPoint.y);
-        }
-
-        // Uses connectable parent vertex if one exists
-        if (cell && !cell.isConnectable()) {
-          const parent = cell.getParent();
-
-          if (parent && parent.isVertex() && parent.isConnectable()) {
-            cell = parent;
-          }
-        }
-
-        if (cell) {
-          if (
-            (this.graph.isSwimlane(cell) &&
-              self.currentPoint &&
-              this.graph.hitsSwimlaneContent(
-                cell,
-                self.currentPoint.x,
-                self.currentPoint.y
-              )) ||
-            !self.isConnectableCell(cell) ||
-            cell === self.state.cell ||
-            (cell && !self.graph.connectableEdges && cell.isEdge()) ||
-            self.state.cell.isAncestor(cell)
-          ) {
-            cell = null;
-          }
-        }
-
-        if (cell && !cell.isConnectable()) {
-          cell = null;
-        }
-
-        return cell;
-      };
-
-      // Sets the highlight color according to validateConnection
-      isValidState = (state: CellState) => {
-        const cell = self.state.cell.getTerminal(!self.isSource) as Cell;
-        const cellState = self.graph.view.getState(cell) as CellState;
-        const other = self.graph.view.getTerminalPort(state, cellState, !self.isSource);
-        const otherCell = other ? other.cell : null;
-        const source = self.isSource ? state.cell : otherCell;
-        const target = self.isSource ? otherCell : state.cell;
-
-        // Updates the error message of the handler
-        self.error = self.validateConnection(source, target);
-
-        return !self.error;
-      };
-    }
-
-    return new MyMarker(this.graph) as CellMarker;
+    return new EdgeHandlerCellMarker(this.graph, this);
   }
 
   /**
@@ -966,12 +905,16 @@ class EdgeHandler {
    * Hook for subclassers do show details while the handler is active.
    */
 
-  updateHint(me: InternalMouseEvent, point: Point) {}
+  updateHint(me: InternalMouseEvent, point: Point) {
+    return;
+  }
 
   /**
    * Hooks for subclassers to hide details when the handler gets inactive.
    */
-  removeHint() {}
+  removeHint() {
+    return;
+  }
 
   /**
    * Hook for rounding the unscaled width or height. This uses Math.round.
@@ -2324,6 +2267,91 @@ class EdgeHandler {
 
     this.removeHint();
   }
+}
+
+class EdgeHandlerCellMarker extends CellMarker {
+  edgeHandler: EdgeHandler;
+
+  constructor(
+    graph: Graph,
+    edgeHandler: EdgeHandler,
+    validColor: ColorValue = DEFAULT_VALID_COLOR,
+    invalidColor: ColorValue = DEFAULT_INVALID_COLOR,
+    hotspot: number = DEFAULT_HOTSPOT
+  ) {
+    super(graph, validColor, invalidColor, hotspot);
+    this.edgeHandler = edgeHandler;
+  }
+  // Only returns edges if they are connectable and never returns
+  // the edge that is currently being modified
+  getCell = (me: InternalMouseEvent) => {
+    let cell = super.getCell(me);
+
+    // Checks for cell at preview point (with grid)
+    if (
+      (cell === this.edgeHandler.state.cell || !cell) &&
+      this.edgeHandler.currentPoint
+    ) {
+      cell = this.edgeHandler.graph.getCellAt(
+        this.edgeHandler.currentPoint.x,
+        this.edgeHandler.currentPoint.y
+      );
+    }
+
+    // Uses connectable parent vertex if one exists
+    if (cell && !cell.isConnectable()) {
+      const parent = cell.getParent();
+
+      if (parent && parent.isVertex() && parent.isConnectable()) {
+        cell = parent;
+      }
+    }
+
+    if (cell) {
+      if (
+        (this.graph.isSwimlane(cell) &&
+          this.edgeHandler.currentPoint &&
+          this.graph.hitsSwimlaneContent(
+            cell,
+            this.edgeHandler.currentPoint.x,
+            this.edgeHandler.currentPoint.y
+          )) ||
+        !this.edgeHandler.isConnectableCell(cell) ||
+        cell === this.edgeHandler.state.cell ||
+        (cell && !this.edgeHandler.graph.connectableEdges && cell.isEdge()) ||
+        this.edgeHandler.state.cell.isAncestor(cell)
+      ) {
+        cell = null;
+      }
+    }
+
+    if (cell && !cell.isConnectable()) {
+      cell = null;
+    }
+
+    return cell;
+  };
+
+  // Sets the highlight color according to validateConnection
+  isValidState = (state: CellState) => {
+    const cell = this.edgeHandler.state.cell.getTerminal(
+      !this.edgeHandler.isSource
+    ) as Cell;
+    const cellState = this.edgeHandler.graph.view.getState(cell) as CellState;
+    const other = this.edgeHandler.graph.view.getTerminalPort(
+      state,
+      cellState,
+      !this.edgeHandler.isSource
+    );
+    const otherCell = other ? other.cell : null;
+    const source = this.edgeHandler.isSource ? state.cell : otherCell;
+    const target = this.edgeHandler.isSource ? otherCell : state.cell;
+
+    // Updates the error message of the handler
+    this.edgeHandler.error = this.edgeHandler.validateConnection(source, target);
+
+    return !this.edgeHandler.error;
+  };
 }
 
 export default EdgeHandler;

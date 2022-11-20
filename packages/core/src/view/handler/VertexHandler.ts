@@ -791,12 +791,16 @@ class VertexHandler {
   /**
    * Hook for subclassers do show details while the handler is active.
    */
-  updateHint(me: InternalMouseEvent) {}
+  updateHint(me: InternalMouseEvent) {
+    return;
+  }
 
   /**
    * Hooks for subclassers to hide details when the handler gets inactive.
    */
-  removeHint() {}
+  removeHint() {
+    return;
+  }
 
   /**
    * Hook for rounding the angle. This uses Math.round.
@@ -1282,7 +1286,9 @@ class VertexHandler {
    * This code is executed as part of the model transaction. This implementation
    * is empty.
    */
-  rotateClick() {}
+  rotateClick() {
+    return;
+  }
 
   /**
    * Rotates the given cell and its children by the given angle in degrees.
@@ -2016,7 +2022,9 @@ class VertexHandler {
    */
   onDestroy() {
     (<Graph>this.state.view.graph).removeListener(this.escapeHandler);
-    this.escapeHandler = () => {};
+    this.escapeHandler = () => {
+      return;
+    };
 
     if (this.preview) {
       this.preview.destroy();

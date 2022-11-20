@@ -770,9 +770,9 @@ class mxXmlCanvas2D extends AbstractCanvas2D {
     w: number,
     h: number,
     src: string,
-    aspect: boolean,
-    flipH: boolean,
-    flipV: boolean
+    aspect = true,
+    flipH = false,
+    flipV = false
   ) {
     src = this.converter.convert(src);
 
@@ -789,6 +789,10 @@ class mxXmlCanvas2D extends AbstractCanvas2D {
     this.root.appendChild(elem);
   }
 
+  updateText(): void {
+    return;
+  }
+
   /**
    * Starts a new path and puts it into the drawing buffer.
    */
@@ -796,6 +800,10 @@ class mxXmlCanvas2D extends AbstractCanvas2D {
     this.root.appendChild(this.createElement('begin'));
     this.lastX = 0;
     this.lastY = 0;
+  }
+
+  end(): void {
+    return;
   }
 
   /**

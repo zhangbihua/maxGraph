@@ -36,7 +36,9 @@ let supportsPassive = false;
 try {
   document.addEventListener(
     'test',
-    () => {},
+    () => {
+      return;
+    },
     Object.defineProperty &&
       Object.defineProperty({}, 'passive', {
         get: () => {

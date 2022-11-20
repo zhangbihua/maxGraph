@@ -2168,8 +2168,12 @@ export class GraphView extends EventSource {
 
         if (popupMenuHandler) popupMenuHandler.hideMenu();
       },
-      mouseMove: () => {},
-      mouseUp: () => {},
+      mouseMove: () => {
+        return;
+      },
+      mouseUp: () => {
+        return;
+      },
     });
 
     this.moveHandler = (evt: MouseEvent) => {

@@ -140,7 +140,7 @@ export const htmlEntities = (s: string, newline = true): string => {
 
   s = s.replace(/&/g, '&amp;'); // 38 26
   s = s.replace(/"/g, '&quot;'); // 34 22
-  s = s.replace(/\'/g, '&#39;'); // 39 27
+  s = s.replace(/'/g, '&#39;'); // 39 27
   s = s.replace(/</g, '&lt;'); // 60 3C
   s = s.replace(/>/g, '&gt;'); // 62 3E
 

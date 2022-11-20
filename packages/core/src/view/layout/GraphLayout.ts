@@ -70,7 +70,9 @@ class GraphLayout {
    * @param x X-coordinate of the new cell location.
    * @param y Y-coordinate of the new cell location.
    */
-  moveCell(cell: Cell, x: number, y: number): void {}
+  moveCell(cell: Cell, x: number, y: number): void {
+    return;
+  }
 
   /**
    * Notified when a cell is being resized in a parent that has automatic
@@ -81,14 +83,18 @@ class GraphLayout {
    * @param cell <Cell> which has been moved.
    * @param bounds {@link Rectangle} that represents the new cell bounds.
    */
-  resizeCell(cell: Cell, bounds: Rectangle, prev?: Cell) {}
+  resizeCell(cell: Cell, bounds: Rectangle, prev?: Cell) {
+    return;
+  }
 
   /**
    * Executes the layout algorithm for the children of the given parent.
    *
    * @param parent {@link mxCell} whose children should be layed out.
    */
-  execute(parent: Cell): void {}
+  execute(parent: Cell): void {
+    return;
+  }
 
   /**
    * Returns the graph that this layout operates on.
