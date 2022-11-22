@@ -29,8 +29,7 @@ Chrome, Edge, Firefox, Safari, Chromium based browsers (Brave, Opera, ....) for 
 
 ## Project status
 
-maxGraph is under active development. An alpha version will be released soon (along with the npm package) once the [versioning](https://github.com/maxGraph/maxGraph/issues/92)
-issue has been resolved.
+maxGraph is under active development. An alpha version will be released soon (along with the npm package).
 
 In the meantime, you can test the project by running the [Storybook examples](#development) or [build the npm package locally](#build-local-npm-package).
 
@@ -135,6 +134,13 @@ Starting from the mxGraph 4.2.2 release, we
 
 ## Development
 
+### Clean former mxGraph tags
+
+Ensure you don't have the former mxGraph tags locally (see [#92](https://github.com/maxGraph/maxGraph/issues/92) fore more details):
+```
+git fetch --all --tags --prune
+```
+
 ### Setting up local development environment
 
 In the project root directory, execute
@@ -170,4 +176,4 @@ Run
 
 The `packages/core` folder or the generated `packages/core/maxgraph-core-***.tgz` file are now ready for use in an external project, using [npm link](https://docs.npmjs.com/cli/v8/commands/npm-link) or `npm install`.
 
-Examples of use can be found in this [repository](https://github.com/tbouffard/maxgraph-integration-examples).
+Examples of use can be found in the [maxgraph-integration-examples](https://github.com/maxGraph/maxgraph-integration-examples) repository.
